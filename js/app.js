@@ -229,7 +229,7 @@ kubectl apply -f deploy.yaml</pre>
         <div class="hero-glow" aria-hidden="true"></div>
         <div class="hero-grid">
           <div class="hero-copy">
-            <div class="eyebrow">Ashovix Labs · Premium developer academy</div>
+            <div class="eyebrow">Ashovix Labs · Premium Developer Academy</div>
             <h1>Master Tools Like a Professional</h1>
             <p class="lead">Learn SQL, MongoDB, PostgreSQL, Git, Docker, Linux, Kubernetes, DevOps, and Cloud technologies through structured step-by-step academies.</p>
             <div class="cta-row">

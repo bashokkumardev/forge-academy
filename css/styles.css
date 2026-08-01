@@ -325,8 +325,7 @@ body:not(.is-logged-in) #mobile-logout {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   color: var(--accent-2);
   margin-bottom: 1rem;
   padding: 0.35rem 0.75rem;
@@ -448,8 +447,7 @@ body:not(.is-logged-in) #mobile-logout {
 .section-label {
   color: var(--accent);
   font-size: 0.78rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
