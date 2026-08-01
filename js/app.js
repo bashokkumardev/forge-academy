@@ -222,7 +222,6 @@ kubectl apply -f deploy.yaml</pre>
   /* ---------- Views ---------- */
   function viewHome() {
     const courses = F.list();
-    const featured = courses.filter((c) => c.featured).slice(0, 8);
 
     return `
       <section class="hero">
@@ -250,7 +249,7 @@ kubectl apply -f deploy.yaml</pre>
           <a class="btn btn-ghost btn-sm" href="#/courses" data-nav>View all</a>
         </div>
         <div class="courses-grid">
-          ${featured.map((c, i) => courseCard(c, { delay: i * 40 })).join("")}
+          ${courses.map((c, i) => courseCard(c, { delay: (i % 8) * 30 })).join("")}
         </div>
       </section>
 
@@ -376,17 +375,13 @@ kubectl apply -f deploy.yaml</pre>
 
   function viewCourses() {
     const courses = F.list();
-    const cats = ["All", ...new Set(courses.map((c) => c.category || "Engineering"))];
     return `
       <div class="page">
         <div class="section-label">Catalog</div>
         <h1>All courses</h1>
-        <p class="lead">${courses.length} premium academies. Filter by category, then start learning.</p>
-        <div class="filter-row" id="course-filters">
-          ${cats.map((c, i) => `<button type="button" class="chip ${i === 0 ? "active" : ""}" data-filter="${c}">${c}</button>`).join("")}
-        </div>
+        <p class="lead">${courses.length} academies — every course in Ashovix Labs is listed here.</p>
         <div class="courses-grid" id="courses-grid">
-          ${courses.map((c, i) => `<div data-category="${c.category || "Engineering"}">${courseCard(c, { delay: (i % 8) * 30 })}</div>`).join("")}
+          ${courses.map((c, i) => courseCard(c, { delay: (i % 8) * 30 })).join("")}
         </div>
       </div>`;
   }
