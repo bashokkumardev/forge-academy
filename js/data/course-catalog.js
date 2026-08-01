@@ -11,8 +11,8 @@
       { value: 4.5, suffix: "★", label: "Student Rating", decimals: 1 }
     ],
     roadmap: [
-      "Beginner", "Git", "Linux", "SQL", "PostgreSQL", "MongoDB",
-      "Docker", "Kubernetes", "Cloud", "DevOps", "Projects", "Certificate"
+      "Git", "Linux", "SQL", "PostgreSQL", "MongoDB",
+      "Docker", "Kubernetes", "Cloud", "DevOps", "Projects"
     ],
     features: [
       { icon: "🧪", title: "Hands-on Labs", desc: "Practice every concept with guided terminal and SQL labs." },
