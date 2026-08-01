@@ -234,7 +234,6 @@ kubectl apply -f deploy.yaml</pre>
             <p class="lead">Learn SQL, MongoDB, PostgreSQL, Git, Docker, Linux, Kubernetes, DevOps, and Cloud technologies through structured step-by-step academies.</p>
             <div class="cta-row">
               <a class="btn btn-primary" href="#/courses" data-nav>Start Learning</a>
-              <a class="btn btn-ghost" href="#/courses" data-nav>Explore Courses</a>
             </div>
           </div>
           ${workspaceArt()}
