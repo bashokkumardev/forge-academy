@@ -230,7 +230,7 @@ kubectl apply -f deploy.yaml</pre>
         <div class="hero-grid">
           <div class="hero-copy">
             <div class="eyebrow">Ashovix Labs · Premium developer academy</div>
-            <h1>Master Databases &amp; Developer Tools Like a Professional</h1>
+            <h1>Master Tools Like a Professional</h1>
             <p class="lead">Learn SQL, MongoDB, PostgreSQL, Git, Docker, Linux, Kubernetes, DevOps, and Cloud technologies through structured step-by-step academies.</p>
             <div class="cta-row">
               <a class="btn btn-primary" href="#/courses" data-nav>Start Learning</a>
