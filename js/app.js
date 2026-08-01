@@ -128,6 +128,15 @@
     p[progKey(courseId, lessonId)] = true;
     setProgress(p);
   }
+  function resetCourseProgress(courseId) {
+    const p = getProgress();
+    const prefix = `${courseId}::`;
+    Object.keys(p).forEach((k) => {
+      if (k.startsWith(prefix)) delete p[k];
+    });
+    setProgress(p);
+    localStorage.removeItem(`ashovix-assessment-${courseId}`);
+  }
   function isDone(courseId, lessonId) {
     return !!getProgress()[progKey(courseId, lessonId)];
   }
@@ -913,6 +922,7 @@ kubectl apply -f deploy.yaml</pre>
           <a class="btn btn-primary" href="#/course/${c.id}/lesson/${first}" data-nav>Watch Lesson / Start</a>
           <a class="btn btn-ghost" href="#/course/${c.id}/reference" data-nav>Quick Ref</a>
           ${c.assessment ? `<a class="btn btn-ghost" href="#/course/${c.id}/assessment" data-nav>Final Assessment (60 Q · 90 min)</a>` : ""}
+          <button type="button" class="btn btn-ghost" id="reset-course-progress" data-course="${c.id}">Reset Progress</button>
         </div>
         <div class="curriculum-list">
           ${(() => {
@@ -1358,6 +1368,16 @@ kubectl apply -f deploy.yaml</pre>
 
     if (parts[0] === "workspace") initWorkspace();
     if (parts[0] === "course" && parts[2] === "assessment") initAssessment(parts[1]);
+
+    $("#reset-course-progress")?.addEventListener("click", (e) => {
+      const btn = e.currentTarget;
+      const courseId = btn.dataset.course;
+      const course = F.get(courseId);
+      const name = course ? (course.shortTitle || course.title) : "this course";
+      if (!confirm(`Reset all progress for ${name} on this device?`)) return;
+      resetCourseProgress(courseId);
+      render();
+    });
 
     const form = $("#auth-form");
     if (form) {
