@@ -2677,83 +2677,6 @@ CREATE INDEX idx_orders_ordered_at ON orders (ordered_at);</code></pre>
     }
   });
 
-  L("sql38", {
-    module: "sql-m07",
-    title: "38 Interview Questions",
-    level: "Advanced",
-    duration: "45 min",
-    objectives: [
-      "Answer core SQL interview prompts clearly",
-      "Contrast related concepts (WHERE vs HAVING, PK vs UNIQUE)",
-      "Write short example SQL under time pressure",
-      "Explain tradeoffs, not only definitions"
-    ],
-    content: `
-<p>This lesson prepares you for common <strong>SQL interview questions</strong>. Interviewers want definitions plus tiny examples and tradeoffs.</p>
-
-<h2>High-frequency prompts</h2>
-<ul>
-<li>What is a primary key vs a unique key?</li>
-<li>INNER JOIN vs LEFT JOIN?</li>
-<li>WHERE vs HAVING?</li>
-<li>What is normalization? Give an example anomaly.</li>
-<li>What is an index? Downsides?</li>
-<li>Explain ACID in plain language.</li>
-<li>How do you find duplicates?</li>
-</ul>
-
-<h2>Worked example answers (SQL)</h2>
-<pre><code>-- Find duplicate emails
-SELECT email, COUNT(*) AS cnt
-FROM customers
-GROUP BY email
-HAVING COUNT(*) > 1;</code></pre>
-<pre><code>-- Customers with no orders (LEFT JOIN anti-pattern filter)
-SELECT c.id, c.name
-FROM customers c
-LEFT JOIN orders o ON o.customer_id = c.id
-WHERE o.id IS NULL;</code></pre>
-<pre><code>-- Second-highest distinct price (portable-ish approach)
-SELECT MAX(price) AS second_highest
-FROM products
-WHERE price &lt; (SELECT MAX(price) FROM products);</code></pre>
-
-<h2>Concept flash answers</h2>
-<ul>
-<li><strong>PK vs UNIQUE:</strong> PK identifies the row, implies NOT NULL; a table has one PK. Multiple UNIQUE constraints allowed; NULL handling varies.</li>
-<li><strong>WHERE vs HAVING:</strong> rows vs groups.</li>
-<li><strong>Clustered index idea:</strong> some engines store row data in index order (SQL Server); know your engine.</li>
-</ul>
-
-<h2>Try it</h2>
-<ol>
-<li>Answer PK vs UNIQUE out loud in under 45 seconds.</li>
-<li>Write INNER and LEFT join examples from memory.</li>
-<li>Write the duplicate-email query without looking.</li>
-<li>Explain one index downside in one sentence.</li>
-</ol>
-
-<h2>Common mistakes</h2>
-<ul>
-<li>Memorizing buzzwords without an example.</li>
-<li>Saying "LEFT JOIN returns everything" without saying from which side.</li>
-<li>Claiming SELECT * is fine in production APIs.</li>
-</ul>
-
-<div class="callout"><strong>Summary:</strong> Interview success is clear definitions, tiny SQL proofs, and honest tradeoffs. Practice aloud with examples from this course schema.</div>
-`,
-    quiz: {
-      q: "UNIQUE vs PRIMARY KEY - which statement is best?",
-      options: [
-        "PK identifies a row and is unique/NOT NULL; UNIQUE can differ on NULLs and count",
-        "They are identical in every engine always",
-        "UNIQUE is only for views",
-        "PK cannot be an integer"
-      ],
-      answer: 0
-    }
-  });
-
   L("sql39", {
     module: "sql-m08",
     title: "39 Final Assessment",
@@ -2860,7 +2783,7 @@ WHERE price &lt; (SELECT MAX(price) FROM products);</code></pre>
       { id: "sql-m04", title: "SQL Language Families", lessonIds: ["sql18","sql19","sql20","sql21","sql22"] },
       { id: "sql-m05", title: "Query Essentials", lessonIds: ["sql23","sql24","sql25","sql26","sql27"] },
       { id: "sql-m06", title: "Joins & Database Objects", lessonIds: ["sql28","sql29","sql30","sql31","sql32","sql33","sql34","sql35"] },
-      { id: "sql-m07", title: "Professional Skills", lessonIds: ["sql36","sql37","sql38"] },
+      { id: "sql-m07", title: "Professional Skills", lessonIds: ["sql36","sql37"] },
       { id: "sql-m08", title: "Capstone", lessonIds: ["sql39"] }
     ],
     lessons,
