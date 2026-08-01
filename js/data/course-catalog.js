@@ -1,4 +1,4 @@
-/* ForgeLab — expanded course catalog + marketing content */
+/* ASHOVIX LABS — expanded course catalog + marketing content */
 (function () {
   const F = window.FORGE;
 
@@ -37,13 +37,13 @@
       { tag: "Git", title: "Git Workflow Projects", desc: "Branching, PRs, reviews, and release tagging." }
     ],
     testimonials: [
-      { name: "Priya N.", role: "Junior DBA", text: "ForgeLab’s step-by-step labs finally made PostgreSQL and backups click. Better than scattered YouTube playlists.", rating: 5 },
+      { name: "Priya N.", role: "Junior DBA", text: "ASHOVIX LABS’ step-by-step labs finally made PostgreSQL and backups click. Better than scattered YouTube playlists.", rating: 5 },
       { name: "Marcus L.", role: "Backend Engineer", text: "The Docker → Kubernetes path felt like a senior mentor sitting next to me. Clean UI, zero fluff.", rating: 5 },
       { name: "Aisha K.", role: "Career Switcher", text: "I went from zero Git to opening PRs confidently in two weeks. The conflict lessons are gold.", rating: 5 },
       { name: "Diego R.", role: "DevOps Associate", text: "Premium docs energy. Search is fast, progress sticks, and the projects look great on my portfolio.", rating: 5 }
     ],
     faqs: [
-      { q: "Is ForgeLab free to start?", a: "Yes. Browse courses, complete lessons, and track progress in your browser. Account features unlock sync across devices." },
+      { q: "Is ASHOVIX LABS free to start?", a: "Yes. Browse courses, complete lessons, and track progress in your browser. Account features unlock sync across devices." },
       { q: "Do I need prior experience?", a: "No. Start with Git and Linux, then SQL. Advanced tracks assume earlier foundations but every lesson stays step-by-step." },
       { q: "Are the courses hands-on?", a: "Every major track includes labs, quizzes, and projects. Install guides cover Windows and Linux where relevant." },
       { q: "Can I get a certificate?", a: "Complete a learning path and required projects to unlock certificate progress. Exportable certificates ship with account plans." },

@@ -1,4 +1,4 @@
-/* ForgeLab — Complete Git & GitHub Course (original educational content) */
+/* ASHOVIX LABS — Complete Git & GitHub Course (original educational content) */
 (function () {
   const C = {
     paths: [
@@ -44,7 +44,7 @@
   <li><strong>Staging area (index)</strong> — what you prepare for the next commit.</li>
   <li><strong>Repository (.git)</strong> — committed snapshots stored permanently.</li>
 </ol>
-<div class="callout"><strong>ForgeLab rule:</strong> Git tracks <em>content</em>, not just filenames. Two files with the same content may share storage efficiently.</div>
+<div class="callout"><strong>ASHOVIX LABS rule:</strong> Git tracks <em>content</em>, not just filenames. Two files with the same content may share storage efficiently.</div>
 <h2>Verify</h2>
 <ul class="verify-list">
   <li>☐ You can explain version control in one sentence.</li>

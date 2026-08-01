@@ -1,4 +1,4 @@
-/* ForgeLab — SQL Mastery (complete portable SQL course) */
+/* ASHOVIX LABS — SQL Mastery (complete portable SQL course) */
 (function () {
   const lessons = {};
   function L(id, d) { lessons[id] = { id, ...d }; }
@@ -22,7 +22,7 @@
 <div class="table-wrap"><table>
   <thead><tr><th>Term</th><th>Meaning</th><th>Example</th></tr></thead>
   <tbody>
-    <tr><td>Database</td><td>Container for schemas and objects</td><td><code>forgelab</code></td></tr>
+    <tr><td>Database</td><td>Container for schemas and objects</td><td><code>ashovix</code></td></tr>
     <tr><td>Schema</td><td>Namespace grouping related tables</td><td><code>shop</code></td></tr>
     <tr><td>Table</td><td>Rows sharing the same columns</td><td><code>customers</code></td></tr>
     <tr><td>Row (record)</td><td>One entity instance</td><td>customer #42</td></tr>
@@ -102,7 +102,7 @@
     <pre><code>sqlite3 --version</code></pre></li>
   <li>Create your first database file:
     <pre><code>cd C:\\Users\\YourName\\sql-lab\\sqlite
-sqlite3 forgelab.db "SELECT 'SQLite on Windows works' AS message;"</code></pre>
+sqlite3 ashovix.db "SELECT 'SQLite on Windows works' AS message;"</code></pre>
     <strong>Expected:</strong> one row: <code>SQLite on Windows works</code>.</li>
 </ol>
 
@@ -118,7 +118,7 @@ sqlite3 forgelab.db "SELECT 'SQLite on Windows works' AS message;"</code></pre>
   <li>Create practice database:
     <pre><code>mkdir -p ~/sql-lab/sqlite
 cd ~/sql-lab/sqlite
-sqlite3 forgelab.db "SELECT 'SQLite on Linux works' AS message;"</code></pre>
+sqlite3 ashovix.db "SELECT 'SQLite on Linux works' AS message;"</code></pre>
     <strong>Expected:</strong> <code>SQLite on Linux works</code>.</li>
 </ol>
 
@@ -184,7 +184,7 @@ sudo systemctl enable --now postgresql</code></pre></li>
 <h2>Verification checklist (run on your OS)</h2>
 <ol>
   <li><code>sqlite3 --version</code> prints a 3.x version.</li>
-  <li><code>sqlite3 forgelab.db ".tables"</code> runs without error (empty list is OK).</li>
+  <li><code>sqlite3 ashovix.db ".tables"</code> runs without error (empty list is OK).</li>
   <li><code>psql --version</code> prints PostgreSQL client version.</li>
   <li><code>psql -U postgres -c "SELECT 1;"</code> returns one row with value <code>1</code>.</li>
 </ol>
@@ -205,7 +205,7 @@ sudo systemctl enable --now postgresql</code></pre></li>
 <div class="callout"><strong>Verify:</strong>
   <ul>
     <li>Both <code>sqlite3 --version</code> and <code>psql --version</code> succeed.</li>
-    <li>You have a <code>forgelab.db</code> file in your sqlite folder.</li>
+    <li>You have a <code>ashovix.db</code> file in your sqlite folder.</li>
     <li>You can run <code>SELECT 1;</code> in both engines.</li>
     <li>You saved your PostgreSQL postgres-user password somewhere safe.</li>
   </ul>
@@ -236,15 +236,15 @@ sudo systemctl enable --now postgresql</code></pre></li>
 <ol>
   <li>Open terminal and start SQLite on your practice DB:
     <pre><code>cd ~/sql-lab/sqlite    # or C:\\Users\\You\\sql-lab\\sqlite
-sqlite3 forgelab.db</code></pre>
+sqlite3 ashovix.db</code></pre>
     <strong>Expected:</strong> prompt changes to <code>sqlite&gt;</code>.</li>
   <li>Turn on readable output:
     <pre><code>.headers on
 .mode column
 .width 20</code></pre></li>
   <li>Run your first query:
-    <pre><code>SELECT datetime('now') AS now_utc, 'ForgeLab' AS course;</code></pre>
-    <strong>Expected:</strong> two columns with current timestamp and <code>ForgeLab</code>.</li>
+    <pre><code>SELECT datetime('now') AS now_utc, 'ASHOVIX LABS' AS course;</code></pre>
+    <strong>Expected:</strong> two columns with current timestamp and <code>ASHOVIX LABS</code>.</li>
   <li>List meta-commands:
     <pre><code>.help</code></pre></li>
   <li>Exit cleanly:
@@ -273,7 +273,7 @@ sqlite3 forgelab.db</code></pre>
     <pre><code>-- hello.sql
 SELECT 'Script execution works' AS status;</code></pre></li>
   <li>SQLite:
-    <pre><code>sqlite3 forgelab.db &lt; scripts/hello.sql</code></pre>
+    <pre><code>sqlite3 ashovix.db &lt; scripts/hello.sql</code></pre>
     <strong>Expected:</strong> <code>Script execution works</code>.</li>
   <li>PostgreSQL:
     <pre><code>psql -U postgres -h localhost -f scripts/hello.sql</code></pre>
@@ -284,7 +284,7 @@ SELECT 'Script execution works' AS status;</code></pre></li>
 <ol>
   <li>Download <a href="https://dbeaver.io/download/" target="_blank" rel="noopener">DBeaver Community</a> and install.</li>
   <li>Launch DBeaver → <strong>Database</strong> → <strong>New Database Connection</strong>.</li>
-  <li><strong>SQLite:</strong> choose SQLite → Browse to <code>forgelab.db</code> → Test Connection → Finish.</li>
+  <li><strong>SQLite:</strong> choose SQLite → Browse to <code>ashovix.db</code> → Test Connection → Finish.</li>
   <li><strong>PostgreSQL:</strong> choose PostgreSQL → Host <code>localhost</code>, Port <code>5432</code>, Database <code>postgres</code>, user/password → Test → Finish.</li>
   <li>Open SQL Editor (<kbd>Ctrl</kbd>+<kbd>]</kbd>), paste <code>SELECT 42 AS answer;</code>, click Execute (orange play).</li>
   <li><strong>Expected:</strong> result grid shows <code>42</code>.</li>
@@ -338,15 +338,15 @@ SELECT 'Script execution works' AS status;</code></pre></li>
   <li>Connect as superuser:
     <pre><code>psql -U postgres -h localhost</code></pre></li>
   <li>Create database with UTF-8 encoding:
-    <pre><code>CREATE DATABASE forgelab
+    <pre><code>CREATE DATABASE ashovix
   ENCODING 'UTF8'
   LC_COLLATE 'en_US.UTF-8'
   LC_CTYPE 'en_US.UTF-8'
   TEMPLATE template0;</code></pre>
     <strong>Expected:</strong> <code>CREATE DATABASE</code>.</li>
   <li>Connect to the new database:
-    <pre><code>\\c forgelab</code></pre>
-    <strong>Expected:</strong> prompt becomes <code>forgelab=#</code>.</li>
+    <pre><code>\\c ashovix</code></pre>
+    <strong>Expected:</strong> prompt becomes <code>ashovix=#</code>.</li>
   <li>Create a schema (namespace):
     <pre><code>CREATE SCHEMA shop AUTHORIZATION CURRENT_USER;</code></pre>
     <strong>Expected:</strong> <code>CREATE SCHEMA</code>.</li>
@@ -377,15 +377,15 @@ SELECT name FROM pragma_database_list();</code></pre>
   <li>PostgreSQL — drop schema only if empty, or use CASCADE consciously:
     <pre><code>DROP SCHEMA IF EXISTS shop CASCADE;</code></pre></li>
   <li>PostgreSQL — drop database (disconnect all sessions first):
-    <pre><code>-- from postgres database, not inside forgelab
+    <pre><code>-- from postgres database, not inside ashovix
 \\c postgres
-DROP DATABASE IF EXISTS forgelab;</code></pre></li>
+DROP DATABASE IF EXISTS ashovix;</code></pre></li>
   <li>SQLite — delete the <code>.db</code> file from the filesystem when no connections are open.</li>
 </ol>
 
 <div class="callout"><strong>Verify:</strong>
   <ul>
-    <li>PostgreSQL: <code>\\l</code> shows <code>forgelab</code> database.</li>
+    <li>PostgreSQL: <code>\\l</code> shows <code>ashovix</code> database.</li>
     <li>PostgreSQL: <code>\\dn</code> shows <code>shop</code> schema.</li>
     <li><code>SHOW search_path;</code> returns your intended order.</li>
     <li>SQLite: you can attach and detach a second file.</li>
@@ -433,7 +433,7 @@ DROP DATABASE IF EXISTS forgelab;</code></pre></li>
 <h2>Step-by-step — build shop.customers and shop.products (PostgreSQL)</h2>
 <ol>
   <li>Connect and set schema:
-    <pre><code>psql -U postgres -d forgelab
+    <pre><code>psql -U postgres -d ashovix
 SET search_path TO shop, public;</code></pre></li>
   <li>Create customers table:
     <pre><code>CREATE TABLE customers (
@@ -616,7 +616,7 @@ ROLLBACK;  -- practice only — undoes the ALTER</code></pre>
 
 <h2>Prerequisites — ensure shop tables exist (sql05)</h2>
 <ol>
-  <li>Connect: <code>psql -U postgres -d forgelab</code> and <code>SET search_path TO shop, public;</code></li>
+  <li>Connect: <code>psql -U postgres -d ashovix</code> and <code>SET search_path TO shop, public;</code></li>
 </ol>
 
 <h2>Form 1 — INSERT one row (explicit columns)</h2>
@@ -896,7 +896,7 @@ FROM shop.orders ORDER BY customer_id, order_date DESC;</code></pre></li>
 <h2>Step 4 — Literal values and functions</h2>
 <ol>
   <li>
-    <pre><code>SELECT 'ForgeLab' AS source, CURRENT_DATE AS report_date, 42 AS magic_number;</code></pre>
+    <pre><code>SELECT 'ASHOVIX LABS' AS source, CURRENT_DATE AS report_date, 42 AS magic_number;</code></pre>
     <strong>Expected:</strong> one row, three computed columns.</li>
 </ol>
 
@@ -1864,7 +1864,7 @@ WHERE c.email LIKE '%@example.com';</code></pre>
         id: "sql-lab02",
         title: "Build the shop schema",
         lesson: "sql05",
-        steps: "Create forgelab database and shop schema. Create customers, products, orders with all constraints. Insert seed rows. Verify with \\d and test FK violation."
+        steps: "Create ashovix database and shop schema. Create customers, products, orders with all constraints. Insert seed rows. Verify with \\d and test FK violation."
       },
       {
         id: "sql-lab03",
