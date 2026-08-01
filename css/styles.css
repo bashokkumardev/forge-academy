@@ -551,28 +551,40 @@ body:not(.is-logged-in) #mobile-logout {
   display: grid;
   place-items: center;
   border-radius: 14px;
-  background: rgba(7, 17, 26, 0.45);
+  background: rgba(7, 17, 26, 0.55);
   border: 1px solid rgba(146, 196, 210, 0.12);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 0 28px color-mix(in srgb, var(--logo-glow, #4da3ff) 28%, transparent);
   transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease;
+  color: var(--logo-glow, #4da3ff);
+  overflow: hidden;
 }
-.course-logo-img,
+.course-logo-img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  display: block;
+  /* brand-color monochrome SVGs that use currentColor via CSS filter fallback */
+  filter: none;
+}
+/* Ensure currentColor inheritance for inline SVG files that use fill=currentColor */
+.course-logo-img[src$=".svg"] {
+  /* soft white plate behind dark logos like Kafka/GitHub when needed */
+}
+.course-logo[data-tech="github"] .course-logo-img,
+.course-logo[data-tech="kafka"] .course-logo-img,
+.course-logo[data-tech="express"] .course-logo-img {
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
+}
 .course-logo-svg,
 .course-logo-svg svg {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
+  width: 34px;
+  height: 34px;
   display: block;
 }
 .course-logo-svg {
-  width: 56px;
-  height: 56px;
   display: grid;
   place-items: center;
-}
-.course-logo-svg svg {
-  width: 40px;
-  height: 40px;
 }
 .course-card:hover .course-logo {
   transform: scale(1.08);
