@@ -1,1919 +1,2071 @@
-/* Ashovix Labs — SQL Mastery (complete portable SQL course) */
+/* Ashovix Labs - SQL Mastery (39 topics + Final Assessment) */
 (function () {
   const lessons = {};
   function L(id, d) { lessons[id] = { id, ...d }; }
 
-  /* ========== MODULE 1: GETTING STARTED ========== */
-
   L("sql01", {
     module: "sql-m01",
-    title: "What Is SQL & RDBMS?",
+    title: "01 Introduction to Databases",
     level: "Beginner",
-    duration: "30 min",
+    duration: "25 min",
     objectives: [
-      "Define SQL and relational databases",
-      "Name tables, rows, columns, keys, and schemas",
-      "Distinguish DDL, DML, and DQL",
-      "Explain why SQL skills transfer across vendors"
+      "Define what a database is",
+      "Contrast files vs databases",
+      "List common database types",
     ],
     content: `
-<p><strong>SQL</strong> (Structured Query Language) is the standard language for talking to <strong>relational database management systems (RDBMS)</strong>. You describe <em>what</em> data you want; the engine figures out <em>how</em> to fetch or change it.</p>
-<h2>Core vocabulary</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>Term</th><th>Meaning</th><th>Example</th></tr></thead>
-  <tbody>
-    <tr><td>Database</td><td>Container for schemas and objects</td><td><code>ashovix</code></td></tr>
-    <tr><td>Schema</td><td>Namespace grouping related tables</td><td><code>shop</code></td></tr>
-    <tr><td>Table</td><td>Rows sharing the same columns</td><td><code>customers</code></td></tr>
-    <tr><td>Row (record)</td><td>One entity instance</td><td>customer #42</td></tr>
-    <tr><td>Column (field)</td><td>Named attribute with a type</td><td><code>email VARCHAR(255)</code></td></tr>
-    <tr><td>Primary key</td><td>Unique row identifier</td><td><code>customer_id</code></td></tr>
-    <tr><td>Foreign key</td><td>Reference to another table's key</td><td><code>order.customer_id → customers.id</code></td></tr>
-  </tbody>
-</table></div>
-<h2>SQL statement families</h2>
-<ol>
-  <li><strong>DDL</strong> (Data Definition Language) — <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code> — shapes structure.</li>
-  <li><strong>DML</strong> (Data Manipulation Language) — <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>MERGE</code> — changes data.</li>
-  <li><strong>DQL</strong> (Data Query Language) — <code>SELECT</code> — reads data (often grouped with DML).</li>
-  <li><strong>DCL</strong> — <code>GRANT</code>, <code>REVOKE</code> — permissions.</li>
-  <li><strong>TCL</strong> — <code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code> — transaction control.</li>
-</ol>
-<h2>How a query runs (mental model)</h2>
-<ol>
-  <li>You send SQL text from a client (CLI, app, GUI).</li>
-  <li>The <strong>parser</strong> checks syntax and builds a logical plan.</li>
-  <li>The <strong>optimizer</strong> chooses indexes, join order, and access paths.</li>
-  <li>The <strong>executor</strong> reads/writes pages and returns a result set or status.</li>
-</ol>
-<h2>Popular RDBMS engines you will meet</h2>
+<p>A <strong>database</strong> is an organized collection of data that a computer program (the database engine) can store, find, update, and protect efficiently.</p>
+<h2>Why not just use files?</h2>
+<div class="table- wrap"><table>
+<thead><tr><th>Files / folders</th><th>Database</th></tr></thead>
+<tbody>
+<tr><td>Hard to query across many files</td><td>Powerful query language (SQL)</td></tr>
+<tr><td>Easy to corrupt with concurrent writes</td><td>Transactions & locking</td></tr>
+<tr><td>Weak consistency rules</td><td>Constraints, keys, types</td></tr>
+<tr><td>Security is ad- hoc</td><td>Users, roles, privileges</td></tr>
+</tbody></table></div>
+<h2>Common database types</h2>
 <ul>
-  <li><strong>SQLite</strong> — embedded, single file, perfect for learning and local apps.</li>
-  <li><strong>PostgreSQL</strong> — open-source server, rich SQL, extensions, production-grade.</li>
-  <li><strong>MySQL / MariaDB</strong> — ubiquitous web stacks.</li>
-  <li><strong>SQL Server, Oracle, Db2</strong> — enterprise deployments with dialect extensions.</li>
+<li><strong>Relational (RDBMS)</strong> - tables with rows/columns (PostgreSQL, MySQL, SQL Server, Oracle, Db2, SQLite).</li>
+<li><strong>Document</strong> - JSON-like documents (MongoDB).</li>
+<li><strong>Key-value</strong> - fast lookups (Redis).</li>
+<li><strong>Wide-column / graph</strong> - specialized models for scale or relationships.</li>
 </ul>
-<div class="callout"><strong>Portable rule:</strong> Learn ANSI SQL first. Vendor docs explain the 10–20% that differs (auto-increment syntax, limit clauses, upsert flavors).</div>
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>You can explain table vs row vs column in your own words.</li>
-    <li>You can name the three families DDL, DML, and DQL with one example each.</li>
-    <li>You know that SQL is declarative — you state the result, not the loop.</li>
-  </ul>
-</div>
+<h2>Example mental model</h2>
+<pre><code>Database: ashovix_shop
+  |- Table: customers
+        |- Row: id=1, name='Asha', city='Pune'
+        |- Row: id=2, name='Dev',  city='Chennai'</code></pre>
+<div class="callout"><strong>Key idea:</strong> Databases exist so many users and apps can share correct data safely - not just store bytes on disk.</div>
 `,
     quiz: {
-      q: "Which SQL family creates and alters tables?",
-      options: ["DML", "DDL", "DCL", "TCL"],
+      q: "What is the main job of a database engine?",
+      options: [
+        "Only draw charts",
+        "Store, query, update, and protect data reliably",
+        "Compile Java code",
+        "Replace operating systems",
+      ],
       answer: 1
     }
   });
 
   L("sql02", {
     module: "sql-m01",
-    title: "Choose & Install a Practice Database",
+    title: "02 What is SQL?",
     level: "Beginner",
-    duration: "50 min",
+    duration: "25 min",
     objectives: [
-      "Install SQLite on Windows and Linux",
-      "Install PostgreSQL on Windows and Linux",
-      "Create a practice workspace folder",
-      "Verify both engines respond to commands"
+      "Define SQL",
+      "Explain declarative style",
+      "Name major statement families",
     ],
     content: `
-<p>This course uses <strong>SQLite</strong> (zero-config, file-based) and <strong>PostgreSQL</strong> (full client/server). Install both so examples work everywhere.</p>
-<h2>Step 0 — Create a workspace (all platforms)</h2>
-<ol>
-  <li>Create a folder for SQL practice, e.g. <code>C:\\Users\\YourName\\sql-lab</code> on Windows or <code>~/sql-lab</code> on Linux.</li>
-  <li>Inside it, create subfolders: <code>sqlite</code>, <code>postgres</code>, <code>scripts</code>.</li>
-  <li><strong>Expected:</strong> empty folders ready for <code>.db</code> files and <code>.sql</code> scripts.</li>
-</ol>
+<p><strong>SQL</strong> (Structured Query Language) is the standard language for working with relational databases. You describe <em>what</em> you want; the engine decides <em>how</em>.</p>
+<h2>SQL is declarative</h2>
+<pre><code>|- You say WHAT: customers in Pune
+SELECT name, email
+FROM customers
+WHERE city = 'Pune';
 
-<h2>Part A — SQLite on Windows</h2>
-<ol>
-  <li>Open <strong>PowerShell</strong> (not CMD unless you prefer it).</li>
-  <li>Check if SQLite is already installed:
-    <pre><code>sqlite3 --version</code></pre>
-    <strong>Expected:</strong> <code>3.xx.x</code> version string. If you see an error, continue.</li>
-  <li>Install via <strong>winget</strong> (recommended):
-    <pre><code>winget install SQLite.SQLite</code></pre>
-    <strong>Expected:</strong> <code>Successfully installed</code>.</li>
-  <li>Close and reopen PowerShell, then verify again:
-    <pre><code>sqlite3 --version</code></pre></li>
-  <li>Create your first database file:
-    <pre><code>cd C:\\Users\\YourName\\sql-lab\\sqlite
-sqlite3 ashovix.db "SELECT 'SQLite on Windows works' AS message;"</code></pre>
-    <strong>Expected:</strong> one row: <code>SQLite on Windows works</code>.</li>
-</ol>
-
-<h2>Part B — SQLite on Linux (Ubuntu/Debian)</h2>
-<ol>
-  <li>Update package index:
-    <pre><code>sudo apt update</code></pre></li>
-  <li>Install SQLite:
-    <pre><code>sudo apt install -y sqlite3</code></pre>
-    <strong>Expected:</strong> package installs without errors.</li>
-  <li>Verify:
-    <pre><code>sqlite3 --version</code></pre></li>
-  <li>Create practice database:
-    <pre><code>mkdir -p ~/sql-lab/sqlite
-cd ~/sql-lab/sqlite
-sqlite3 ashovix.db "SELECT 'SQLite on Linux works' AS message;"</code></pre>
-    <strong>Expected:</strong> <code>SQLite on Linux works</code>.</li>
-</ol>
-
-<h2>Part C — SQLite on Linux (RHEL/Rocky/Alma)</h2>
-<ol>
-  <li>Install:
-    <pre><code>sudo dnf install -y sqlite</code></pre></li>
-  <li>Verify and test exactly as in Ubuntu step 4 above.</li>
-</ol>
-
-<h2>Part D — PostgreSQL on Windows</h2>
-<ol>
-  <li>Download the installer from <a href="https://www.postgresql.org/download/windows/" target="_blank" rel="noopener">postgresql.org/download/windows</a> (EDB installer) or use winget:
-    <pre><code>winget install PostgreSQL.PostgreSQL</code></pre></li>
-  <li>Run the installer. Note these choices:
-    <ul>
-      <li>Port: <code>5432</code> (default)</li>
-      <li>Superuser password: choose a strong password and write it down</li>
-      <li>Locale: default is fine for learning</li>
-      <li>Install Stack Builder components: optional; skip for now</li>
-    </ul>
-  </li>
-  <li>Open <strong>SQL Shell (psql)</strong> from the Start menu, press Enter for defaults until password prompt, enter your postgres password.</li>
-  <li>At <code>postgres=#</code>, run:
-    <pre><code>SELECT version();
-\\q</code></pre>
-    <strong>Expected:</strong> a line containing <code>PostgreSQL</code> and a version number.</li>
-  <li>From PowerShell (add PostgreSQL <code>bin</code> to PATH if needed):
-    <pre><code>psql -U postgres -c "SELECT 'PostgreSQL on Windows works' AS message;"</code></pre></li>
-</ol>
-
-<h2>Part E — PostgreSQL on Linux (Ubuntu/Debian)</h2>
-<ol>
-  <li>Install server and client:
-    <pre><code>sudo apt update
-sudo apt install -y postgresql postgresql-contrib</code></pre></li>
-  <li>Start and enable the service:
-    <pre><code>sudo systemctl start postgresql
-sudo systemctl enable postgresql
-sudo systemctl status postgresql</code></pre>
-    <strong>Expected:</strong> <code>active (running)</code>.</li>
-  <li>Switch to the <code>postgres</code> OS user and open psql:
-    <pre><code>sudo -u postgres psql -c "SELECT version();"</code></pre></li>
-  <li>Set a password for local connections (learning only):
-    <pre><code>sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'YourStrongPassword';"</code></pre></li>
-  <li>Test as yourself:
-    <pre><code>psql -U postgres -h localhost -c "SELECT 'PostgreSQL on Linux works' AS message;"</code></pre></li>
-</ol>
-
-<h2>Part F — PostgreSQL on Linux (RHEL/Rocky/Alma)</h2>
-<ol>
-  <li>Enable PostgreSQL module and install:
-    <pre><code>sudo dnf module enable -y postgresql:16
-sudo dnf install -y postgresql-server postgresql-contrib</code></pre>
-    <em>(Use the module version available on your distro.)</em></li>
-  <li>Initialize and start:
-    <pre><code>sudo postgresql-setup --initdb
-sudo systemctl enable --now postgresql</code></pre></li>
-  <li>Verify:
-    <pre><code>sudo -u postgres psql -c "SELECT version();"</code></pre></li>
-</ol>
-
-<h2>Verification checklist (run on your OS)</h2>
-<ol>
-  <li><code>sqlite3 --version</code> prints a 3.x version.</li>
-  <li><code>sqlite3 ashovix.db ".tables"</code> runs without error (empty list is OK).</li>
-  <li><code>psql --version</code> prints PostgreSQL client version.</li>
-  <li><code>psql -U postgres -c "SELECT 1;"</code> returns one row with value <code>1</code>.</li>
-</ol>
-
-<h2>Common errors &amp; fixes</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>Error</th><th>Cause</th><th>Fix</th></tr></thead>
-  <tbody>
-    <tr><td><code>sqlite3: command not found</code></td><td>Not installed or PATH missing</td><td>Reinstall; reopen terminal; on Windows add install dir to PATH</td></tr>
-    <tr><td><code>psql: command not found</code></td><td>Client not on PATH</td><td>Add PostgreSQL <code>bin</code> folder to PATH; reopen shell</td></tr>
-    <tr><td><code>connection refused</code> (PostgreSQL)</td><td>Service not running</td><td><code>sudo systemctl start postgresql</code> (Linux) or start Windows service</td></tr>
-    <tr><td><code>password authentication failed</code></td><td>Wrong password</td><td>Reset with <code>ALTER USER</code> as superuser via <code>sudo -u postgres psql</code></td></tr>
-    <tr><td><code>could not connect to server: No such file</code></td><td>Wrong host/socket</td><td>Use <code>-h localhost</code> on Linux; check <code>pg_hba.conf</code> for local auth</td></tr>
-    <tr><td>winget install fails</td><td>Old winget or policy block</td><td>Download SQLite zip or PostgreSQL installer manually</td></tr>
-  </tbody>
-</table></div>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>Both <code>sqlite3 --version</code> and <code>psql --version</code> succeed.</li>
-    <li>You have a <code>ashovix.db</code> file in your sqlite folder.</li>
-    <li>You can run <code>SELECT 1;</code> in both engines.</li>
-    <li>You saved your PostgreSQL postgres-user password somewhere safe.</li>
-  </ul>
-</div>
+|- You do NOT write a loop over files</code></pre>
+<h2>Statement families</h2>
+<ul>
+<li><strong>DDL</strong> - create/alter structure (<code>CREATE TABLE</code>)</li>
+<li><strong>DML</strong> - change data (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>)</li>
+<li><strong>DQL</strong> - read data (<code>SELECT</code>)</li>
+<li><strong>TCL</strong> - transactions (<code>COMMIT</code>, <code>ROLLBACK</code>)</li>
+<li><strong>DCL</strong> - permissions (<code>GRANT</code>, <code>REVOKE</code>)</li>
+</ul>
+<h2>Hello, SQL</h2>
+<pre><code>SELECT 'Ashovix Labs' AS academy, 2026 AS year;</code></pre>
+<div class="callout"><strong>Portable rule:</strong> Learn ANSI SQL first. Dialects (Postgres, MySQL, SQL Server) differ at the edges.</div>
 `,
     quiz: {
-      q: "Which database needs a running server process before you connect?",
-      options: ["SQLite only", "PostgreSQL", "Both always", "Neither"],
+      q: "SQL is best described as:",
+      options: [
+        "A markup language like HTML",
+        "A declarative language for relational data",
+        "A CPU assembly language",
+        "A CSS framework",
+      ],
       answer: 1
     }
   });
 
   L("sql03", {
     module: "sql-m01",
-    title: "First Connection & Tools",
+    title: "03 Database vs Spreadsheet",
     level: "Beginner",
-    duration: "40 min",
+    duration: "20 min",
     objectives: [
-      "Open interactive sqlite3 and psql sessions",
-      "Run meta-commands and basic SQL",
-      "Understand DBeaver as a GUI option",
-      "Save and replay script files"
+      "Compare spreadsheets and databases",
+      "Know when to choose each",
     ],
     content: `
-<p>CLI tools build muscle memory. GUI tools (DBeaver) help exploration. Learn both.</p>
-
-<h2>Part A — sqlite3 interactive session</h2>
-<ol>
-  <li>Open terminal and start SQLite on your practice DB:
-    <pre><code>cd ~/sql-lab/sqlite    # or C:\\Users\\You\\sql-lab\\sqlite
-sqlite3 ashovix.db</code></pre>
-    <strong>Expected:</strong> prompt changes to <code>sqlite&gt;</code>.</li>
-  <li>Turn on readable output:
-    <pre><code>.headers on
-.mode column
-.width 20</code></pre></li>
-  <li>Run your first query:
-    <pre><code>SELECT datetime('now') AS now_utc, 'Ashovix Labs' AS course;</code></pre>
-    <strong>Expected:</strong> two columns with current timestamp and <code>Ashovix Labs</code>.</li>
-  <li>List meta-commands:
-    <pre><code>.help</code></pre></li>
-  <li>Exit cleanly:
-    <pre><code>.quit</code></pre></li>
-</ol>
-
-<h2>Part B — psql interactive session</h2>
-<ol>
-  <li>Connect (Linux often uses peer auth without password when using <code>sudo -u postgres psql</code>):
-    <pre><code>psql -U postgres -h localhost</code></pre>
-    <strong>Expected:</strong> prompt <code>postgres=#</code> (hash means superuser/owner).</li>
-  <li>Enable expanded display for wide results (optional):
-    <pre><code>\\x auto</code></pre></li>
-  <li>Run a query:
-    <pre><code>SELECT now() AS now_local, current_user AS whoami;</code></pre>
-    <strong>Expected:</strong> timestamp and <code>postgres</code> (or your user).</li>
-  <li>List databases:
-    <pre><code>\\l</code></pre></li>
-  <li>Quit:
-    <pre><code>\\q</code></pre></li>
-</ol>
-
-<h2>Part C — Run a script file (both engines)</h2>
-<ol>
-  <li>Create <code>scripts/hello.sql</code> with:
-    <pre><code>-- hello.sql
-SELECT 'Script execution works' AS status;</code></pre></li>
-  <li>SQLite:
-    <pre><code>sqlite3 ashovix.db &lt; scripts/hello.sql</code></pre>
-    <strong>Expected:</strong> <code>Script execution works</code>.</li>
-  <li>PostgreSQL:
-    <pre><code>psql -U postgres -h localhost -f scripts/hello.sql</code></pre>
-    <strong>Expected:</strong> same message in a formatted table.</li>
-</ol>
-
-<h2>Part D — DBeaver overview (GUI)</h2>
-<ol>
-  <li>Download <a href="https://dbeaver.io/download/" target="_blank" rel="noopener">DBeaver Community</a> and install.</li>
-  <li>Launch DBeaver → <strong>Database</strong> → <strong>New Database Connection</strong>.</li>
-  <li><strong>SQLite:</strong> choose SQLite → Browse to <code>ashovix.db</code> → Test Connection → Finish.</li>
-  <li><strong>PostgreSQL:</strong> choose PostgreSQL → Host <code>localhost</code>, Port <code>5432</code>, Database <code>postgres</code>, user/password → Test → Finish.</li>
-  <li>Open SQL Editor (<kbd>Ctrl</kbd>+<kbd>]</kbd>), paste <code>SELECT 42 AS answer;</code>, click Execute (orange play).</li>
-  <li><strong>Expected:</strong> result grid shows <code>42</code>.</li>
-</ol>
-
-<h2>Essential meta-commands cheat sheet</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>sqlite3</th><th>psql</th><th>Purpose</th></tr></thead>
-  <tbody>
-    <tr><td><code>.tables</code></td><td><code>\\dt</code></td><td>List tables</td></tr>
-    <tr><td><code>.schema name</code></td><td><code>\\d name</code></td><td>Show DDL</td></tr>
-    <tr><td><code>.read file.sql</code></td><td><code>\\i file.sql</code></td><td>Run script</td></tr>
-    <tr><td><code>.quit</code></td><td><code>\\q</code></td><td>Exit</td></tr>
-  </tbody>
-</table></div>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>You opened sqlite3 and psql interactively and ran <code>SELECT</code>.</li>
-    <li>You executed <code>hello.sql</code> from the shell in both engines.</li>
-    <li>You connected DBeaver to at least one database (optional but recommended).</li>
-    <li>You know <code>.quit</code> vs <code>\\q</code>.</li>
-  </ul>
-</div>
+<p>Spreadsheets (Excel/Sheets) are great for personal analysis. Databases are built for shared, large, concurrent, structured work.</p>
+<div class="table- wrap"><table>
+<thead><tr><th>Spreadsheets</th><th>Databases</th></tr></thead>
+<tbody>
+<tr><td>One user edits easily</td><td>Many users/apps at once</td></tr>
+<tr><td>Formulas in cells</td><td>SQL queries & constraints</td></tr>
+<tr><td>Weak typing / mixed cells</td><td>Strict data types</td></tr>
+<tr><td>Breaks at tens of thousands of rows</td><td>Handles millions+ with indexes</td></tr>
+<tr><td>Hard to enforce relationships</td><td>Foreign keys & joins</td></tr>
+</tbody></table></div>
+<h2>Example</h2>
+<pre><code>|- Spreadsheet: filter column City = Pune manually
+|- Database: reusable, auditable query
+SELECT * FROM customers WHERE city = 'Pune';</code></pre>
+<div class="callout"><strong>Rule of thumb:</strong> If multiple systems must share correct data, use a database.</div>
 `,
     quiz: {
-      q: "In psql, which command lists tables?",
-      options: [".tables", "\\dt", "\\l", ".schema"],
+      q: "Databases beat spreadsheets mainly when you need:",
+      options: [
+        "Fancier fonts",
+        "Multi- user integrity, scale, and relationships",
+        "More colors",
+        "Offline drawing tools",
+      ],
       answer: 1
     }
   });
 
-  /* ========== MODULE 2: DDL ========== */
-
   L("sql04", {
-    module: "sql-m02",
-    title: "CREATE DATABASE & SCHEMA",
+    module: "sql-m01",
+    title: "04 What is RDBMS?",
     level: "Beginner",
-    duration: "35 min",
+    duration: "25 min",
     objectives: [
-      "Create databases in PostgreSQL",
-      "Understand SQLite's single-file model",
-      "Create and use schemas",
-      "Set search_path / default schema"
+      "Define RDBMS",
+      "List popular engines",
+      "Explain relational model basics",
     ],
     content: `
-<p><strong>PostgreSQL</strong> separates <em>clusters</em> (server instance) into multiple <em>databases</em>. <strong>SQLite</strong> uses one database per file — there is no <code>CREATE DATABASE</code> inside SQLite.</p>
-
-<h2>PostgreSQL — create a learning database</h2>
-<ol>
-  <li>Connect as superuser:
-    <pre><code>psql -U postgres -h localhost</code></pre></li>
-  <li>Create database with UTF-8 encoding:
-    <pre><code>CREATE DATABASE ashovix
-  ENCODING 'UTF8'
-  LC_COLLATE 'en_US.UTF-8'
-  LC_CTYPE 'en_US.UTF-8'
-  TEMPLATE template0;</code></pre>
-    <strong>Expected:</strong> <code>CREATE DATABASE</code>.</li>
-  <li>Connect to the new database:
-    <pre><code>\\c ashovix</code></pre>
-    <strong>Expected:</strong> prompt becomes <code>ashovix=#</code>.</li>
-  <li>Create a schema (namespace):
-    <pre><code>CREATE SCHEMA shop AUTHORIZATION CURRENT_USER;</code></pre>
-    <strong>Expected:</strong> <code>CREATE SCHEMA</code>.</li>
-  <li>List schemas:
-    <pre><code>\\dn</code></pre>
-    <strong>Expected:</strong> <code>shop</code> and <code>public</code> appear.</li>
-  <li>Set default schema for this session:
-    <pre><code>SET search_path TO shop, public;</code></pre></li>
-  <li>Verify current path:
-    <pre><code>SHOW search_path;</code></pre>
-    <strong>Expected:</strong> <code>shop, public</code>.</li>
-</ol>
-
-<h2>SQLite — new database file</h2>
-<ol>
-  <li>Create a fresh file (creates DB if missing):
-    <pre><code>sqlite3 ~/sql-lab/sqlite/shop.db</code></pre></li>
-  <li>SQLite has no <code>CREATE SCHEMA</code> — use table name prefixes or attach files:
-    <pre><code>ATTACH DATABASE 'archive.db' AS archive;
-SELECT name FROM pragma_database_list();</code></pre>
-    <strong>Expected:</strong> <code>main</code> and <code>archive</code> databases listed.</li>
-  <li>Detach when done:
-    <pre><code>DETACH DATABASE archive;</code></pre></li>
-</ol>
-
-<h2>Drop safely (never on production without backup)</h2>
-<ol>
-  <li>PostgreSQL — drop schema only if empty, or use CASCADE consciously:
-    <pre><code>DROP SCHEMA IF EXISTS shop CASCADE;</code></pre></li>
-  <li>PostgreSQL — drop database (disconnect all sessions first):
-    <pre><code>-- from postgres database, not inside ashovix
-\\c postgres
-DROP DATABASE IF EXISTS ashovix;</code></pre></li>
-  <li>SQLite — delete the <code>.db</code> file from the filesystem when no connections are open.</li>
-</ol>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>PostgreSQL: <code>\\l</code> shows <code>ashovix</code> database.</li>
-    <li>PostgreSQL: <code>\\dn</code> shows <code>shop</code> schema.</li>
-    <li><code>SHOW search_path;</code> returns your intended order.</li>
-    <li>SQLite: you can attach and detach a second file.</li>
-  </ul>
-</div>
+<p>An <strong>RDBMS</strong> (Relational Database Management System) stores data in <strong>relations</strong> (tables) and manages access, recovery, concurrency, and security.</p>
+<h2>Popular engines</h2>
+<ul>
+<li><strong>PostgreSQL</strong> - open source, advanced SQL</li>
+<li><strong>MySQL / MariaDB</strong> - common in web apps</li>
+<li><strong>SQLite</strong> - embedded file database</li>
+<li><strong>SQL Server, Oracle, IBM Db2</strong> - enterprise</li>
+</ul>
+<h2>Relational idea</h2>
+<pre><code>customers (id, name)
+orders    (id, customer_id, total)
+|- customer_id relates orders - customers</code></pre>
+<pre><code>SELECT c.name, o.total
+FROM customers c
+JOIN orders o ON o.customer_id = c.id;</code></pre>
+<div class="callout"><strong>Verify:</strong> You can name three RDBMS products and explain table + relationship.</div>
 `,
     quiz: {
-      q: "In PostgreSQL, what does SET search_path control?",
-      options: ["Disk quota", "Which schemas are searched for unqualified object names", "Network port", "Backup schedule"],
+      q: "RDBMS stands for:",
+      options: [
+        "Random Data Binary Memory Store",
+        "Relational Database Management System",
+        "Remote Desktop Backup Main Server",
+        "Rapid Document Blob Media System",
+      ],
       answer: 1
     }
   });
 
   L("sql05", {
     module: "sql-m02",
-    title: "CREATE TABLE — Types & Constraints",
+    title: "05 Install PostgreSQL",
     level: "Beginner",
-    duration: "55 min",
+    duration: "40 min",
     objectives: [
-      "Choose appropriate column data types",
-      "Apply PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK, NOT NULL",
-      "Use DEFAULT and auto-generated keys",
-      "Create a realistic shop schema"
+      "Install PostgreSQL on Windows/Linux",
+      "Connect with psql",
+      "Run SELECT version()",
     ],
     content: `
-<p>Tables are contracts. Types and constraints protect data quality for every client — apps, reports, and ad-hoc SQL.</p>
-
-<h2>Common data types</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>Category</th><th>PostgreSQL</th><th>SQLite</th><th>Use when</th></tr></thead>
-  <tbody>
-    <tr><td>Integer</td><td><code>INTEGER</code>, <code>BIGINT</code>, <code>SMALLINT</code></td><td><code>INTEGER</code></td><td>IDs, counts (no fractions)</td></tr>
-    <tr><td>Decimal money</td><td><code>NUMERIC(p,s)</code></td><td><code>NUMERIC</code></td><td>Money — never use FLOAT for currency</td></tr>
-    <tr><td>Float</td><td><code>REAL</code>, <code>DOUBLE PRECISION</code></td><td><code>REAL</code></td><td>Science metrics where exact cents don't matter</td></tr>
-    <tr><td>Text</td><td><code>VARCHAR(n)</code>, <code>TEXT</code></td><td><code>TEXT</code></td><td>Names, descriptions</td></tr>
-    <tr><td>Fixed char</td><td><code>CHAR(n)</code></td><td><code>TEXT</code></td><td>Fixed codes (e.g. country ISO)</td></tr>
-    <tr><td>Boolean</td><td><code>BOOLEAN</code></td><td><code>INTEGER 0/1</code></td><td>Flags</td></tr>
-    <tr><td>Date/time</td><td><code>DATE</code>, <code>TIME</code>, <code>TIMESTAMP</code>, <code>TIMESTAMPTZ</code></td><td><code>TEXT/INTEGER</code> (affinity)</td><td>Events, scheduling</td></tr>
-    <tr><td>Binary</td><td><code>BYTEA</code></td><td><code>BLOB</code></td><td>Files, hashes</td></tr>
-    <tr><td>JSON</td><td><code>JSON</code>, <code>JSONB</code></td><td><code>TEXT</code> + JSON functions</td><td>Semi-structured attributes</td></tr>
-    <tr><td>UUID</td><td><code>UUID</code></td><td><code>TEXT</code></td><td>Distributed IDs</td></tr>
-  </tbody>
-</table></div>
-
-<h2>Step-by-step — build shop.customers and shop.products (PostgreSQL)</h2>
+<p>PostgreSQL is a powerful open-source RDBMS - excellent for learning professional SQL.</p>
+<h2>Windows</h2>
 <ol>
-  <li>Connect and set schema:
-    <pre><code>psql -U postgres -d ashovix
-SET search_path TO shop, public;</code></pre></li>
-  <li>Create customers table:
-    <pre><code>CREATE TABLE customers (
-  customer_id   INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  email         VARCHAR(255) NOT NULL UNIQUE,
-  full_name     VARCHAR(100) NOT NULL,
-  country_code  CHAR(2) NOT NULL DEFAULT 'US',
-  is_active     BOOLEAN NOT NULL DEFAULT TRUE,
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
-  profile       JSONB,
-  CONSTRAINT ck_country_len CHECK (char_length(country_code) = 2)
-);</code></pre>
-    <strong>Expected:</strong> <code>CREATE TABLE</code>.</li>
-  <li>Create products:
-    <pre><code>CREATE TABLE products (
-  product_id    INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  sku           VARCHAR(32) NOT NULL UNIQUE,
-  name          VARCHAR(200) NOT NULL,
-  unit_price    NUMERIC(10,2) NOT NULL CHECK (unit_price >= 0),
-  stock_qty     INTEGER NOT NULL DEFAULT 0 CHECK (stock_qty >= 0)
-);</code></pre></li>
-  <li>Create orders with foreign keys:
-    <pre><code>CREATE TABLE orders (
-  order_id      BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  customer_id   INTEGER NOT NULL REFERENCES customers(customer_id),
-  order_date    DATE NOT NULL DEFAULT CURRENT_DATE,
-  status        VARCHAR(20) NOT NULL DEFAULT 'NEW'
-    CHECK (status IN ('NEW','PAID','SHIPPED','CANCELLED')),
-  total_amount  NUMERIC(12,2) NOT NULL DEFAULT 0
-);</code></pre></li>
-  <li>Inspect structure:
-    <pre><code>\\d customers
-\\d orders</code></pre>
-    <strong>Expected:</strong> constraints and indexes listed.</li>
+<li>Download the installer from <code>postgresql.org</code>.</li>
+<li>Set a strong superuser (<code>postgres</code>) password.</li>
+<li>Keep default port <code>5432</code> unless you know you need another.</li>
+<li>Open <strong>SQL Shell (psql)</strong> or pgAdmin.</li>
 </ol>
-
-<h2>SQLite equivalent (note INTEGER PRIMARY KEY autoincrement)</h2>
-<ol>
-  <li>
-    <pre><code>sqlite3 shop.db
-CREATE TABLE customers (
-  customer_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  email TEXT NOT NULL UNIQUE,
-  full_name TEXT NOT NULL,
-  country_code TEXT NOT NULL DEFAULT 'US' CHECK(length(country_code)=2),
-  is_active INTEGER NOT NULL DEFAULT 1 CHECK(is_active IN (0,1)),
-  created_at TEXT NOT NULL DEFAULT (datetime('now'))
-);</code></pre></li>
-  <li>Verify:
-    <pre><code>.schema customers</code></pre></li>
-</ol>
-
-<h2>Constraint reference</h2>
-<ul>
-  <li><strong>PRIMARY KEY</strong> — unique + not null; one per table.</li>
-  <li><strong>FOREIGN KEY</strong> — child column must exist in parent (or NULL if allowed).</li>
-  <li><strong>UNIQUE</strong> — no duplicate values (NULLs usually allowed once per SQL standard).</li>
-  <li><strong>NOT NULL</strong> — column must have a value on insert/update.</li>
-  <li><strong>CHECK</strong> — boolean expression per row.</li>
-  <li><strong>DEFAULT</strong> — value when insert omits column.</li>
-</ul>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li><code>\\d customers</code> (psql) shows PK, UNIQUE on email, CHECK on country.</li>
-    <li>Insert with invalid country length fails with constraint error.</li>
-    <li>Insert order with non-existent <code>customer_id</code> fails FK check.</li>
-    <li>You can explain why NUMERIC beats FLOAT for prices.</li>
-  </ul>
-</div>
+<h2>Linux (Debian/Ubuntu)</h2>
+<pre><code>sudo apt update
+sudo apt install postgresql postgresql- contrib
+sudo systemctl status postgresql
+sudo - u postgres psql</code></pre>
+<h2>Verify</h2>
+<pre><code>SELECT version();
+\conninfo</code></pre>
+<div class="callout"><strong>Lab:</strong> Install Postgres, connect, run <code>SELECT version();</code>, create a note with your port and user.</div>
 `,
     quiz: {
-      q: "Which type is best for storing exact currency amounts?",
-      options: ["FLOAT", "NUMERIC(10,2)", "TEXT", "BYTEA"],
+      q: "Default PostgreSQL port is usually:",
+      options: [
+        "3306",
+        "5432",
+        "1521",
+        "27017",
+      ],
       answer: 1
     }
   });
 
   L("sql06", {
     module: "sql-m02",
-    title: "ALTER & DROP Safely",
+    title: "06 Install SQLite",
     level: "Beginner",
-    duration: "40 min",
+    duration: "30 min",
     objectives: [
-      "Add, rename, and drop columns safely",
-      "Add constraints online where possible",
-      "Plan rollback before destructive DDL",
-      "Use IF EXISTS to avoid errors"
+      "Install sqlite3 CLI",
+      "Create a file database",
+      "Run a first query",
     ],
     content: `
-<p>DDL mistakes are expensive. Always work on a copy first, capture <code>\\d+ table</code> before/after, and prefer additive changes in production.</p>
-
-<h2>Safe ALTER workflow</h2>
+<p><strong>SQLite</strong> is a serverless database in a single file - perfect for labs and local apps.</p>
+<h2>Windows</h2>
 <ol>
-  <li><strong>Backup or snapshot</strong> the database (or clone to DEV).</li>
-  <li><strong>Document current DDL:</strong>
-    <pre><code>\\d+ shop.products   -- PostgreSQL
-.schema products     -- SQLite</code></pre></li>
-  <li><strong>Apply change in a transaction</strong> when the engine allows (PostgreSQL DDL is transactional).</li>
-  <li><strong>Verify</strong> with test inserts/selects.</li>
-  <li><strong>Deploy</strong> via migration tool (Flyway, Liquibase, etc.) in real teams.</li>
+<li>Download precompiled binaries from sqlite.org.</li>
+<li>Add the folder to PATH.</li>
+<li>Open PowerShell: <code>sqlite3 |- version</code></li>
 </ol>
-
-<h2>PostgreSQL — common ALTER examples</h2>
-<ol>
-  <li>Add nullable column (online-friendly):
-    <pre><code>ALTER TABLE shop.products
-  ADD COLUMN description TEXT;</code></pre>
-    <strong>Expected:</strong> <code>ALTER TABLE</code>.</li>
-  <li>Add column with default (PostgreSQL 11+ often avoids full rewrite):
-    <pre><code>ALTER TABLE shop.products
-  ADD COLUMN weight_kg NUMERIC(8,3) NOT NULL DEFAULT 0;</code></pre></li>
-  <li>Rename column:
-    <pre><code>ALTER TABLE shop.products RENAME COLUMN name TO product_name;</code></pre></li>
-  <li>Add CHECK constraint:
-    <pre><code>ALTER TABLE shop.products
-  ADD CONSTRAINT ck_weight_nonneg CHECK (weight_kg >= 0);</code></pre></li>
-  <li>Drop column (destructive — confirm first):
-    <pre><code>ALTER TABLE shop.products DROP COLUMN IF EXISTS weight_kg;</code></pre></li>
-  <li>Drop table safely:
-    <pre><code>DROP TABLE IF EXISTS shop.old_staging CASCADE;</code></pre></li>
-</ol>
-
-<h2>SQLite limitations (know before you ALTER)</h2>
-<ol>
-  <li>SQLite supports limited <code>ALTER TABLE</code>: add column, rename table, rename column (3.25+).</li>
-  <li>Dropping columns or changing types requires table rebuild:
-    <ol>
-      <li>Create new table with desired shape.</li>
-      <li><code>INSERT INTO new SELECT ... FROM old;</code></li>
-      <li>Drop old; rename new.</li>
-    </ol>
-  </li>
-</ol>
-
-<h2>Rollback pattern (PostgreSQL)</h2>
-<ol>
-  <li>Start transaction:
-    <pre><code>BEGIN;
-ALTER TABLE shop.products ADD COLUMN color VARCHAR(30);
-SELECT column_name FROM information_schema.columns
-  WHERE table_schema='shop' AND table_name='products' AND column_name='color';
-ROLLBACK;  -- practice only — undoes the ALTER</code></pre>
-    <strong>Expected:</strong> column absent after rollback.</li>
-</ol>
-
-<div class="callout warning"><strong>Production rule:</strong> Never <code>DROP TABLE</code> or <code>DROP COLUMN</code> without backup and stakeholder sign-off.</div>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>You added and renamed a column successfully.</li>
-    <li>You used <code>IF EXISTS</code> on a drop statement.</li>
-    <li>You demonstrated transactional DDL rollback in PostgreSQL.</li>
-    <li>You know SQLite's ALTER limitations.</li>
-  </ul>
-</div>
+<h2>Linux</h2>
+<pre><code>sudo apt install sqlite3
+sqlite3 |- version</code></pre>
+<h2>Create & query</h2>
+<pre><code>sqlite3 ashovix.db
+SQLite version ...
+sqlite> CREATE TABLE hello(id INTEGER PRIMARY KEY, msg TEXT);
+sqlite> INSERT INTO hello(msg) VALUES ('SQL Mastery');
+sqlite> SELECT * FROM hello;
+sqlite> .quit</code></pre>
+<div class="callout"><strong>Tip:</strong> The database <em>is</em> the file <code>ashovix.db</code>. Back it up by copying the file.</div>
 `,
     quiz: {
-      q: "In PostgreSQL, DDL inside BEGIN...ROLLBACK can:",
-      options: ["Never be rolled back", "Be rolled back like DML in the same transaction", "Only run on Sundays", "Require restarting the server"],
+      q: "SQLite stores a database primarily as:",
+      options: [
+        "A remote cluster only",
+        "A single file on disk",
+        "Only RAM with no persistence",
+        "A spreadsheet workbook",
+      ],
       answer: 1
     }
   });
 
-  /* ========== MODULE 3: DML ========== */
-
   L("sql07", {
-    module: "sql-m03",
-    title: "INSERT — All Forms",
+    module: "sql-m02",
+    title: "07 Install MySQL",
     level: "Beginner",
-    duration: "45 min",
+    duration: "35 min",
     objectives: [
-      "Insert single and multiple rows",
-      "Insert from SELECT",
-      "Use DEFAULT and omitting columns",
-      "Handle identity/serial columns"
+      "Install MySQL Server",
+      "Connect with mysql client",
+      "Create a practice database",
     ],
     content: `
-<p>Populate tables with disciplined INSERT patterns. Always know which columns are NOT NULL and which have defaults.</p>
-
-<h2>Prerequisites — ensure shop tables exist (sql05)</h2>
+<p>MySQL is widely used for web applications. MariaDB is a compatible alternative.</p>
+<h2>Windows</h2>
 <ol>
-  <li>Connect: <code>psql -U postgres -d ashovix</code> and <code>SET search_path TO shop, public;</code></li>
+<li>Install MySQL Community Server.</li>
+<li>Set root password; note port <code>3306</code>.</li>
+<li>Open MySQL Command Line Client.</li>
 </ol>
-
-<h2>Form 1 — INSERT one row (explicit columns)</h2>
-<ol>
-  <li>
-    <pre><code>INSERT INTO customers (email, full_name, country_code)
-VALUES ('ada@example.com', 'Ada Lovelace', 'GB');</code></pre>
-    <strong>Expected:</strong> <code>INSERT 0 1</code>.</li>
-  <li>Confirm:
-    <pre><code>SELECT customer_id, email, created_at FROM customers WHERE email='ada@example.com';</code></pre>
-    <strong>Expected:</strong> auto-generated <code>customer_id</code> and timestamp.</li>
-</ol>
-
-<h2>Form 2 — INSERT multiple rows</h2>
-<ol>
-  <li>
-    <pre><code>INSERT INTO products (sku, name, unit_price, stock_qty) VALUES
-  ('SKU-001', 'Mechanical Keyboard', 129.99, 50),
-  ('SKU-002', 'USB-C Hub', 49.50, 120),
-  ('SKU-003', 'Monitor Arm', 89.00, 30);</code></pre>
-    <strong>Expected:</strong> <code>INSERT 0 3</code>.</li>
-</ol>
-
-<h2>Form 3 — INSERT with DEFAULT keyword</h2>
-<ol>
-  <li>
-    <pre><code>INSERT INTO customers (email, full_name, country_code, is_active)
-VALUES ('default@example.com', 'Default User', DEFAULT, DEFAULT);</code></pre>
-    <strong>Expected:</strong> <code>country_code='US'</code>, <code>is_active=true</code>.</li>
-</ol>
-
-<h2>Form 4 — INSERT ... SELECT (copy/transform)</h2>
-<ol>
-  <li>Create archive table:
-    <pre><code>CREATE TABLE products_archive (LIKE products INCLUDING ALL);</code></pre></li>
-  <li>Copy low-stock items:
-    <pre><code>INSERT INTO products_archive (product_id, sku, name, unit_price, stock_qty)
-SELECT product_id, sku, name, unit_price, stock_qty
-FROM products
-WHERE stock_qty &lt; 40;</code></pre>
-    <strong>Expected:</strong> rows copied matching filter.</li>
-  <li>Verify count:
-    <pre><code>SELECT COUNT(*) FROM products_archive;</code></pre></li>
-</ol>
-
-<h2>Form 5 — RETURNING clause (PostgreSQL)</h2>
-<ol>
-  <li>
-    <pre><code>INSERT INTO orders (customer_id, status, total_amount)
-VALUES (1, 'NEW', 0)
-RETURNING order_id, order_date;</code></pre>
-    <strong>Expected:</strong> new <code>order_id</code> printed immediately — useful in apps.</li>
-</ol>
-
-<h2>SQLite notes</h2>
-<ul>
-  <li><code>RETURNING</code> supported in SQLite 3.35+.</li>
-  <li>Omit <code>customer_id</code> for AUTOINCREMENT to assign next integer.</li>
-</ul>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li><code>SELECT COUNT(*) FROM customers;</code> ≥ 2.</li>
-    <li><code>SELECT COUNT(*) FROM products;</code> = 3.</li>
-    <li>INSERT...SELECT populated <code>products_archive</code>.</li>
-    <li>RETURNING showed a new <code>order_id</code>.</li>
-  </ul>
-</div>
+<h2>Linux</h2>
+<pre><code>sudo apt install mysql- server
+sudo mysql
+CREATE DATABASE ashovix;
+SHOW DATABASES;</code></pre>
+<h2>Verify</h2>
+<pre><code>SELECT VERSION();
+CREATE DATABASE practice;
+USE practice;</code></pre>
+<div class="callout"><strong>Lab:</strong> Connect, create database <code>ashovix</code>, run <code>SELECT VERSION();</code>.</div>
 `,
     quiz: {
-      q: "INSERT ... SELECT is used to:",
-      options: ["Delete rows", "Copy or transform rows from a query into a table", "Create indexes", "Grant permissions"],
+      q: "MySQL default port is commonly:",
+      options: [
+        "5432",
+        "3306",
+        "6379",
+        "9200",
+      ],
       answer: 1
     }
   });
 
   L("sql08", {
-    module: "sql-m03",
-    title: "UPDATE & DELETE with WHERE Safety",
+    module: "sql-m02",
+    title: "08 SQL Tools",
     level: "Beginner",
-    duration: "40 min",
+    duration: "30 min",
     objectives: [
-      "Update rows with precise predicates",
-      "Delete safely with dry-run SELECT",
-      "Avoid accidental full-table changes",
-      "Use transactions for multi-step changes"
+      "Use CLI clients",
+      "Try a GUI tool",
+      "Run a script file",
     ],
     content: `
-<p>The most common production incident: <code>UPDATE</code> or <code>DELETE</code> without a <code>WHERE</code> clause. Treat every change as a two-step: SELECT first, then DML.</p>
-
-<h2>Golden safety rule</h2>
-<ol>
-  <li>Write the <code>WHERE</code> as a <code>SELECT</code> first.</li>
-  <li>Count rows: <code>SELECT COUNT(*) ...</code></li>
-  <li>Wrap in <code>BEGIN;</code> … verify … <code>COMMIT;</code> or <code>ROLLBACK;</code></li>
-</ol>
-
-<h2>UPDATE step-by-step</h2>
-<ol>
-  <li>Dry run — find product to repriced:
-    <pre><code>SELECT product_id, sku, unit_price FROM products WHERE sku = 'SKU-002';</code></pre>
-    <strong>Expected:</strong> exactly 1 row.</li>
-  <li>Update inside transaction:
-    <pre><code>BEGIN;
-UPDATE products SET unit_price = 44.99 WHERE sku = 'SKU-002';
-SELECT product_id, unit_price FROM products WHERE sku = 'SKU-002';
-COMMIT;</code></pre>
-    <strong>Expected:</strong> price is <code>44.99</code>.</li>
-  <li>Update with expression:
-    <pre><code>UPDATE products SET stock_qty = stock_qty - 5 WHERE sku = 'SKU-001';</code></pre></li>
-  <li>Update with subquery (customers with no orders — mark inactive):
-    <pre><code>UPDATE customers c
-SET is_active = FALSE
-WHERE NOT EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id);</code></pre></li>
-</ol>
-
-<h2>DELETE step-by-step</h2>
-<ol>
-  <li>Dry run:
-    <pre><code>SELECT * FROM products_archive;</code></pre></li>
-  <li>Delete with WHERE:
-    <pre><code>DELETE FROM products_archive WHERE sku = 'SKU-003';</code></pre>
-    <strong>Expected:</strong> <code>DELETE 1</code> (if row existed).</li>
-  <li>Prevent orphan deletes — FK on orders protects customers:
-    <pre><code>DELETE FROM customers WHERE customer_id = 1;</code></pre>
-    <strong>Expected:</strong> error if orders reference customer (FK violation) — this is good.</li>
-</ol>
-
-<h2>TRUNCATE vs DELETE</h2>
+<p>You will use both CLIs and GUIs professionally.</p>
+<h2>CLI tools</h2>
 <ul>
-  <li><code>DELETE</code> — row-by-row, can use WHERE, fires triggers, logged per row.</li>
-  <li><code>TRUNCATE</code> — fast empty table (PostgreSQL), resets identities optionally; cannot filter rows.</li>
+<li><code>psql</code> - PostgreSQL</li>
+<li><code>sqlite3</code> - SQLite</li>
+<li><code>mysql</code> - MySQL</li>
 </ul>
+<h2>GUI tools</h2>
+<ul>
+<li>DBeaver (multi- engine)</li>
+<li>pgAdmin (PostgreSQL)</li>
+<li>MySQL Workbench</li>
+<li>VS Code SQL extensions</li>
+</ul>
+<h2>Run a script file</h2>
+<pre><code>|- hello.sql
+SELECT 1 AS ok, 'Ashovix' AS lab;
 
-<div class="callout warning"><strong>Never do this:</strong> <code>DELETE FROM orders;</code> without WHERE in production. Always require a predicate.</div>
+|- PostgreSQL
+psql - U postgres - d ashovix - f hello.sql
 
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>You ran SELECT before every UPDATE/DELETE.</li>
-    <li>SKU-002 price changed inside a transaction.</li>
-    <li>FK blocked deleting a referenced customer.</li>
-    <li>You can explain TRUNCATE vs DELETE.</li>
-  </ul>
-</div>
+|- SQLite
+sqlite3 ashovix.db &lt; hello.sql</code></pre>
+<div class="callout"><strong>Practice:</strong> Create <code>hello.sql</code>, execute it from CLI, confirm output.</div>
 `,
     quiz: {
-      q: "Before running DELETE in production, you should first:",
-      options: ["Drop the table", "Run an equivalent SELECT with the same WHERE", "Restart the server", "Disable all constraints"],
+      q: "Which tool talks to many database engines from one GUI?",
+      options: [
+        "Only Notepad",
+        "DBeaver",
+        "CSS Grid",
+        "npm",
+      ],
       answer: 1
     }
   });
 
   L("sql09", {
     module: "sql-m03",
-    title: "MERGE & UPSERT Patterns",
-    level: "Intermediate",
-    duration: "45 min",
+    title: "09 Create First Database",
+    level: "Beginner",
+    duration: "25 min",
     objectives: [
-      "Upsert with PostgreSQL ON CONFLICT",
-      "Use MERGE (SQL:2003, PostgreSQL 15+)",
-      "Implement SQLite INSERT OR REPLACE / UPSERT",
-      "Sync staging tables into production"
+      "Create a database",
+      "Connect to it",
+      "List databases",
     ],
     content: `
-<p><strong>Upsert</strong> = update if exists, insert if not. Essential for idempotent ETL and API sync.</p>
-
-<h2>PostgreSQL — ON CONFLICT (most common)</h2>
-<ol>
-  <li>Ensure UNIQUE on <code>sku</code> (already from sql05).</li>
-  <li>Upsert one product:
-    <pre><code>INSERT INTO products (sku, name, unit_price, stock_qty)
-VALUES ('SKU-001', 'Mech Keyboard v2', 139.99, 60)
-ON CONFLICT (sku) DO UPDATE
-  SET name = EXCLUDED.name,
-      unit_price = EXCLUDED.unit_price,
-      stock_qty = products.stock_qty + EXCLUDED.stock_qty;</code></pre>
-    <strong>Expected:</strong> existing SKU-001 row updated, stock increased.</li>
-  <li>Verify:
-    <pre><code>SELECT sku, name, unit_price, stock_qty FROM products WHERE sku='SKU-001';</code></pre></li>
-  <li>Do nothing on conflict:
-    <pre><code>INSERT INTO products (sku, name, unit_price, stock_qty)
-VALUES ('SKU-002', 'Ignored', 1, 1)
-ON CONFLICT (sku) DO NOTHING;</code></pre>
-    <strong>Expected:</strong> SKU-002 unchanged.</li>
-</ol>
-
-<h2>PostgreSQL 15+ — MERGE</h2>
-<ol>
-  <li>Create staging table:
-    <pre><code>CREATE TABLE products_staging (
-  sku VARCHAR(32) PRIMARY KEY,
-  name VARCHAR(200),
-  unit_price NUMERIC(10,2),
-  stock_qty INTEGER
-);
-INSERT INTO products_staging VALUES
-  ('SKU-004', 'Webcam HD', 59.99, 80),
-  ('SKU-001', 'Keyboard Pro', 149.99, 10);</code></pre></li>
-  <li>MERGE into target:
-    <pre><code>MERGE INTO products p
-USING products_staging s ON p.sku = s.sku
-WHEN MATCHED THEN UPDATE SET
-  name = s.name, unit_price = s.unit_price, stock_qty = p.stock_qty + s.stock_qty
-WHEN NOT MATCHED THEN INSERT (sku, name, unit_price, stock_qty)
-  VALUES (s.sku, s.name, s.unit_price, s.stock_qty);</code></pre>
-    <strong>Expected:</strong> SKU-001 updated, SKU-004 inserted.</li>
-</ol>
-
-<h2>SQLite — UPSERT</h2>
-<ol>
-  <li>
-    <pre><code>INSERT INTO products (sku, name, unit_price, stock_qty)
-VALUES ('SKU-001', 'SQLite Keyboard', 99.00, 5)
-ON CONFLICT(sku) DO UPDATE SET
-  unit_price = excluded.unit_price,
-  stock_qty = stock_qty + excluded.stock_qty;</code></pre></li>
-</ol>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>ON CONFLICT updated SKU-001 without duplicate key error.</li>
-    <li>MERGE (or documented alternative) synced staging rows.</li>
-    <li>New SKU-004 exists in products.</li>
-    <li>You know when to prefer MERGE vs ON CONFLICT.</li>
-  </ul>
-</div>
+<h2>PostgreSQL</h2>
+<pre><code>CREATE DATABASE ashovix;
+\c ashovix
+SELECT current_database();</code></pre>
+<h2>MySQL</h2>
+<pre><code>CREATE DATABASE ashovix;
+USE ashovix;
+SELECT DATABASE();</code></pre>
+<h2>SQLite</h2>
+<pre><code>sqlite3 ashovix.db
+|- file created on open; no CREATE DATABASE needed</code></pre>
+<div class="callout"><strong>Lab:</strong> Create <code>ashovix</code> (or a file DB) and confirm you are connected.</div>
 `,
     quiz: {
-      q: "PostgreSQL ON CONFLICT requires:",
-      options: ["A random GUID", "A unique or primary key constraint on the conflict target", "No indexes", "Windows only"],
-      answer: 1
+      q: "In PostgreSQL, switch database in psql with:",
+      options: [
+        "\\c dbname",
+        "USE ONLY",
+        "OPEN DATABASE",
+        "FLIP TO",
+      ],
+      answer: 0
     }
   });
 
-  /* ========== MODULE 4: QUERIES ========== */
-
   L("sql10", {
-    module: "sql-m04",
-    title: "SELECT — Projection & Aliases",
+    module: "sql-m03",
+    title: "10 Tables",
     level: "Beginner",
-    duration: "35 min",
+    duration: "30 min",
     objectives: [
-      "Project specific columns vs SELECT *",
-      "Use column and table aliases",
-      "Compute expressions in SELECT",
-      "Understand DISTINCT"
+      "Create a table",
+      "Describe structure",
+      "Drop safely",
     ],
     content: `
-<h2>Step 1 — Basic projection</h2>
-<ol>
-  <li>List product names and prices only:
-    <pre><code>SELECT name, unit_price FROM shop.products;</code></pre>
-    <strong>Expected:</strong> two columns, all product rows.</li>
-  <li>Avoid <code>SELECT *</code> in application hot paths — it breaks when columns are added and prevents covering indexes.</li>
-</ol>
+<p>A <strong>table</strong> is a named set of columns. Every row follows that structure.</p>
+<pre><code>CREATE TABLE customers (
+  id   INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  city TEXT
+);
 
-<h2>Step 2 — Aliases (AS is optional)</h2>
-<ol>
-  <li>Column alias:
-    <pre><code>SELECT name AS product_name, unit_price AS price_usd FROM shop.products;</code></pre></li>
-  <li>Expression alias:
-    <pre><code>SELECT sku, unit_price, unit_price * 0.9 AS sale_price FROM shop.products;</code></pre>
-    <strong>Expected:</strong> sale_price = 90% of unit_price.</li>
-  <li>Table alias for brevity:
-    <pre><code>SELECT p.sku, p.name FROM shop.products AS p;</code></pre></li>
-</ol>
-
-<h2>Step 3 — DISTINCT</h2>
-<ol>
-  <li>Unique countries among customers:
-    <pre><code>SELECT DISTINCT country_code FROM shop.customers ORDER BY 1;</code></pre></li>
-  <li>DISTINCT ON (PostgreSQL) — first row per group:
-    <pre><code>SELECT DISTINCT ON (customer_id) customer_id, order_id, order_date
-FROM shop.orders ORDER BY customer_id, order_date DESC;</code></pre></li>
-</ol>
-
-<h2>Step 4 — Literal values and functions</h2>
-<ol>
-  <li>
-    <pre><code>SELECT 'Ashovix Labs' AS source, CURRENT_DATE AS report_date, 42 AS magic_number;</code></pre>
-    <strong>Expected:</strong> one row, three computed columns.</li>
-</ol>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>You projected only needed columns.</li>
-    <li>Expression alias <code>sale_price</code> calculated correctly.</li>
-    <li>DISTINCT returned unique country codes.</li>
-  </ul>
-</div>
+INSERT INTO customers (id, name, city) VALUES (1, 'Asha', 'Pune');
+SELECT * FROM customers;</code></pre>
+<h2>Inspect</h2>
+<pre><code>|- PostgreSQL
+\d customers
+|- SQLite
+.schema customers</code></pre>
+<pre><code>DROP TABLE IF EXISTS customers;</code></pre>
 `,
     quiz: {
-      q: "Why avoid SELECT * in production application queries?",
-      options: ["It is illegal SQL", "It returns unexpected columns when schema evolves and can hurt performance", "It only works in SQLite", "It disables JOINs"],
+      q: "A table is best described as:",
+      options: [
+        "A random JSON blob",
+        "A structured set of columns and rows",
+        "A CSS class",
+        "A Linux process",
+      ],
       answer: 1
     }
   });
 
   L("sql11", {
-    module: "sql-m04",
-    title: "WHERE — Operators & NULL",
+    module: "sql-m03",
+    title: "11 Rows",
     level: "Beginner",
-    duration: "40 min",
+    duration: "20 min",
     objectives: [
-      "Filter with comparison and logical operators",
-      "Use IN, BETWEEN, LIKE, ILIKE",
-      "Handle NULL correctly with IS NULL",
-      "Combine predicates with AND/OR precedence"
+      "Insert rows",
+      "Update a row",
+      "Delete a row",
     ],
     content: `
-<h2>Comparison operators</h2>
-<ol>
-  <li>Equality and inequality:
-    <pre><code>SELECT sku, unit_price FROM shop.products WHERE unit_price = 49.50;
-SELECT sku FROM shop.products WHERE unit_price &lt;&gt; 49.50;</code></pre></li>
-  <li>Range:
-    <pre><code>SELECT sku, unit_price FROM shop.products WHERE unit_price BETWEEN 50 AND 130;</code></pre></li>
-  <li>IN list:
-    <pre><code>SELECT * FROM shop.products WHERE sku IN ('SKU-001','SKU-003');</code></pre></li>
-</ol>
+<p>A <strong>row</strong> (record/tuple) is one instance - one customer, one order, one product.</p>
+<pre><code>INSERT INTO customers (id, name, city) VALUES
+  (1, 'Asha', 'Pune'),
+  (2, 'Dev', 'Chennai');
 
-<h2>Pattern matching</h2>
-<ol>
-  <li>LIKE (case-sensitive in PostgreSQL for non-C locales):
-    <pre><code>SELECT name FROM shop.products WHERE name LIKE '%Keyboard%';</code></pre></li>
-  <li>ILIKE (PostgreSQL case-insensitive):
-    <pre><code>SELECT name FROM shop.products WHERE name ILIKE '%keyboard%';</code></pre></li>
-  <li>Escape wildcards:
-    <pre><code>SELECT sku FROM shop.products WHERE sku LIKE 'SKU-\_%' ESCAPE '\\';</code></pre></li>
-</ol>
-
-<h2>NULL — the silent killer</h2>
-<ol>
-  <li>NULL means unknown — never use <code>= NULL</code>:
-    <pre><code>-- WRONG: returns no rows
-SELECT * FROM shop.customers WHERE country_code = NULL;
-
--- RIGHT:
-SELECT * FROM shop.customers WHERE country_code IS NULL;</code></pre></li>
-  <li>Three-valued logic: <code>WHERE (NULL = 'US')</code> is UNKNOWN, row filtered out.</li>
-  <li>COALESCE for display:
-    <pre><code>SELECT email, COALESCE(country_code, '??') AS country FROM shop.customers;</code></pre></li>
-</ol>
-
-<h2>Logical operators</h2>
-<ol>
-  <li>
-    <pre><code>SELECT sku, unit_price, stock_qty FROM shop.products
-WHERE unit_price &gt; 50 AND stock_qty &lt; 100;</code></pre></li>
-  <li>Use parentheses when mixing OR/AND:
-    <pre><code>SELECT * FROM shop.products
-WHERE (unit_price &lt; 50 OR sku = 'SKU-001') AND stock_qty &gt; 0;</code></pre></li>
-</ol>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>BETWEEN returned expected price band.</li>
-    <li>IS NULL syntax used (not = NULL).</li>
-    <li>Parentheses changed OR/AND results as expected.</li>
-  </ul>
-</div>
+UPDATE customers SET city = 'Mumbai' WHERE id = 1;
+DELETE FROM customers WHERE id = 2;
+SELECT * FROM customers;</code></pre>
+<div class="callout"><strong>Safety:</strong> Always <code>SELECT</code> with the same <code>WHERE</code> before <code>UPDATE</code>/<code>DELETE</code>.</div>
 `,
     quiz: {
-      q: "Which predicate correctly finds rows where city IS unknown?",
-      options: ["city = NULL", "city IS NULL", "city == NULL", "city EQUALS NULL"],
+      q: "Before DELETE, best practice is to:",
+      options: [
+        "Restart the server",
+        "SELECT the same WHERE first",
+        "Drop the database",
+        "Disable indexes forever",
+      ],
       answer: 1
     }
   });
 
   L("sql12", {
-    module: "sql-m04",
-    title: "ORDER BY, LIMIT & FETCH",
+    module: "sql-m03",
+    title: "12 Columns",
     level: "Beginner",
-    duration: "30 min",
+    duration: "20 min",
     objectives: [
-      "Sort ascending and descending",
-      "Sort by multiple columns and ordinals",
-      "Paginate with LIMIT/OFFSET",
-      "Use FETCH FIRST (standard SQL)"
+      "Add a column",
+      "Rename carefully",
+      "Choose meaningful names",
     ],
     content: `
-<h2>ORDER BY</h2>
-<ol>
-  <li>Single column ascending (default):
-    <pre><code>SELECT sku, unit_price FROM shop.products ORDER BY unit_price;</code></pre></li>
-  <li>Descending:
-    <pre><code>SELECT sku, stock_qty FROM shop.products ORDER BY stock_qty DESC;</code></pre></li>
-  <li>Multiple keys — tie-breakers:
-    <pre><code>SELECT customer_id, order_date, order_id FROM shop.orders
-ORDER BY customer_id ASC, order_date DESC, order_id DESC;</code></pre></li>
-  <li>NULLS ordering (PostgreSQL):
-    <pre><code>SELECT email, country_code FROM shop.customers
-ORDER BY country_code NULLS LAST;</code></pre></li>
-</ol>
+<p>A <strong>column</strong> is a named attribute with a data type.</p>
+<pre><code>ALTER TABLE customers ADD COLUMN email TEXT;
+ALTER TABLE customers ADD COLUMN created_at TIMESTAMP;
 
-<h2>Pagination</h2>
-<ol>
-  <li>Top 3 expensive products:
-    <pre><code>SELECT sku, unit_price FROM shop.products
-ORDER BY unit_price DESC
-LIMIT 3;</code></pre>
-    <strong>Expected:</strong> at most 3 rows.</li>
-  <li>Page 2 (page size 2) — OFFSET pattern:
-    <pre><code>SELECT sku, unit_price FROM shop.products
-ORDER BY sku
-LIMIT 2 OFFSET 2;</code></pre>
-    <strong>Expected:</strong> rows 3–4 by sku order.</li>
-  <li>Standard SQL FETCH:
-    <pre><code>SELECT sku FROM shop.products ORDER BY sku
-OFFSET 2 ROWS FETCH FIRST 2 ROWS ONLY;</code></pre></li>
-</ol>
-
-<div class="callout"><strong>Performance note:</strong> Large OFFSET scans and discards rows — keyset pagination (<code>WHERE id &gt; last_seen</code>) scales better.</div>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>ORDER BY DESC changed row order.</li>
-    <li>LIMIT 3 returned ≤3 rows.</li>
-    <li>OFFSET skipped the correct number of rows.</li>
-  </ul>
-</div>
+SELECT id, name, email FROM customers;</code></pre>
+<h2>Naming tips</h2>
+<ul>
+<li>Use clear names: <code>customer_id</code>, not <code>c1</code>.</li>
+<li>Be consistent: <code>snake_case</code> is common in SQL.</li>
+<li>Avoid spaces and reserved words.</li>
+</ul>
 `,
     quiz: {
-      q: "LIMIT 10 OFFSET 20 returns:",
-      options: ["First 20 rows", "Rows 21–30 after sorting", "All rows", "Only row 20"],
+      q: "A column represents:",
+      options: [
+        "An entire database backup",
+        "One named attribute/field for every row",
+        "Only the primary key",
+        "A network port",
+      ],
       answer: 1
     }
   });
 
   L("sql13", {
-    module: "sql-m04",
-    title: "JOINs — Step by Step",
-    level: "Intermediate",
-    duration: "55 min",
+    module: "sql-m03",
+    title: "13 Data Types",
+    level: "Beginner",
+    duration: "35 min",
     objectives: [
-      "Write INNER JOIN with explicit ON",
-      "Use LEFT, RIGHT, FULL OUTER joins",
-      "Understand CROSS JOIN and SELF JOIN",
-      "Avoid accidental Cartesian products"
+      "Pick types for text, numbers, dates",
+      "Avoid wrong types",
     ],
     content: `
-<p>Joins combine rows from related tables. Always specify join conditions explicitly.</p>
-
-<h2>Setup — order line items</h2>
-<ol>
-  <li>
-    <pre><code>CREATE TABLE IF NOT EXISTS shop.order_items (
-  order_id INTEGER NOT NULL REFERENCES shop.orders(order_id),
-  product_id INTEGER NOT NULL REFERENCES shop.products(product_id),
-  qty INTEGER NOT NULL CHECK (qty &gt; 0),
-  line_price NUMERIC(10,2) NOT NULL,
-  PRIMARY KEY (order_id, product_id)
-);
-INSERT INTO shop.order_items VALUES (1, 1, 2, 259.98);</code></pre></li>
-</ol>
-
-<h2>INNER JOIN</h2>
-<ol>
-  <li>Orders with customer names:
-    <pre><code>SELECT o.order_id, c.full_name, o.order_date, o.status
-FROM shop.orders o
-INNER JOIN shop.customers c ON c.customer_id = o.customer_id;</code></pre>
-    <strong>Expected:</strong> only orders that have matching customers.</li>
-  <li>Three-table join:
-    <pre><code>SELECT o.order_id, p.sku, oi.qty, oi.line_price
-FROM shop.order_items oi
-INNER JOIN shop.orders o ON o.order_id = oi.order_id
-INNER JOIN shop.products p ON p.product_id = oi.product_id;</code></pre></li>
-</ol>
-
-<h2>LEFT OUTER JOIN</h2>
-<ol>
-  <li>All customers, even without orders:
-    <pre><code>SELECT c.full_name, o.order_id
-FROM shop.customers c
-LEFT JOIN shop.orders o ON o.customer_id = c.customer_id;</code></pre>
-    <strong>Expected:</strong> NULL order_id for customers with no orders.</li>
-</ol>
-
-<h2>RIGHT / FULL OUTER (PostgreSQL)</h2>
-<ol>
-  <li>RIGHT JOIN (rare — usually rewrite as LEFT):
-    <pre><code>SELECT c.full_name, o.order_id
-FROM shop.orders o
-RIGHT JOIN shop.customers c ON c.customer_id = o.customer_id;</code></pre></li>
-  <li>FULL OUTER — unmatched from both sides:
-    <pre><code>SELECT c.full_name, o.order_id
-FROM shop.customers c
-FULL OUTER JOIN shop.orders o ON c.customer_id = o.customer_id;</code></pre></li>
-</ol>
-
-<h2>CROSS JOIN</h2>
-<ol>
-  <li>Every product × every customer (careful — explosive):
-    <pre><code>SELECT c.customer_id, p.sku
-FROM shop.customers c
-CROSS JOIN shop.products p
-LIMIT 5;</code></pre>
-    <strong>Expected:</strong> Cartesian combinations (limited to 5 for safety).</li>
-</ol>
-
-<h2>SELF JOIN</h2>
-<ol>
-  <li>Employees table example:
-    <pre><code>CREATE TABLE shop.employees (
-  emp_id INT PRIMARY KEY, name TEXT, manager_id INT REFERENCES shop.employees(emp_id)
-);
-INSERT INTO shop.employees VALUES (1,'CEO',NULL),(2,'Mgr',1),(3,'Dev',2);
-SELECT e.name AS employee, m.name AS manager
-FROM shop.employees e
-LEFT JOIN shop.employees m ON e.manager_id = m.emp_id;</code></pre></li>
-</ol>
-
-<div class="callout warning"><strong>Cartesian trap:</strong> <code>FROM a, b</code> without WHERE multiplies row counts. Prefer explicit JOIN syntax.</div>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>INNER JOIN returned only matching pairs.</li>
-    <li>LEFT JOIN showed NULLs for customers without orders.</li>
-    <li>SELF JOIN listed employee and manager names.</li>
-  </ul>
-</div>
+<div class="table- wrap"><table>
+<thead><tr><th>Kind</th><th>Examples</th><th>Use for</th></tr></thead>
+<tbody>
+<tr><td>Integer</td><td><code>INT</code>, <code>INTEGER</code>, <code>BIGINT</code></td><td>IDs, counts</td></tr>
+<tr><td>Decimal</td><td><code>NUMERIC(10,2)</code>, <code>DECIMAL</code></td><td>Money (prefer over float)</td></tr>
+<tr><td>Text</td><td><code>TEXT</code>, <code>VARCHAR(n)</code></td><td>Names, emails</td></tr>
+<tr><td>Date/time</td><td><code>DATE</code>, <code>TIMESTAMP</code></td><td>Events, audits</td></tr>
+<tr><td>Boolean</td><td><code>BOOLEAN</code></td><td>Flags</td></tr>
+</tbody></table></div>
+<pre><code>CREATE TABLE products (
+  id         INTEGER PRIMARY KEY,
+  title      VARCHAR(120) NOT NULL,
+  price      NUMERIC(10,2) NOT NULL,
+  in_stock   BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+<div class="callout"><strong>Tip:</strong> Do not store money in floating point (<code>REAL</code>/<code>FLOAT</code>) if you can use <code>NUMERIC</code>.</div>
 `,
     quiz: {
-      q: "LEFT JOIN keeps all rows from which table?",
-      options: ["Right table", "Left table", "Both always", "Neither"],
+      q: "Best type for currency amounts:",
+      options: [
+        "FLOAT only",
+        "NUMERIC/DECIMAL",
+        "BOOLEAN",
+        "BLOB of images",
+      ],
       answer: 1
     }
   });
 
   L("sql14", {
-    module: "sql-m04",
-    title: "GROUP BY, HAVING & Aggregates",
-    level: "Intermediate",
-    duration: "45 min",
+    module: "sql-m03",
+    title: "14 Constraints",
+    level: "Beginner",
+    duration: "35 min",
     objectives: [
-      "Use COUNT, SUM, AVG, MIN, MAX",
-      "Group by one or more columns",
-      "Filter groups with HAVING",
-      "Understand SELECT column rules with GROUP BY"
+      "Apply NOT NULL, UNIQUE, CHECK",
+      "See constraint errors",
     ],
     content: `
-<h2>Scalar aggregates (whole table)</h2>
-<ol>
-  <li>
-    <pre><code>SELECT COUNT(*) AS product_count,
-       SUM(stock_qty) AS total_units,
-       AVG(unit_price) AS avg_price,
-       MIN(unit_price) AS min_price,
-       MAX(unit_price) AS max_price
-FROM shop.products;</code></pre>
-    <strong>Expected:</strong> one summary row.</li>
-</ol>
+<p>Constraints protect data quality at the database level.</p>
+<pre><code>CREATE TABLE users (
+  id    INTEGER PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  age   INT CHECK (age >= 0),
+  role  TEXT NOT NULL DEFAULT 'student'
+);
 
-<h2>GROUP BY</h2>
-<ol>
-  <li>Orders per customer:
-    <pre><code>SELECT customer_id, COUNT(*) AS order_count, SUM(total_amount) AS revenue
-FROM shop.orders
-GROUP BY customer_id;</code></pre></li>
-  <li>Multi-column grouping:
-    <pre><code>SELECT status, DATE_TRUNC('month', order_date) AS month, COUNT(*)
-FROM shop.orders
-GROUP BY status, DATE_TRUNC('month', order_date)
-ORDER BY month, status;</code></pre></li>
-</ol>
-
-<h2>HAVING (filter groups, not rows)</h2>
-<ol>
-  <li>Customers with more than one order:
-    <pre><code>SELECT customer_id, COUNT(*) AS cnt
-FROM shop.orders
-GROUP BY customer_id
-HAVING COUNT(*) &gt; 1;</code></pre></li>
-  <li>Compare WHERE vs HAVING:
-    <pre><code>SELECT customer_id, SUM(total_amount) AS spent
-FROM shop.orders
-WHERE status &lt;&gt; 'CANCELLED'
-GROUP BY customer_id
-HAVING SUM(total_amount) &gt; 100;</code></pre>
-    <strong>Expected:</strong> WHERE filters rows before grouping; HAVING filters groups after.</li>
-</ol>
-
-<h2>Rule: non-aggregated SELECT columns must appear in GROUP BY</h2>
-<pre><code>-- INVALID in standard SQL:
--- SELECT customer_id, order_date, COUNT(*) FROM orders GROUP BY customer_id;
-
--- VALID:
-SELECT customer_id, COUNT(*) FROM shop.orders GROUP BY customer_id;</code></pre>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>Scalar aggregate returned one row.</li>
-    <li>GROUP BY produced per-customer counts.</li>
-    <li>HAVING excluded groups below threshold.</li>
-    <li>You can explain WHERE vs HAVING.</li>
-  </ul>
-</div>
+|- Fails: duplicate email
+INSERT INTO users(id,email,age) VALUES (1,'a@x.com',20);
+INSERT INTO users(id,email,age) VALUES (2,'a@x.com',22);</code></pre>
+<ul>
+<li><strong>NOT NULL</strong> - required value</li>
+<li><strong>UNIQUE</strong> - no duplicates</li>
+<li><strong>CHECK</strong> - custom rule</li>
+<li><strong>DEFAULT</strong> - fill when omitted</li>
+</ul>
 `,
     quiz: {
-      q: "HAVING filters:",
-      options: ["Individual rows before grouping", "Groups after aggregation", "Only indexed columns", "Only NULL values"],
+      q: "UNIQUE constraint means:",
+      options: [
+        "Column can be missing always",
+        "No two rows may share the same value",
+        "Table cannot be queried",
+        "Indexes are forbidden",
+      ],
       answer: 1
     }
   });
 
   L("sql15", {
-    module: "sql-m04",
-    title: "Subqueries & CTEs",
-    level: "Intermediate",
-    duration: "50 min",
+    module: "sql-m03",
+    title: "15 Primary Key",
+    level: "Beginner",
+    duration: "30 min",
     objectives: [
-      "Write scalar, row, and table subqueries",
-      "Use IN and EXISTS semi-joins",
-      "Refactor with WITH (CTE)",
-      "Build a recursive CTE"
+      "Define a primary key",
+      "Use surrogate vs natural keys",
     ],
     content: `
-<h2>Subquery in WHERE (IN)</h2>
-<ol>
-  <li>Products ordered at least once:
-    <pre><code>SELECT sku, name FROM shop.products
-WHERE product_id IN (
-  SELECT product_id FROM shop.order_items
-);</code></pre></li>
-</ol>
-
-<h2>EXISTS (often faster than IN for large sets)</h2>
-<ol>
-  <li>Customers who placed orders:
-    <pre><code>SELECT c.full_name FROM shop.customers c
-WHERE EXISTS (
-  SELECT 1 FROM shop.orders o WHERE o.customer_id = c.customer_id
-);</code></pre></li>
-</ol>
-
-<h2>Scalar subquery in SELECT</h2>
-<ol>
-  <li>
-    <pre><code>SELECT sku, unit_price,
-  (SELECT AVG(unit_price) FROM shop.products) AS catalog_avg
-FROM shop.products;</code></pre>
-    <strong>Expected:</strong> same catalog_avg on every row.</li>
-</ol>
-
-<h2>CTE (WITH clause)</h2>
-<ol>
-  <li>Readable revenue per customer:
-    <pre><code>WITH revenue AS (
-  SELECT customer_id, SUM(total_amount) AS total
-  FROM shop.orders GROUP BY customer_id
-)
-SELECT c.full_name, r.total
-FROM shop.customers c
-JOIN revenue r ON r.customer_id = c.customer_id;</code></pre></li>
-</ol>
-
-<h2>Recursive CTE — org chart depth</h2>
-<ol>
-  <li>
-    <pre><code>WITH RECURSIVE chain AS (
-  SELECT emp_id, name, manager_id, 0 AS depth FROM shop.employees WHERE manager_id IS NULL
-  UNION ALL
-  SELECT e.emp_id, e.name, e.manager_id, chain.depth + 1
-  FROM shop.employees e JOIN chain ON e.manager_id = chain.emp_id
-)
-SELECT * FROM chain ORDER BY depth, name;</code></pre>
-    <strong>Expected:</strong> CEO depth 0, manager depth 1, dev depth 2.</li>
-</ol>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>IN and EXISTS returned consistent customer sets.</li>
-    <li>CTE query ran without errors.</li>
-    <li>Recursive CTE showed increasing depth values.</li>
-  </ul>
-</div>
+<p>A <strong>primary key (PK)</strong> uniquely identifies each row. It is NOT NULL and UNIQUE.</p>
+<pre><code>CREATE TABLE orders (
+  order_id INTEGER PRIMARY KEY,           |- surrogate key
+  order_no TEXT NOT NULL UNIQUE,          |- business number
+  total    NUMERIC(10,2) NOT NULL
+);</code></pre>
+<pre><code>|- Composite primary key example
+CREATE TABLE enrollment (
+  student_id INT NOT NULL,
+  course_id  INT NOT NULL,
+  PRIMARY KEY (student_id, course_id)
+);</code></pre>
+<div class="callout"><strong>Practice:</strong> Prefer a simple integer/UUID PK for joins; keep business codes UNIQUE separately.</div>
 `,
     quiz: {
-      q: "A CTE (WITH clause) primarily improves:",
-      options: ["Disk encryption", "Readability and reuse of query logic", "Network bandwidth only", "OS kernel scheduling"],
+      q: "A primary key must be:",
+      options: [
+        "Nullable and duplicated",
+        "Unique and not null",
+        "Always a float",
+        "Stored only in Redis",
+      ],
       answer: 1
     }
   });
 
   L("sql16", {
-    module: "sql-m04",
-    title: "Window Functions",
-    level: "Advanced",
-    duration: "50 min",
+    module: "sql-m03",
+    title: "16 Foreign Key",
+    level: "Beginner",
+    duration: "35 min",
     objectives: [
-      "Use ROW_NUMBER, RANK, DENSE_RANK",
-      "Compute running totals with frames",
-      "Compare GROUP BY vs OVER()",
-      "Apply LAG/LEAD for row comparisons"
+      "Create FK relationships",
+      "Understand referential integrity",
     ],
     content: `
-<p>Window functions compute across related rows <em>without</em> collapsing them like GROUP BY.</p>
+<p>A <strong>foreign key (FK)</strong> points to a primary (or unique) key in another table.</p>
+<pre><code>CREATE TABLE customers (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL
+);
 
-<h2>Ranking</h2>
-<ol>
-  <li>Rank products by price:
-    <pre><code>SELECT sku, unit_price,
-  RANK() OVER (ORDER BY unit_price DESC) AS price_rank,
-  DENSE_RANK() OVER (ORDER BY unit_price DESC) AS dense_rank
-FROM shop.products;</code></pre>
-    <strong>Expected:</strong> ties get same rank; RANK leaves gaps, DENSE_RANK does not.</li>
-  <li>ROW_NUMBER — unique sequence even with ties:
-    <pre><code>SELECT sku, unit_price,
-  ROW_NUMBER() OVER (ORDER BY unit_price DESC, sku) AS rn
-FROM shop.products;</code></pre></li>
-</ol>
+CREATE TABLE orders (
+  id INTEGER PRIMARY KEY,
+  customer_id INTEGER NOT NULL,
+  total NUMERIC(10,2) NOT NULL,
+  FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
 
-<h2>PARTITION BY</h2>
-<ol>
-  <li>Rank orders within each customer:
-    <pre><code>SELECT order_id, customer_id, order_date,
-  ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY order_date DESC) AS recent_rank
-FROM shop.orders;</code></pre></li>
-</ol>
-
-<h2>Aggregate window — running total</h2>
-<ol>
-  <li>
-    <pre><code>SELECT order_id, customer_id, total_amount,
-  SUM(total_amount) OVER (
-    PARTITION BY customer_id ORDER BY order_id
-    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-  ) AS running_total
-FROM shop.orders;</code></pre></li>
-</ol>
-
-<h2>LAG / LEAD</h2>
-<ol>
-  <li>Compare each order total to previous per customer:
-    <pre><code>SELECT order_id, customer_id, total_amount,
-  LAG(total_amount) OVER (PARTITION BY customer_id ORDER BY order_id) AS prev_amount,
-  total_amount - LAG(total_amount) OVER (PARTITION BY customer_id ORDER BY order_id) AS delta
-FROM shop.orders;</code></pre></li>
-</ol>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>ROW_NUMBER assigned unique sequence per partition ordering.</li>
-    <li>Running total increased monotonically within customer.</li>
-    <li>LAG returned NULL for first order per customer.</li>
-  </ul>
-</div>
+INSERT INTO customers VALUES (1, 'Asha');
+INSERT INTO orders VALUES (10, 1, 499.00);
+|- Fails: no customer 99
+INSERT INTO orders VALUES (11, 99, 10.00);</code></pre>
+<div class="callout"><strong>Why it matters:</strong> FKs stop orphan orders that point to missing customers.</div>
 `,
     quiz: {
-      q: "Unlike GROUP BY, window functions:",
-      options: ["Always delete rows", "Keep detail rows while adding analytic columns", "Require a HAVING clause", "Only work on one column"],
+      q: "A foreign key ensures:",
+      options: [
+        "Faster CSS",
+        "Referential integrity between tables",
+        "That backups never run",
+        "Only one column exists",
+      ],
       answer: 1
     }
   });
 
-  /* ========== MODULE 5: DESIGN & OBJECTS ========== */
-
   L("sql17", {
-    module: "sql-m05",
-    title: "Constraints & Normalization (1NF–3NF)",
+    module: "sql-m03",
+    title: "17 Normalization",
     level: "Intermediate",
-    duration: "50 min",
+    duration: "40 min",
     objectives: [
-      "Apply normalization rules with examples",
-      "Recognize 1NF, 2NF, 3NF violations",
-      "Balance normalization vs denormalization",
-      "Use constraints to enforce design in the database"
+      "Explain 1NF, 2NF, 3NF",
+      "Refactor a denormalized table",
     ],
     content: `
-<h2>Why normalize?</h2>
-<p>Reduce redundancy, update anomalies, and deletion anomalies. The database enforces truth once; every app benefits.</p>
-
-<h2>0NF → 1NF (atomic values)</h2>
-<p><strong>Violation:</strong> repeating groups or multi-valued cells.</p>
-<ol>
-  <li>Bad design:
-    <pre><code>-- BAD: phone1, phone2 columns or '555-1,555-2' in one cell
-CREATE TABLE bad_customer (id INT, name TEXT, phones TEXT);</code></pre></li>
-  <li>1NF fix — separate row per phone:
-    <pre><code>CREATE TABLE customer_phones (
-  customer_id INT REFERENCES shop.customers(customer_id),
-  phone TEXT NOT NULL,
-  PRIMARY KEY (customer_id, phone)
-);</code></pre></li>
-</ol>
-
-<h2>1NF → 2NF (no partial dependency on composite key)</h2>
-<p>Only applies when PK has multiple columns.</p>
-<ol>
-  <li>Violation: order line stores product name (depends only on product_id, not full PK):
-    <pre><code>-- BAD composite PK (order_id, product_id) but product_name depends only on product_id</code></pre></li>
-  <li>2NF fix: product name stays in <code>products</code>; line item stores only FK + qty + price snapshot.</li>
-</ol>
-
-<h2>2NF → 3NF (no transitive dependency)</h2>
-<ol>
-  <li>Violation: customer stores <code>city</code> and <code>country_name</code> where country_name depends on city, not customer_id.</li>
-  <li>3NF fix:
-    <pre><code>CREATE TABLE cities (city_id SERIAL PRIMARY KEY, city_name TEXT, country_code CHAR(2));
-CREATE TABLE customer_city (
-  customer_id INT PRIMARY KEY REFERENCES shop.customers(customer_id),
-  city_id INT REFERENCES cities(city_id)
-);</code></pre></li>
-</ol>
-
-<h2>When to denormalize</h2>
+<p><strong>Normalization</strong> reduces duplication and update anomalies by designing related tables.</p>
+<h2>Bad (denormalized)</h2>
+<pre><code>|- phones packed in one cell; course names repeated
+student_id | name | phones           | course1     | course2
+1          | Asha | 98..,97..        | SQL         | Git</code></pre>
+<h2>Better (3NF style)</h2>
+<pre><code>students(id, name)
+phones(student_id, phone)
+enrollments(student_id, course_id)
+courses(id, title)</code></pre>
 <ul>
-  <li>Read-heavy reporting tables (materialized summaries)</li>
-  <li>Snapshot columns on order lines (<code>line_price</code> at purchase time)</li>
-  <li>Always document why and how you keep denormalized data consistent</li>
+<li><strong>1NF</strong> - atomic values, no repeating groups</li>
+<li><strong>2NF</strong> - no partial dependency on part of a composite key</li>
+<li><strong>3NF</strong> - no transitive dependency on non-key attributes</li>
 </ul>
-
-<h2>Enforce with constraints</h2>
-<ol>
-  <li>Add UNIQUE on natural keys where appropriate.</li>
-  <li>Use FK to prevent orphan references.</li>
-  <li>CHECK for domain rules (status enums, non-negative amounts).</li>
-</ol>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>You can identify a 1NF violation (multi-valued column).</li>
-    <li>You explained why <code>line_price</code> on order_items is intentional denormalization.</li>
-    <li>You created at least one FK-backed child table.</li>
-  </ul>
-</div>
 `,
     quiz: {
-      q: "Third normal form (3NF) eliminates:",
-      options: ["All indexes", "Transitive dependencies on non-key attributes", "Primary keys", "Foreign keys"],
+      q: "Normalization mainly aims to:",
+      options: [
+        "Add random duplication",
+        "Reduce redundancy and anomalies",
+        "Delete all indexes",
+        "Ban SELECT",
+      ],
       answer: 1
     }
   });
 
   L("sql18", {
-    module: "sql-m05",
-    title: "Indexes — Create, Use & When Not To",
-    level: "Intermediate",
-    duration: "45 min",
+    module: "sql-m04",
+    title: "18 DDL",
+    level: "Beginner",
+    duration: "35 min",
     objectives: [
-      "Create B-tree indexes on PostgreSQL and SQLite",
-      "Understand when indexes help SELECT and hurt writes",
-      "Use composite and partial indexes",
-      "Inspect index usage with EXPLAIN"
+      "Use CREATE/ALTER/DROP",
+      "Change structure safely",
     ],
     content: `
-<h2>Create indexes step-by-step</h2>
-<ol>
-  <li>Single-column index on FK join column:
-    <pre><code>CREATE INDEX ix_orders_customer ON shop.orders (customer_id);</code></pre>
-    <strong>Expected:</strong> <code>CREATE INDEX</code>.</li>
-  <li>Composite index for filter + sort:
-    <pre><code>CREATE INDEX ix_orders_cust_date ON shop.orders (customer_id, order_date DESC);</code></pre></li>
-  <li>Partial index (PostgreSQL) — only active customers:
-    <pre><code>CREATE INDEX ix_customers_active_email ON shop.customers (email)
-WHERE is_active = TRUE;</code></pre></li>
-  <li>List indexes:
-    <pre><code>\\di shop.*   -- psql
-.indexes      -- sqlite (meta)</code></pre></li>
-</ol>
+<p><strong>DDL</strong> (Data Definition Language) defines structure.</p>
+<pre><code>CREATE TABLE products (
+  id INT PRIMARY KEY,
+  title TEXT NOT NULL
+);
 
-<h2>When indexes help</h2>
-<ul>
-  <li>WHERE equality/range on leading index columns</li>
-  <li>JOIN keys (especially FK columns on the child table)</li>
-  <li>ORDER BY matching index order</li>
-</ul>
-
-<h2>When NOT to index</h2>
-<ul>
-  <li>Tiny tables (sequential scan is faster)</li>
-  <li>Low-cardinality columns alone (e.g. boolean) unless partial</li>
-  <li>Tables with extreme write volume and rare reads</li>
-  <li>Every column "just in case" — slows INSERT/UPDATE/DELETE</li>
-</ul>
-
-<h2>Drop unused index</h2>
-<ol>
-  <li>
-    <pre><code>DROP INDEX IF EXISTS shop.ix_orders_customer;</code></pre>
-    <strong>Expected:</strong> index removed; recreate if you still need it for labs.</li>
-</ol>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li><code>\\di</code> lists your new indexes.</li>
-    <li>You can name one benefit and one cost of indexing.</li>
-    <li>You created a composite or partial index.</li>
-  </ul>
-</div>
+ALTER TABLE products ADD COLUMN price NUMERIC(10,2);
+ALTER TABLE products RENAME TO catalog_products;
+DROP TABLE IF EXISTS catalog_products;</code></pre>
+<div class="callout"><strong>Caution:</strong> <code>DROP</code>/<code>ALTER</code> can destroy or lock production data - practice on labs first.</div>
 `,
     quiz: {
-      q: "Over-indexing primarily hurts:",
-      options: ["SELECT with perfect predicates", "INSERT/UPDATE/DELETE maintenance", "Database creation only", "UTF-8 encoding"],
+      q: "Which is DDL?",
+      options: [
+        "SELECT * FROM t",
+        "CREATE TABLE t (...)",
+        "COMMIT",
+        "GRANT SELECT",
+      ],
       answer: 1
     }
   });
 
   L("sql19", {
-    module: "sql-m05",
-    title: "Views",
-    level: "Intermediate",
-    duration: "40 min",
+    module: "sql-m04",
+    title: "19 DML",
+    level: "Beginner",
+    duration: "35 min",
     objectives: [
-      "Create simple and joined views",
-      "Use views for security and simplification",
-      "Understand updatable vs read-only views",
-      "Create materialized views (PostgreSQL)"
+      "INSERT, UPDATE, DELETE with WHERE",
+      "Use transactions for safety",
     ],
     content: `
-<h2>Simple view</h2>
-<ol>
-  <li>Customer order summary:
-    <pre><code>CREATE OR REPLACE VIEW shop.v_customer_orders AS
-SELECT c.customer_id, c.full_name, c.email,
-       COUNT(o.order_id) AS order_count,
-       COALESCE(SUM(o.total_amount), 0) AS lifetime_spend
-FROM shop.customers c
-LEFT JOIN shop.orders o ON o.customer_id = c.customer_id
-GROUP BY c.customer_id, c.full_name, c.email;</code></pre></li>
-  <li>Query like a table:
-    <pre><code>SELECT * FROM shop.v_customer_orders WHERE lifetime_spend &gt; 0;</code></pre>
-    <strong>Expected:</strong> aggregated rows, no duplicate customer rows.</li>
-</ol>
+<p><strong>DML</strong> changes data rows.</p>
+<pre><code>INSERT INTO products(id, title, price) VALUES (1, 'SQL Book', 499);
 
-<h2>Security pattern</h2>
-<ol>
-  <li>Hide emails from reporting role:
-    <pre><code>CREATE VIEW shop.v_customers_public AS
-SELECT customer_id, full_name, country_code, is_active FROM shop.customers;</code></pre></li>
-  <li>Grant SELECT on view only (PostgreSQL):
-    <pre><code>-- GRANT SELECT ON shop.v_customers_public TO reporting_role;</code></pre></li>
-</ol>
+UPDATE products SET price = 449 WHERE id = 1;
 
-<h2>Materialized view (PostgreSQL)</h2>
-<ol>
-  <li>
-    <pre><code>CREATE MATERIALIZED VIEW shop.mv_product_sales AS
-SELECT p.product_id, p.sku, SUM(oi.qty) AS units_sold, SUM(oi.line_price) AS revenue
-FROM shop.products p
-LEFT JOIN shop.order_items oi ON oi.product_id = p.product_id
-GROUP BY p.product_id, p.sku;</code></pre></li>
-  <li>Refresh after ETL:
-    <pre><code>REFRESH MATERIALIZED VIEW shop.mv_product_sales;</code></pre>
-    <strong>Expected:</strong> snapshot updated.</li>
-</ol>
-
-<h2>Updatable views (rules)</h2>
-<p>Simple views on one table with no aggregation may be updatable. Complex joins/GROUP BY views are read-only unless INSTEAD OF triggers exist.</p>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li><code>v_customer_orders</code> returns one row per customer.</li>
-    <li>Materialized view refreshed successfully.</li>
-    <li>You know when a view is not updatable.</li>
-  </ul>
-</div>
+DELETE FROM products WHERE id = 1;</code></pre>
+<pre><code>BEGIN;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;  |- or ROLLBACK;</code></pre>
 `,
     quiz: {
-      q: "A materialized view stores:",
-      options: ["Only the view definition", "A physical snapshot of query results", "OS log files", "User passwords"],
+      q: "Which statement is DML?",
+      options: [
+        "CREATE INDEX",
+        "UPDATE students SET grade=A WHERE id=5",
+        "GRANT ALL",
+        "ALTER TABLE",
+      ],
       answer: 1
     }
   });
 
   L("sql20", {
-    module: "sql-m05",
-    title: "Transactions — ACID, Isolation, COMMIT & ROLLBACK",
-    level: "Intermediate",
-    duration: "50 min",
+    module: "sql-m04",
+    title: "20 DQL",
+    level: "Beginner",
+    duration: "35 min",
     objectives: [
-      "Explain ACID properties",
-      "Use BEGIN, COMMIT, ROLLBACK, SAVEPOINT",
-      "Understand isolation levels and anomalies",
-      "Transfer money safely in one transaction"
+      "Write SELECT queries",
+      "Project columns and filter rows",
     ],
     content: `
-<h2>ACID recap</h2>
-<ul>
-  <li><strong>Atomicity</strong> — all or nothing</li>
-  <li><strong>Consistency</strong> — constraints hold after commit</li>
-  <li><strong>Isolation</strong> — concurrent sessions don't corrupt each other</li>
-  <li><strong>Durability</strong> — committed data survives crash</li>
-</ul>
-
-<h2>Bank transfer lab</h2>
-<ol>
-  <li>Add balance column to accounts concept (use products stock as analog or create accounts):
-    <pre><code>CREATE TABLE shop.accounts (
-  acct_id SERIAL PRIMARY KEY, customer_id INT REFERENCES shop.customers(customer_id),
-  balance NUMERIC(12,2) NOT NULL CHECK (balance &gt;= 0)
-);
-INSERT INTO shop.accounts (customer_id, balance) VALUES (1, 1000), (2, 500);</code></pre></li>
-  <li>Transfer 100 from acct 1 → 2 inside transaction:
-    <pre><code>BEGIN;
-UPDATE shop.accounts SET balance = balance - 100 WHERE acct_id = 1;
-UPDATE shop.accounts SET balance = balance + 100 WHERE acct_id = 2;
-SELECT * FROM shop.accounts ORDER BY acct_id;
-COMMIT;</code></pre>
-    <strong>Expected:</strong> 900 and 600 balances.</li>
-  <li>Simulate failure — rollback:
-    <pre><code>BEGIN;
-UPDATE shop.accounts SET balance = balance - 50 WHERE acct_id = 1;
--- oops — application error
-ROLLBACK;
-SELECT balance FROM shop.accounts WHERE acct_id = 1;</code></pre>
-    <strong>Expected:</strong> balance unchanged from last commit.</li>
-</ol>
-
-<h2>SAVEPOINT</h2>
-<ol>
-  <li>
-    <pre><code>BEGIN;
-UPDATE shop.accounts SET balance = balance - 10 WHERE acct_id = 1;
-SAVEPOINT sp1;
-UPDATE shop.accounts SET balance = balance - 99999 WHERE acct_id = 1; -- would violate CHECK
-ROLLBACK TO SAVEPOINT sp1;
-COMMIT;</code></pre>
-    <strong>Expected:</strong> only -10 applied if first update valid.</li>
-</ol>
-
-<h2>Isolation levels (PostgreSQL)</h2>
-<ol>
-  <li>
-    <pre><code>SHOW transaction_isolation;
-SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;</code></pre></li>
-</ol>
-<div class="table-wrap"><table>
-  <thead><tr><th>Level</th><th>Dirty read</th><th>Non-repeatable read</th><th>Phantom</th></tr></thead>
-  <tbody>
-    <tr><td>READ UNCOMMITTED (PG treats as RC)</td><td>No</td><td>Yes</td><td>Yes</td></tr>
-    <tr><td>READ COMMITTED (default)</td><td>No</td><td>Yes</td><td>Yes</td></tr>
-    <tr><td>REPEATABLE READ</td><td>No</td><td>No</td><td>No (PG)</td></tr>
-    <tr><td>SERIALIZABLE</td><td>No</td><td>No</td><td>No</td></tr>
-  </tbody>
-</table></div>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>Transfer committed with correct balances.</li>
-    <li>ROLLBACK undid uncommitted changes.</li>
-    <li>You named all four ACID properties.</li>
-    <li>You tried SAVEPOINT or read isolation docs.</li>
-  </ul>
-</div>
+<p><strong>DQL</strong> is primarily <code>SELECT</code> - reading data without changing it.</p>
+<pre><code>SELECT name, city
+FROM customers
+WHERE city = 'Pune'
+ORDER BY name;</code></pre>
+<pre><code>SELECT COUNT(*) AS total_customers FROM customers;
+SELECT DISTINCT city FROM customers;</code></pre>
+<div class="callout"><strong>Tip:</strong> Master <code>SELECT</code> deeply - most SQL work is reading and shaping data.</div>
 `,
     quiz: {
-      q: "ROLLBACK in a transaction:",
-      options: ["Commits changes", "Undoes changes since BEGIN", "Deletes the database", "Creates an index"],
+      q: "DQL is mainly associated with:",
+      options: [
+        "DROP DATABASE",
+        "SELECT",
+        "GRANT",
+        "SAVEPOINT",
+      ],
       answer: 1
     }
   });
 
-  /* ========== MODULE 6: PRO ========== */
-
   L("sql21", {
-    module: "sql-m06",
-    title: "Functions & Stored Routines Overview",
-    level: "Advanced",
-    duration: "45 min",
+    module: "sql-m04",
+    title: "21 TCL",
+    level: "Intermediate",
+    duration: "35 min",
     objectives: [
-      "Use built-in scalar and aggregate functions",
-      "Write a SQL function in PostgreSQL",
-      "Create a stored procedure with control flow",
-      "Know when logic belongs in DB vs application"
+      "COMMIT and ROLLBACK",
+      "Use SAVEPOINT",
     ],
     content: `
-<h2>Built-in functions (quick tour)</h2>
-<ol>
-  <li>String: <code>UPPER</code>, <code>LOWER</code>, <code>TRIM</code>, <code>SUBSTRING</code>, <code>CONCAT</code> / <code>||</code></li>
-  <li>Date: <code>NOW()</code>, <code>DATE_TRUNC</code>, <code>AGE</code>, <code>EXTRACT</code></li>
-  <li>Math: <code>ROUND</code>, <code>CEIL</code>, <code>FLOOR</code>, <code>ABS</code></li>
-  <li>Conditional: <code>COALESCE</code>, <code>NULLIF</code>, <code>CASE</code></li>
-  <li>Aggregate: <code>COUNT</code>, <code>STRING_AGG</code> (PostgreSQL)</li>
-</ol>
-
-<h2>User-defined function (PostgreSQL)</h2>
-<ol>
-  <li>Price with tax:
-    <pre><code>CREATE OR REPLACE FUNCTION shop.price_with_tax(p_amount NUMERIC, p_rate NUMERIC DEFAULT 0.08)
-RETURNS NUMERIC LANGUAGE sql IMMUTABLE AS $$
-  SELECT ROUND(p_amount * (1 + p_rate), 2);
-$$;</code></pre></li>
-  <li>Test:
-    <pre><code>SELECT shop.price_with_tax(100);</code></pre>
-    <strong>Expected:</strong> <code>108.00</code>.</li>
-</ol>
-
-<h2>Stored procedure (PL/pgSQL)</h2>
-<ol>
-  <li>Apply discount if stock high:
-    <pre><code>CREATE OR REPLACE PROCEDURE shop.apply_bulk_discount(p_sku TEXT, p_pct NUMERIC)
-LANGUAGE plpgsql AS $$
-BEGIN
-  IF p_pct &lt; 0 OR p_pct &gt; 50 THEN
-    RAISE EXCEPTION 'Discount % out of range', p_pct;
-  END IF;
-  UPDATE shop.products
-  SET unit_price = ROUND(unit_price * (1 - p_pct/100), 2)
-  WHERE sku = p_sku AND stock_qty &gt; 100;
-END;
-$$;</code></pre></li>
-  <li>Call:
-    <pre><code>CALL shop.apply_bulk_discount('SKU-002', 10);</code></pre></li>
-</ol>
-
-<h2>DB vs app logic</h2>
+<p><strong>TCL</strong> (Transaction Control Language) groups statements into atomic units.</p>
+<pre><code>BEGIN;
+UPDATE accounts SET balance = balance - 500 WHERE id = 1;
+SAVEPOINT after_debit;
+UPDATE accounts SET balance = balance + 500 WHERE id = 2;
+|- oops?
+ROLLBACK TO after_debit;
+ROLLBACK;  |- cancel all
+|- or COMMIT; to save</code></pre>
 <ul>
-  <li><strong>In DB:</strong> constraints, simple transforms close to data, performance-critical set operations</li>
-  <li><strong>In app:</strong> complex business workflows, external API calls, UI rules</li>
+<li><strong>COMMIT</strong> - make permanent</li>
+<li><strong>ROLLBACK</strong> - undo</li>
+<li><strong>SAVEPOINT</strong> - partial undo point</li>
 </ul>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li><code>price_with_tax(100)</code> returned 108.00.</li>
-    <li>Procedure ran without error (or raised expected exception for bad input).</li>
-    <li>You listed three built-in function categories.</li>
-  </ul>
-</div>
 `,
     quiz: {
-      q: "IMMUTABLE on a PostgreSQL function tells the optimizer:",
-      options: ["The function deletes data", "The function result depends only on inputs (safe to optimize)", "The function must run as root", "The function cannot use SQL"],
+      q: "ROLLBACK does what?",
+      options: [
+        "Creates a new table",
+        "Undoes uncommitted work in the transaction",
+        "Grants admin rights",
+        "Builds an index",
+      ],
       answer: 1
     }
   });
 
   L("sql22", {
-    module: "sql-m06",
-    title: "Performance — EXPLAIN & Anti-Patterns",
-    level: "Advanced",
-    duration: "55 min",
+    module: "sql-m04",
+    title: "22 DCL",
+    level: "Intermediate",
+    duration: "30 min",
     objectives: [
-      "Read EXPLAIN and EXPLAIN ANALYZE output",
-      "Identify sequential scans and nested loops",
-      "Fix common anti-patterns",
-      "Apply practical tuning checklist"
+      "GRANT and REVOKE privileges",
+      "Think least privilege",
     ],
     content: `
-<h2>Capture a plan</h2>
-<ol>
-  <li>PostgreSQL — explain without executing:
-    <pre><code>EXPLAIN SELECT * FROM shop.orders o
-JOIN shop.customers c ON c.customer_id = o.customer_id
-WHERE c.country_code = 'US';</code></pre>
-    <strong>Expected:</strong> plan tree with Seq Scan or Index Scan nodes.</li>
-  <li>Execute and measure:
-    <pre><code>EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
-SELECT * FROM shop.orders o
-JOIN shop.customers c ON c.customer_id = o.customer_id
-WHERE c.email LIKE '%@example.com';</code></pre>
-    <strong>Expected:</strong> actual row counts and timing per node.</li>
-  <li>SQLite:
-    <pre><code>EXPLAIN QUERY PLAN SELECT * FROM products WHERE sku = 'SKU-001';</code></pre></li>
-</ol>
-
-<h2>Read the plan</h2>
-<ul>
-  <li><strong>Seq Scan</strong> — reads whole table; OK for tiny tables, bad for large filtered tables.</li>
-  <li><strong>Index Scan / Index Only Scan</strong> — uses index; preferred for selective predicates.</li>
-  <li><strong>Nested Loop</strong> — for each outer row, probe inner — good with index on inner.</li>
-  <li><strong>Hash Join</strong> — builds hash table on one side — good for larger equi-joins.</li>
-  <li><strong>Sort</strong> — expensive; check if index provides order.</li>
-</ul>
-
-<h2>Anti-patterns & fixes</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>Anti-pattern</th><th>Symptom</th><th>Fix</th></tr></thead>
-  <tbody>
-    <tr><td>SELECT * in hot queries</td><td>Wide rows, no covering index</td><td>Project needed columns only</td></tr>
-    <tr><td>Function on indexed column <code>WHERE UPPER(email)=...</code></td><td>Seq scan</td><td>Store normalized email or functional index</td></tr>
-    <tr><td>Leading wildcard LIKE <code>'%x'</code></td><td>Index unusable</td><td>Full-text search / trigram index</td></tr>
-    <tr><td>Implicit type cast on indexed column</td><td>Seq scan</td><td>Match parameter type to column</td></tr>
-    <tr><td>N+1 queries from app loop</td><td>High round trips</td><td>JOIN or batch IN query</td></tr>
-    <tr><td>Missing index on FK child column</td><td>Slow joins/deletes on parent</td><td>Index FK columns</td></tr>
-    <tr><td>OR across columns</td><td>Multiple scans</td><td>UNION ALL rewrite or bitmap plans</td></tr>
-  </tbody>
-</table></div>
-
-<h2>Tuning checklist</h2>
-<ol>
-  <li>Reproduce with realistic data volume.</li>
-  <li>EXPLAIN (ANALYZE, BUFFERS) the slow query.</li>
-  <li>Check row estimate vs actual (stats stale?).</li>
-  <li>Add/adjust index on selective predicates and join keys.</li>
-  <li>Rewrite query (CTE vs subquery, EXISTS vs IN).</li>
-  <li>Update statistics: <code>ANALYZE shop.orders;</code> (PostgreSQL).</li>
-  <li>Re-measure; document before/after.</li>
-</ol>
-
-<h2>Lab — index proof</h2>
-<ol>
-  <li>Run EXPLAIN before index on <code>orders(customer_id)</code>.</li>
-  <li><code>CREATE INDEX ix_orders_customer ON shop.orders(customer_id);</code></li>
-  <li>Run EXPLAIN again — expect Index Scan or better join plan.</li>
-</ol>
-
-<div class="callout"><strong>Verify:</strong>
-  <ul>
-    <li>You ran EXPLAIN ANALYZE on a join query.</li>
-    <li>You identified at least one Seq Scan or Join node.</li>
-    <li>You named three SQL anti-patterns and fixes.</li>
-    <li>Index changed the plan (or you documented why not).</li>
-  </ul>
-</div>
+<p><strong>DCL</strong> controls who can do what.</p>
+<pre><code>|- PostgreSQL- style examples
+CREATE ROLE analyst LOGIN PASSWORD 'change- me';
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO analyst;
+REVOKE SELECT ON payroll FROM analyst;</code></pre>
+<div class="callout"><strong>Security:</strong> Give the minimum privileges required (least privilege).</div>
 `,
     quiz: {
-      q: "EXPLAIN ANALYZE differs from EXPLAIN because it:",
-      options: ["Only works on SQLite", "Actually runs the query and shows real timings", "Deletes the table", "Creates automatic indexes"],
+      q: "GRANT is part of:",
+      options: [
+        "DQL",
+        "DCL",
+        "HTML",
+        "CSS",
+      ],
       answer: 1
     }
   });
 
-  /* ========== REGISTER COURSE ========== */
+  L("sql23", {
+    module: "sql-m05",
+    title: "23 Operators",
+    level: "Beginner",
+    duration: "30 min",
+    objectives: [
+      "Use comparison and logical operators",
+      "Use IN, BETWEEN, LIKE",
+    ],
+    content: `
+<pre><code>SELECT * FROM products WHERE price &gt;= 500;
+SELECT * FROM products WHERE price BETWEEN 100 AND 500;
+SELECT * FROM customers WHERE city IN ('Pune','Mumbai');
+SELECT * FROM customers WHERE name LIKE 'A%';
+SELECT * FROM products WHERE price &gt; 100 AND in_stock = TRUE;
+SELECT * FROM products WHERE category IS NULL;</code></pre>
+<div class="table- wrap"><table>
+<thead><tr><th>Operator</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>= &lt;&gt; &lt; &gt; &lt;= &gt;=</code></td><td>Compare values</td></tr>
+<tr><td><code>AND OR NOT</code></td><td>Combine predicates</td></tr>
+<tr><td><code>LIKE</code></td><td>Pattern match</td></tr>
+<tr><td><code>IS NULL</code></td><td>Null test (not <code>= NULL</code>)</td></tr>
+</tbody></table></div>
+`,
+    quiz: {
+      q: "To test NULL correctly use:",
+      options: [
+        "= NULL",
+        "IS NULL",
+        "== null",
+        "EQUALS NONE",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql24", {
+    module: "sql-m05",
+    title: "24 WHERE",
+    level: "Beginner",
+    duration: "30 min",
+    objectives: [
+      "Filter rows with WHERE",
+      "Combine conditions safely",
+    ],
+    content: `
+<p><code>WHERE</code> filters rows <em>before</em> grouping.</p>
+<pre><code>SELECT id, name, city
+FROM customers
+WHERE city = 'Pune' AND name LIKE 'A%';</code></pre>
+<pre><code>|- Dangerous: missing WHERE updates ALL rows
+UPDATE products SET price = 0;  |- DON''T</code></pre>
+<div class="callout"><strong>Order reminder:</strong> FROM - WHERE - GROUP BY - HAVING - SELECT - ORDER BY</div>
+`,
+    quiz: {
+      q: "WHERE filters:",
+      options: [
+        "Columns only after SELECT list formatting",
+        "Rows based on conditions",
+        "Indexes exclusively",
+        "Users in Linux",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql25", {
+    module: "sql-m05",
+    title: "25 ORDER BY",
+    level: "Beginner",
+    duration: "25 min",
+    objectives: [
+      "Sort ascending/descending",
+      "Sort by multiple columns",
+    ],
+    content: `
+<pre><code>SELECT title, price FROM products
+ORDER BY price DESC, title ASC;</code></pre>
+<pre><code>SELECT name, city FROM customers
+ORDER BY city, name;</code></pre>
+<div class="callout"><strong>Note:</strong> Without ORDER BY, row order is not guaranteed.</div>
+`,
+    quiz: {
+      q: "ORDER BY price DESC means:",
+      options: [
+        "Cheapest first",
+        "Highest price first",
+        "Delete prices",
+        "Group prices",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql26", {
+    module: "sql-m05",
+    title: "26 GROUP BY",
+    level: "Intermediate",
+    duration: "35 min",
+    objectives: [
+      "Aggregate with COUNT/SUM/AVG",
+      "Group rows",
+    ],
+    content: `
+<pre><code>SELECT city, COUNT(*) AS customers
+FROM customers
+GROUP BY city
+ORDER BY customers DESC;</code></pre>
+<pre><code>SELECT customer_id, SUM(total) AS revenue
+FROM orders
+GROUP BY customer_id;</code></pre>
+<div class="callout"><strong>Rule:</strong> Non- aggregated SELECT columns must appear in GROUP BY.</div>
+`,
+    quiz: {
+      q: "GROUP BY is used with:",
+      options: [
+        "Only DROP TABLE",
+        "Aggregate functions like COUNT/SUM",
+        "CSS Grid",
+        "SSH keys",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql27", {
+    module: "sql-m05",
+    title: "27 HAVING",
+    level: "Intermediate",
+    duration: "30 min",
+    objectives: [
+      "Filter groups with HAVING",
+      "Contrast WHERE vs HAVING",
+    ],
+    content: `
+<pre><code>SELECT city, COUNT(*) AS n
+FROM customers
+GROUP BY city
+HAVING COUNT(*) &gt;= 2;</code></pre>
+<div class="table- wrap"><table>
+<thead><tr><th>WHERE</th><th>HAVING</th></tr></thead>
+<tbody>
+<tr><td>Filters rows</td><td>Filters groups</td></tr>
+<tr><td>Before GROUP BY</td><td>After GROUP BY</td></tr>
+<tr><td>Cannot use aggregate results easily</td><td>Can use COUNT/SUM-/td></tr>
+</tbody></table></div>
+`,
+    quiz: {
+      q: "HAVING filters:",
+      options: [
+        "Files on disk",
+        "Grouped results after aggregation",
+        "Only primary keys",
+        "TCP packets",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql28", {
+    module: "sql-m06",
+    title: "28 Joins",
+    level: "Intermediate",
+    duration: "45 min",
+    objectives: [
+      "Write INNER and LEFT joins",
+      "Join three tables",
+    ],
+    content: `
+<pre><code>SELECT c.name, o.id AS order_id, o.total
+FROM customers c
+INNER JOIN orders o ON o.customer_id = c.id;</code></pre>
+<pre><code>|- Customers even without orders
+SELECT c.name, o.id AS order_id
+FROM customers c
+LEFT JOIN orders o ON o.customer_id = c.id;</code></pre>
+<pre><code>SELECT c.name, p.title, oi.qty
+FROM orders o
+JOIN customers c ON c.id = o.customer_id
+JOIN order_items oi ON oi.order_id = o.id
+JOIN products p ON p.id = oi.product_id;</code></pre>
+<div class="callout"><strong>INNER</strong> keeps matches only. <strong>LEFT</strong> keeps all left rows.</div>
+`,
+    quiz: {
+      q: "LEFT JOIN returns:",
+      options: [
+        "Only matching right rows alone",
+        "All left rows, matched right data or NULL",
+        "Only duplicate keys",
+        "No rows ever",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql29", {
+    module: "sql-m06",
+    title: "29 Subqueries",
+    level: "Intermediate",
+    duration: "40 min",
+    objectives: [
+      "Use scalar and IN subqueries",
+      "Compare to joins",
+    ],
+    content: `
+<pre><code>|- Products above average price
+SELECT title, price
+FROM products
+WHERE price &gt; (SELECT AVG(price) FROM products);</code></pre>
+<pre><code>|- Customers who placed orders
+SELECT name FROM customers
+WHERE id IN (SELECT customer_id FROM orders);</code></pre>
+<pre><code>SELECT c.name,
+  (SELECT COUNT(*) FROM orders o WHERE o.customer_id = c.id) AS order_count
+FROM customers c;</code></pre>
+`,
+    quiz: {
+      q: "A subquery is:",
+      options: [
+        "A query nested inside another SQL statement",
+        "A Linux daemon",
+        "A CSS selector",
+        "A Git branch",
+      ],
+      answer: 0
+    }
+  });
+
+  L("sql30", {
+    module: "sql-m06",
+    title: "30 Views",
+    level: "Intermediate",
+    duration: "30 min",
+    objectives: [
+      "Create a view",
+      "Query through a view",
+    ],
+    content: `
+<p>A <strong>view</strong> is a saved query that looks like a table.</p>
+<pre><code>CREATE VIEW v_customer_revenue AS
+SELECT c.id, c.name, COALESCE(SUM(o.total),0) AS revenue
+FROM customers c
+LEFT JOIN orders o ON o.customer_id = c.id
+GROUP BY c.id, c.name;
+
+SELECT * FROM v_customer_revenue WHERE revenue &gt; 1000;</code></pre>
+<div class="callout"><strong>Use views</strong> for reuse, security (hide columns), and simplifying reports.</div>
+`,
+    quiz: {
+      q: "A view is best described as:",
+      options: [
+        "A physical backup file",
+        "A stored query presented like a table",
+        "A primary key only",
+        "A Redis list",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql31", {
+    module: "sql-m06",
+    title: "31 Indexes",
+    level: "Intermediate",
+    duration: "40 min",
+    objectives: [
+      "Create indexes",
+      "Know when indexes help",
+    ],
+    content: `
+<pre><code>CREATE INDEX ix_orders_customer ON orders(customer_id);
+CREATE INDEX ix_products_title ON products(title);
+
+SELECT * FROM orders WHERE customer_id = 42;</code></pre>
+<ul>
+<li>Speed up WHERE/JOIN lookups on selective columns</li>
+<li>Slow down heavy INSERT/UPDATE/DELETE slightly</li>
+<li>Do not index everything blindly</li>
+</ul>
+<pre><code>|- PostgreSQL
+EXPLAIN ANALYZE SELECT * FROM orders WHERE customer_id = 42;</code></pre>
+`,
+    quiz: {
+      q: "Indexes are primarily used to:",
+      options: [
+        "Make UI colors prettier",
+        "Speed up lookups/filters/joins",
+        "Delete foreign keys",
+        "Replace backups",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql32", {
+    module: "sql-m06",
+    title: "32 Stored Procedures",
+    level: "Advanced",
+    duration: "40 min",
+    objectives: [
+      "Understand procedures",
+      "See a portable pattern",
+    ],
+    content: `
+<p>A <strong>stored procedure</strong> is server-side procedural code invoked on demand (syntax varies by vendor).</p>
+<pre><code>|- PostgreSQL function used like a procedure
+CREATE OR REPLACE FUNCTION add_customer(p_name TEXT, p_city TEXT)
+RETURNS INT AS $$
+DECLARE new_id INT;
+BEGIN
+  INSERT INTO customers(name, city) VALUES (p_name, p_city)
+  RETURNING id INTO new_id;
+  RETURN new_id;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT add_customer('Kai', 'Delhi');</code></pre>
+<div class="callout"><strong>Note:</strong> Prefer set-based SQL; use procedures for controlled multi-step business logic.</div>
+`,
+    quiz: {
+      q: "Stored procedures run:",
+      options: [
+        "Only in the browser CSS engine",
+        "On the database server",
+        "Inside Photoshop",
+        "On DNS servers only",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql33", {
+    module: "sql-m06",
+    title: "33 Functions",
+    level: "Advanced",
+    duration: "35 min",
+    objectives: [
+      "Use built-in SQL functions",
+      "Contrast with procedures",
+    ],
+    content: `
+<pre><code>SELECT UPPER(name), LENGTH(name), COALESCE(city, 'Unknown')
+FROM customers;
+
+SELECT ROUND(AVG(price), 2) FROM products;
+SELECT DATE_TRUNC('month', created_at) FROM orders; |- Postgres</code></pre>
+<ul>
+<li><strong>Scalar functions</strong> return one value</li>
+<li><strong>Aggregate functions</strong> summarize many rows</li>
+<li>User- defined functions encapsulate reusable logic</li>
+</ul>
+`,
+    quiz: {
+      q: "COALESCE(a,b) returns:",
+      options: [
+        "Always null",
+        "First non- null among args",
+        "Only b",
+        "A new table",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql34", {
+    module: "sql-m06",
+    title: "34 Triggers",
+    level: "Advanced",
+    duration: "40 min",
+    objectives: [
+      "Explain trigger use cases",
+      "See an audit example",
+    ],
+    content: `
+<p>A <strong>trigger</strong> runs automatically on INSERT/UPDATE/DELETE.</p>
+<pre><code>|- Concept: audit price changes (Postgres-style sketch)
+CREATE TABLE product_audit (
+  product_id INT,
+  old_price NUMERIC,
+  new_price NUMERIC,
+  changed_at TIMESTAMP DEFAULT NOW()
+);
+
+|- Trigger function would INSERT into product_audit
+|- WHEN products.price is updated</code></pre>
+<ul>
+<li>Auditing / history</li>
+<li>Derived values</li>
+<li>Enforcing complex rules</li>
+</ul>
+<div class="callout"><strong>Caution:</strong> Hidden trigger logic can surprise app developers - document it.</div>
+`,
+    quiz: {
+      q: "Triggers execute:",
+      options: [
+        "Only when you open Excel",
+        "Automatically on table events",
+        "Never on UPDATE",
+        "On DNS resolve",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql35", {
+    module: "sql-m06",
+    title: "35 Transactions",
+    level: "Intermediate",
+    duration: "40 min",
+    objectives: [
+      "Apply ACID",
+      "Transfer funds safely",
+    ],
+    content: `
+<p>Transactions give <strong>ACID</strong>: Atomicity, Consistency, Isolation, Durability.</p>
+<pre><code>BEGIN;
+UPDATE accounts SET balance = balance - 1000 WHERE id = 1;
+UPDATE accounts SET balance = balance + 1000 WHERE id = 2;
+COMMIT;</code></pre>
+<pre><code>BEGIN;
+UPDATE accounts SET balance = balance - 1000 WHERE id = 1;
+|- error / doubt
+ROLLBACK;</code></pre>
+<div class="callout"><strong>Lab:</strong> Implement a money transfer that either fully succeeds or fully rolls back.</div>
+`,
+    quiz: {
+      q: "Atomicity means:",
+      options: [
+        "Partially commit forever",
+        "All steps succeed or none do",
+        "Ignore constraints",
+        "Drop indexes",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql36", {
+    module: "sql-m07",
+    title: "36 Performance Tuning",
+    level: "Advanced",
+    duration: "45 min",
+    objectives: [
+      "Use EXPLAIN",
+      "Fix common anti-patterns",
+    ],
+    content: `
+<pre><code>EXPLAIN ANALYZE
+SELECT * FROM orders WHERE customer_id = 42;</code></pre>
+<h2>Common fixes</h2>
+<ul>
+<li>Index join/filter columns</li>
+<li>Avoid <code>SELECT *</code> in hot paths</li>
+<li>Don't wrap indexed columns in functions in WHERE</li>
+<li>Update statistics (<code>ANALYZE</code> in Postgres)</li>
+<li>Rewrite correlated subqueries as joins when needed</li>
+</ul>
+<pre><code>|- Anti- pattern
+WHERE YEAR(created_at) = 2026
+|- Better (Postgres)
+WHERE created_at &gt;= DATE '2026-01-01'
+  AND created_at &lt;  DATE '2027-01-01';</code></pre>
+`,
+    quiz: {
+      q: "EXPLAIN ANALYZE helps you:",
+      options: [
+        "Design logos",
+        "See the real query plan and timings",
+        "Send email",
+        "Compile C++",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql37", {
+    module: "sql-m07",
+    title: "37 Database Design",
+    level: "Advanced",
+    duration: "45 min",
+    objectives: [
+      "Model entities and relationships",
+      "Choose keys and constraints",
+    ],
+    content: `
+<h2>Design steps</h2>
+<ol>
+<li>List entities (Customer, Order, Product).</li>
+<li>Define attributes and types.</li>
+<li>Identify PKs and relationships (1:N, N:M).</li>
+<li>Add FKs, UNIQUE, CHECK.</li>
+<li>Normalize to 3NF, then denormalize only with reason.</li>
+</ol>
+<pre><code>customers(id PK, email UNIQUE, name)
+products(id PK, title, price)
+orders(id PK, customer_id FK, ordered_at)
+order_items(order_id FK, product_id FK, qty, PRIMARY KEY(order_id, product_id))</code></pre>
+`,
+    quiz: {
+      q: "N:M relationships usually need:",
+      options: [
+        "A junction/bridge table",
+        "No tables",
+        "Only CSS",
+        "A single flat cell",
+      ],
+      answer: 0
+    }
+  });
+
+  L("sql38", {
+    module: "sql-m07",
+    title: "38 Interview Questions",
+    level: "Advanced",
+    duration: "40 min",
+    objectives: [
+      "Answer common SQL interview prompts",
+      "Practice aloud",
+    ],
+    content: `
+<h2>High- frequency questions</h2>
+<ol>
+<li>WHERE vs HAVING?</li>
+<li>INNER vs LEFT JOIN?</li>
+<li>What is a primary key vs unique key?</li>
+<li>What is normalization? Give 1NF/2NF/3NF.</li>
+<li>What is an index? Pros/cons?</li>
+<li>Explain ACID.</li>
+<li>DELETE vs TRUNCATE vs DROP?</li>
+<li>Find duplicates with SQL.</li>
+<li>Second highest salary query.</li>
+<li>Correlated subquery vs join?</li>
+</ol>
+<pre><code>|- Duplicates
+SELECT email, COUNT(*)
+FROM users
+GROUP BY email
+HAVING COUNT(*) &gt; 1;
+
+|- Second highest salary (portable idea)
+SELECT MAX(salary) FROM employees
+WHERE salary &lt; (SELECT MAX(salary) FROM employees);</code></pre>
+<div class="callout"><strong>Practice:</strong> Explain each answer with a tiny example sketch.</div>
+`,
+    quiz: {
+      q: "WHERE vs HAVING: HAVING filters:",
+      options: [
+        "Rows before grouping",
+        "Groups after aggregation",
+        "Only file names",
+        "OS users",
+      ],
+      answer: 1
+    }
+  });
+
+  L("sql39", {
+    module: "sql-m08",
+    title: "39 Final Assessment",
+    level: "Assessment",
+    duration: "90 min",
+    objectives: [
+      "Complete 60 questions in 90 minutes",
+      "Review your score card",
+    ],
+    content: `
+<p>This is your <strong>SQL Mastery Final Assessment</strong>.</p>
+<ul>
+<li><strong>60 questions</strong> covering lessons 01-8</li>
+<li><strong>90 minutes</strong> timed</li>
+<li>Multiple choice</li>
+<li>Score card at the end (score, %, pass/fail, review)</li>
+</ul>
+<p>Passing score: <strong>70%</strong> (42/60 or higher).</p>
+<p><a class="btn btn- primary" href="#/course/sql/assessment" data- nav>Start Final Assessment</a></p>
+<div class="callout"><strong>Rules:</strong> Timer auto- submits at 0:00. You can submit early. Results save in this browser.</div>
+`,
+    quiz: null
+  });
+
+  const assessmentQuestions = [
+    {
+      q: "SQL stands for?",
+      options: [
+        "Structured Query Language",
+        "Simple Query List",
+        "Server Queue Logic",
+        "Sequential Queue Language",
+      ],
+      answer: 0
+    },
+    {
+      q: "Which engine is embedded as a file DB?",
+      options: [
+        "Oracle RAC only",
+        "SQLite",
+        "Only Redis Cluster",
+        "Photoshop",
+      ],
+      answer: 1
+    },
+    {
+      q: "Default PostgreSQL port?",
+      options: [
+        "3306",
+        "5432",
+        "1521",
+        "27017",
+      ],
+      answer: 1
+    },
+    {
+      q: "Default MySQL port?",
+      options: [
+        "5432",
+        "3306",
+        "6379",
+        "1433",
+      ],
+      answer: 1
+    },
+    {
+      q: "Which is DDL?",
+      options: [
+        "SELECT",
+        "CREATE TABLE",
+        "COMMIT",
+        "GRANT",
+      ],
+      answer: 1
+    },
+    {
+      q: "Which is DML?",
+      options: [
+        "ALTER TABLE",
+        "INSERT INTO",
+        "REVOKE",
+        "CREATE INDEX",
+      ],
+      answer: 1
+    },
+    {
+      q: "Which is mainly DQL?",
+      options: [
+        "DROP",
+        "SELECT",
+        "GRANT",
+        "ROLLBACK",
+      ],
+      answer: 1
+    },
+    {
+      q: "COMMIT belongs to?",
+      options: [
+        "DQL",
+        "TCL",
+        "HTML",
+        "CSS",
+      ],
+      answer: 1
+    },
+    {
+      q: "GRANT belongs to?",
+      options: [
+        "DML",
+        "DCL",
+        "DQL",
+        "TCL",
+      ],
+      answer: 1
+    },
+    {
+      q: "A primary key must be?",
+      options: [
+        "Null and duplicate OK",
+        "Unique and NOT NULL",
+        "Float only",
+        "Unindexed always",
+      ],
+      answer: 1
+    },
+    {
+      q: "Foreign keys enforce?",
+      options: [
+        "UI themes",
+        "Referential integrity",
+        "DNS only",
+        "CPU affinity",
+      ],
+      answer: 1
+    },
+    {
+      q: "NOT NULL means?",
+      options: [
+        "Value optional",
+        "Value required",
+        "Always zero",
+        "Always unique",
+      ],
+      answer: 1
+    },
+    {
+      q: "Best type for money?",
+      options: [
+        "FLOAT",
+        "NUMERIC/DECIMAL",
+        "BOOLEAN",
+        "CLOB of HTML",
+      ],
+      answer: 1
+    },
+    {
+      q: "WHERE filters?",
+      options: [
+        "Groups after aggregation",
+        "Rows",
+        "Only indexes",
+        "Linux users",
+      ],
+      answer: 1
+    },
+    {
+      q: "HAVING filters?",
+      options: [
+        "Rows before GROUP BY",
+        "Groups after aggregation",
+        "CSS classes",
+        "Files",
+      ],
+      answer: 1
+    },
+    {
+      q: "ORDER BY price DESC sorts?",
+      options: [
+        "Low to high",
+        "High to low",
+        "Random",
+        "By name only",
+      ],
+      answer: 1
+    },
+    {
+      q: "INNER JOIN returns?",
+      options: [
+        "All left rows always",
+        "Matching rows only",
+        "All right rows always",
+        "No matches ever",
+      ],
+      answer: 1
+    },
+    {
+      q: "LEFT JOIN returns?",
+      options: [
+        "Matching only",
+        "All left + match or NULL",
+        "All right only",
+        "Cartesian only",
+      ],
+      answer: 1
+    },
+    {
+      q: "COUNT(*) counts?",
+      options: [
+        "Only nulls",
+        "Rows in the group/result",
+        "Columns only",
+        "Indexes only",
+      ],
+      answer: 1
+    },
+    {
+      q: "To test NULL use?",
+      options: [
+        "= NULL",
+        "IS NULL",
+        "== NULL",
+        "EQUALS NULL",
+      ],
+      answer: 1
+    },
+    {
+      q: "LIKE 'A%' matches?",
+      options: [
+        "Ends with A",
+        "Starts with A",
+        "Equals A only",
+        "Never matches",
+      ],
+      answer: 1
+    },
+    {
+      q: "BETWEEN 10 AND 20 is?",
+      options: [
+        "Exclusive ends always",
+        "Inclusive range typically",
+        "Only strings",
+        "Invalid SQL",
+      ],
+      answer: 1
+    },
+    {
+      q: "A view is?",
+      options: [
+        "A backup tape",
+        "Saved query as a table-like object",
+        "A PK constraint",
+        "A Redis stream",
+      ],
+      answer: 1
+    },
+    {
+      q: "Indexes help?",
+      options: [
+        "Lookups and joins",
+        "Only fonts",
+        "Deleting FK rules",
+        "HTTPS certs",
+      ],
+      answer: 1
+    },
+    {
+      q: "EXPLAIN ANALYZE?",
+      options: [
+        "Draws ERD art",
+        "Shows plan + actual timings",
+        "Sends email",
+        "Creates users",
+      ],
+      answer: 1
+    },
+    {
+      q: "Atomicity means?",
+      options: [
+        "Partial commits OK",
+        "All- or- nothing transaction",
+        "Ignore FKs",
+        "Drop schema",
+      ],
+      answer: 1
+    },
+    {
+      q: "ROLLBACK does?",
+      options: [
+        "Creates DB",
+        "Undoes uncommitted work",
+        "Grants root",
+        "Builds UI",
+      ],
+      answer: 1
+    },
+    {
+      q: "Normalization reduces?",
+      options: [
+        "Network cables",
+        "Redundancy/anomalies",
+        "Need for backups forever",
+        "SQL itself",
+      ],
+      answer: 1
+    },
+    {
+      q: "1NF requires?",
+      options: [
+        "Atomic values / no repeating groups",
+        "Only MongoDB",
+        "No primary keys",
+        "Only floats",
+      ],
+      answer: 0
+    },
+    {
+      q: "Junction table used for?",
+      options: [
+        "1:1 only",
+        "Many- to- many (N:M)",
+        "No relations",
+        "CSS layout",
+      ],
+      answer: 1
+    },
+    {
+      q: "DELETE vs DROP TABLE?",
+      options: [
+        "Same thing",
+        "DELETE removes rows; DROP removes table",
+        "DROP removes one row only",
+        "DELETE drops schema",
+      ],
+      answer: 1
+    },
+    {
+      q: "TRUNCATE typically?",
+      options: [
+        "Removes all rows quickly",
+        "Creates index",
+        "Grants role",
+        "Renames column",
+      ],
+      answer: 0
+    },
+    {
+      q: "Subquery is?",
+      options: [
+        "Nested query",
+        "OS thread",
+        "Git tag",
+        "K8s pod",
+      ],
+      answer: 0
+    },
+    {
+      q: "COALESCE(a,b) returns?",
+      options: [
+        "Always a",
+        "First non- null",
+        "Always null",
+        "Sum only",
+      ],
+      answer: 1
+    },
+    {
+      q: "UNIQUE allows?",
+      options: [
+        "Duplicate values freely",
+        "No duplicate non- null values",
+        "Only nulls",
+        "No SELECT",
+      ],
+      answer: 1
+    },
+    {
+      q: "CHECK constraint?",
+      options: [
+        "Validates a condition on values",
+        "Creates a user",
+        "Opens firewall",
+        "Sorts rows",
+      ],
+      answer: 0
+    },
+    {
+      q: "psql is CLI for?",
+      options: [
+        "MongoDB",
+        "PostgreSQL",
+        "Redis only",
+        "Photoshop",
+      ],
+      answer: 1
+    },
+    {
+      q: "sqlite3 ashovix.db creates?",
+      options: [
+        "A Postgres cluster",
+        "A SQLite DB file",
+        "An S3 bucket",
+        "A Docker swarm",
+      ],
+      answer: 1
+    },
+    {
+      q: "SELECT DISTINCT removes?",
+      options: [
+        "All rows",
+        "Duplicate result rows",
+        "Primary keys",
+        "Databases",
+      ],
+      answer: 1
+    },
+    {
+      q: "GROUP BY used with?",
+      options: [
+        "Aggregates",
+        "Only DROP",
+        "Only GRANT",
+        "SSH",
+      ],
+      answer: 0
+    },
+    {
+      q: "Correlated subquery?",
+      options: [
+        "Refs outer query per row",
+        "Never uses SQL",
+        "Only runs offline",
+        "Creates CSS",
+      ],
+      answer: 0
+    },
+    {
+      q: "Second highest salary approach?",
+      options: [
+        "MAX of values below MAX",
+        "DELETE MAX",
+        "DROP TABLE",
+        "GRANT ALL",
+      ],
+      answer: 0
+    },
+    {
+      q: "ACID Isolation means?",
+      options: [
+        "Transactions do not step on each other incorrectly",
+        "No durability",
+        "No consistency",
+        "No atomicity",
+      ],
+      answer: 0
+    },
+    {
+      q: "Trigger fires?",
+      options: [
+        "On table events automatically",
+        "Only on Mondays",
+        "Never on INSERT",
+        "In the browser only",
+      ],
+      answer: 0
+    },
+    {
+      q: "Stored procedure runs?",
+      options: [
+        "On DB server",
+        "In CSS",
+        "In DNS",
+        "In Excel chart",
+      ],
+      answer: 0
+    },
+    {
+      q: "Avoid for money?",
+      options: [
+        "NUMERIC",
+        "FLOAT/REAL for exact currency",
+        "DECIMAL",
+        "INTEGER cents",
+      ],
+      answer: 1
+    },
+    {
+      q: "FK child row pointing missing parent?",
+      options: [
+        "Allowed always",
+        "Blocked if FK enforced",
+        "Required by SQL",
+        "Creates view",
+      ],
+      answer: 1
+    },
+    {
+      q: "CREATE INDEX on customer_id helps?",
+      options: [
+        "JOIN/WHERE on customer_id",
+        "Only CHANGE COLUMN colors",
+        "Dropping DB",
+        "SMTP",
+      ],
+      answer: 0
+    },
+    {
+      q: "SELECT * in hot path?",
+      options: [
+        "Always best",
+        "Often wasteful; prefer needed columns",
+        "Required by law",
+        "Disables indexes",
+      ],
+      answer: 1
+    },
+    {
+      q: "WHERE YEAR(col)=2026 downside?",
+      options: [
+        "May prevent index use",
+        "Always faster",
+        "Required syntax",
+        "Drops table",
+      ],
+      answer: 0
+    },
+    {
+      q: "SAVEPOINT allows?",
+      options: [
+        "Partial rollback inside transaction",
+        "Creating OS users",
+        "Dropping cluster",
+        "CSS animation",
+      ],
+      answer: 0
+    },
+    {
+      q: "DCL example?",
+      options: [
+        "SELECT 1",
+        "GRANT SELECT ON t TO u",
+        "INSERT INTO t",
+        "COMMIT",
+      ],
+      answer: 1
+    },
+    {
+      q: "Relational data stored mainly as?",
+      options: [
+        "Tables of rows/columns",
+        "Only graphs",
+        "Only raw photos",
+        "Only CSS",
+      ],
+      answer: 0
+    },
+    {
+      q: "Spreadsheet vs DB: DBs better for?",
+      options: [
+        "Fonts",
+        "Concurrent integrity & scale",
+        "Clipart",
+        "Animations",
+      ],
+      answer: 1
+    },
+    {
+      q: "INNER JOIN ON condition missing?",
+      options: [
+        "May produce Cartesian product",
+        "Always errors in all engines",
+        "Deletes data",
+        "Creates PK",
+      ],
+      answer: 0
+    },
+    {
+      q: "HAVING COUNT(*) > 1 finds?",
+      options: [
+        "Groups with more than one row",
+        "Only empty tables",
+        "Primary keys",
+        "Linux processes",
+      ],
+      answer: 0
+    },
+    {
+      q: "View benefits include?",
+      options: [
+        "Reuse and simplifying queries",
+        "Replacing need for backups forever",
+        "Disabling SQL",
+        "Removing ACID",
+      ],
+      answer: 0
+    },
+    {
+      q: "Transaction COMMIT?",
+      options: [
+        "Makes changes permanent",
+        "Undoes all",
+        "Drops DB",
+        "Creates role",
+      ],
+      answer: 0
+    },
+    {
+      q: "Interview: UNIQUE vs PK?",
+      options: [
+        "PK identifies row & is unique/not null; UNIQUE can allow one NULL depending on engine",
+        "They are identical always",
+        "UNIQUE is DDL only for views",
+        "PK cannot be integer",
+      ],
+      answer: 0
+    },
+    {
+      q: "Final goal of SQL Mastery labs?",
+      options: [
+        "Write correct, safe, efficient SQL with understanding",
+        "Memorize only GUI clicks",
+        "Avoid SELECT forever",
+        "Replace networking",
+      ],
+      answer: 0
+    },
+  ];
 
   window.FORGE.register({
     id: "sql",
     order: 1,
     title: "SQL Mastery",
     shortTitle: "SQL",
-    tagline: "Portable SQL from zero to production — SQLite & PostgreSQL, nothing skipped",
-    level: "Beginner → Advanced",
+    tagline: "39 clear topics with examples - from databases to final assessment",
+    level: "Beginner to Advanced",
     accent: "#6aa8ff",
-    description: "Complete step-by-step SQL course: install SQLite and PostgreSQL on Windows and Linux, DDL/DML, queries, joins, windows, design, indexes, views, transactions, routines, and EXPLAIN tuning.",
-    audience: "Developers, analysts, aspiring DBAs, and anyone who needs production-grade SQL skills",
+    duration: "20+ hrs",
+    description: "Complete SQL Mastery: databases, SQL basics, installs (PostgreSQL, SQLite, MySQL), tables/rows/columns/types/constraints/keys, normalization, DDL/DML/DQL/TCL/DCL, querying, joins, views, indexes, routines, transactions, tuning, design, interviews, and a timed final assessment.",
+    audience: "Beginners to job-ready SQL practitioners",
     modules: [
-      { id: "sql-m01", title: "Getting Started", lessonIds: ["sql01", "sql02", "sql03"] },
-      { id: "sql-m02", title: "DDL — Defining Structure", lessonIds: ["sql04", "sql05", "sql06"] },
-      { id: "sql-m03", title: "DML — Changing Data", lessonIds: ["sql07", "sql08", "sql09"] },
-      { id: "sql-m04", title: "Queries — Reading Data", lessonIds: ["sql10", "sql11", "sql12", "sql13", "sql14", "sql15", "sql16"] },
-      { id: "sql-m05", title: "Design & Database Objects", lessonIds: ["sql17", "sql18", "sql19", "sql20"] },
-      { id: "sql-m06", title: "Professional SQL", lessonIds: ["sql21", "sql22"] }
+      { id: "sql-m01", title: "Foundations", lessonIds: ["sql01","sql02","sql03","sql04"] },
+      { id: "sql-m02", title: "Install & Tools", lessonIds: ["sql05","sql06","sql07","sql08"] },
+      { id: "sql-m03", title: "Data Model Basics", lessonIds: ["sql09","sql10","sql11","sql12","sql13","sql14","sql15","sql16","sql17"] },
+      { id: "sql-m04", title: "SQL Language Families", lessonIds: ["sql18","sql19","sql20","sql21","sql22"] },
+      { id: "sql-m05", title: "Query Essentials", lessonIds: ["sql23","sql24","sql25","sql26","sql27"] },
+      { id: "sql-m06", title: "Joins & Database Objects", lessonIds: ["sql28","sql29","sql30","sql31","sql32","sql33","sql34","sql35"] },
+      { id: "sql-m07", title: "Professional Skills", lessonIds: ["sql36","sql37","sql38"] },
+      { id: "sql-m08", title: "Capstone", lessonIds: ["sql39"] }
     ],
     lessons,
     labs: [
-      {
-        id: "sql-lab01",
-        title: "Install & verify SQLite + PostgreSQL",
-        lesson: "sql02",
-        steps: "Complete Windows or Linux install paths for both engines. Run sqlite3 --version, psql --version, SELECT 1 in each. Document passwords and workspace folder."
-      },
-      {
-        id: "sql-lab02",
-        title: "Build the shop schema",
-        lesson: "sql05",
-        steps: "Create ashovix database and shop schema. Create customers, products, orders with all constraints. Insert seed rows. Verify with \\d and test FK violation."
-      },
-      {
-        id: "sql-lab03",
-        title: "CLI power session",
-        lesson: "sql03",
-        steps: "Open sqlite3 and psql interactively. Run meta-commands, execute hello.sql, optionally connect DBeaver and run SELECT 42."
-      },
-      {
-        id: "sql-lab04",
-        title: "Safe UPDATE/DELETE drill",
-        lesson: "sql08",
-        steps: "For three scenarios, write SELECT dry-run first, then UPDATE or DELETE inside BEGIN/COMMIT. Demonstrate FK blocking a bad delete."
-      },
-      {
-        id: "sql-lab05",
-        title: "Upsert staging sync",
-        lesson: "sql09",
-        steps: "Load products_staging from CSV or manual INSERT. Run ON CONFLICT or MERGE to sync into products. Verify counts and updated prices."
-      },
-      {
-        id: "sql-lab06",
-        title: "Join challenge",
-        lesson: "sql13",
-        steps: "Write queries: inner join orders to customers; left join all customers; three-table order line report; self-join on employees."
-      },
-      {
-        id: "sql-lab07",
-        title: "Analytics with windows",
-        lesson: "sql16",
-        steps: "Rank products by price; running total per customer; LAG delta between orders. Compare output to equivalent subquery approach."
-      },
-      {
-        id: "sql-lab08",
-        title: "ACID transfer transaction",
-        lesson: "sql20",
-        steps: "Create accounts table. Transfer funds in one transaction. Demonstrate ROLLBACK and SAVEPOINT. Show balances before and after."
-      },
-      {
-        id: "sql-lab09",
-        title: "Index & EXPLAIN before/after",
-        lesson: "sql22",
-        steps: "Pick a slow join. Capture EXPLAIN ANALYZE. Add index on FK column. Re-run and document plan change and timing."
-      },
-      {
-        id: "sql-lab10",
-        title: "Normalization refactor",
-        lesson: "sql17",
-        steps: "Start from a denormalized table with repeating phone numbers. Refactor to 1NF/3NF. Migrate data with INSERT...SELECT."
-      }
-    ]
+      { id: "sql- lab01", title: "Install PostgreSQL & verify", lesson: "sql05", steps: "Install Postgres, connect with psql, run SELECT version();" },
+      { id: "sql- lab02", title: "SQLite first database", lesson: "sql06", steps: "Create ashovix.db, CREATE TABLE, INSERT, SELECT." },
+      { id: "sql- lab03", title: "MySQL practice schema", lesson: "sql07", steps: "Create database ashovix and a customers table." },
+      { id: "sql- lab04", title: "Keys & constraints", lesson: "sql15", steps: "Build customers/orders with PK/FK and prove FK rejection." },
+      { id: "sql- lab05", title: "Joins report", lesson: "sql28", steps: "Write INNER and LEFT join reports across customers and orders." },
+      { id: "sql- lab06", title: "Transaction transfer", lesson: "sql35", steps: "Transfer funds with BEGIN/COMMIT and demonstrate ROLLBACK." },
+      { id: "sql- lab07", title: "EXPLAIN before/after index", lesson: "sql36", steps: "Capture EXPLAIN, add index, compare plan." }
+    ],
+    assessment: {
+      id: "sql- final",
+      title: "SQL Mastery Final Assessment",
+      durationMinutes: 90,
+      passPercent: 70,
+      questionCount: 60,
+      questions: assessmentQuestions
+    }
   });
 })();

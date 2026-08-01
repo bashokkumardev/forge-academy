@@ -909,6 +909,7 @@ kubectl apply -f deploy.yaml</pre>
         <div class="cta-row" style="margin:1.25rem 0 2rem">
           <a class="btn btn-primary" href="#/course/${c.id}/lesson/${first}" data-nav>Watch Lesson / Start</a>
           <a class="btn btn-ghost" href="#/course/${c.id}/labs" data-nav>Practice Labs</a>
+          ${c.assessment ? `<a class="btn btn-ghost" href="#/course/${c.id}/assessment" data-nav>Final Assessment (60 Q · 90 min)</a>` : ""}
           ${c.reference ? `<a class="btn btn-ghost" href="#/course/${c.id}/reference" data-nav>Notes / Quick Ref</a>` : ""}
         </div>
         <div class="curriculum-list">
@@ -938,6 +939,7 @@ kubectl apply -f deploy.yaml</pre>
           <div class="sidebar-actions">
             <a href="#/course/${course.id}/lesson/${activeId}" data-nav>▶ Watch lesson</a>
             <a href="#/course/${course.id}/labs" data-nav>🧪 Practice quiz / labs</a>
+            ${course.assessment ? `<a href="#/course/${course.id}/assessment" data-nav>📋 Final Assessment</a>` : ""}
             <a href="#/course/${course.id}" data-nav>📝 Download notes (overview)</a>
             <a href="#/projects" data-nav>🛠️ Assignments / projects</a>
           </div>
@@ -1042,6 +1044,184 @@ kubectl apply -f deploy.yaml</pre>
       </div>`;
   }
 
+  function viewAssessment(courseId) {
+    const c = F.get(courseId);
+    if (!c || !c.assessment) return viewNotFound();
+    const a = c.assessment;
+    const qs = a.questions || [];
+    const saved = safeJson(localStorage.getItem(`ashovix-assessment-${c.id}`), null);
+
+    if (saved && saved.submitted) {
+      return renderAssessmentScorecard(c, a, saved);
+    }
+
+    return `
+      <div class="page assessment-page" id="assessment-root"
+        data-course="${c.id}"
+        data-minutes="${a.durationMinutes || 90}"
+        data-pass="${a.passPercent || 70}">
+        <div class="assessment-top">
+          <div>
+            <div class="section-label">Final Assessment</div>
+            <h1>${a.title || "Final Assessment"}</h1>
+            <p class="lead">${qs.length} questions · ${a.durationMinutes || 90} minutes · Pass mark ${a.passPercent || 70}%</p>
+          </div>
+          <div class="assessment-timer" id="assessment-timer" aria-live="polite">90:00</div>
+        </div>
+        <div class="assessment-progress">
+          <div class="progress-bar"><span id="assessment-progress-bar" style="width:0%"></span></div>
+          <span id="assessment-progress-label">0 / ${qs.length} answered</span>
+        </div>
+        <form id="assessment-form" class="assessment-form">
+          ${qs.map((q, i) => `
+            <fieldset class="assessment-q" data-q-index="${i}">
+              <legend>Q${i + 1}. ${q.q}</legend>
+              ${q.options.map((opt, oi) => `
+                <label class="assessment-opt">
+                  <input type="radio" name="q${i}" value="${oi}" />
+                  <span>${opt}</span>
+                </label>`).join("")}
+            </fieldset>`).join("")}
+          <div class="assessment-actions">
+            <a class="btn btn-ghost" href="#/course/${c.id}/lesson/sql39" data-nav>Cancel</a>
+            <button type="submit" class="btn btn-primary" id="assessment-submit">Submit assessment</button>
+          </div>
+        </form>
+      </div>`;
+  }
+
+  function safeJson(raw, fallback) {
+    try { return raw ? JSON.parse(raw) : fallback; } catch (_) { return fallback; }
+  }
+
+  function renderAssessmentScorecard(c, a, result) {
+    const pct = result.percent;
+    const passed = pct >= (a.passPercent || 70);
+    const mins = Math.floor((result.usedSeconds || 0) / 60);
+    const secs = (result.usedSeconds || 0) % 60;
+    const review = (result.review || []).map((r) => `
+      <div class="score-review ${r.correct ? "ok" : "bad"}">
+        <strong>Q${r.n}. ${r.q}</strong>
+        <p>Your answer: ${r.yours == null ? "<em>Not answered</em>" : r.yours}</p>
+        ${r.correct ? "" : `<p>Correct: ${r.correctText}</p>`}
+      </div>`).join("");
+
+    return `
+      <div class="page assessment-page">
+        <div class="section-label">Score card</div>
+        <h1>${a.title || "Final Assessment"} — Results</h1>
+        <div class="score-card ${passed ? "pass" : "fail"}">
+          <div class="score-big">${pct}%</div>
+          <div class="score-meta">
+            <p><strong>${passed ? "Passed" : "Not passed"}</strong> · Pass mark ${a.passPercent || 70}%</p>
+            <p>${result.correct} / ${result.total} correct</p>
+            <p>Time used: ${mins}m ${String(secs).padStart(2, "0")}s of ${a.durationMinutes || 90}m</p>
+            <p>Submitted: ${result.at || ""}</p>
+          </div>
+        </div>
+        <div class="cta-row" style="margin:1.25rem 0 2rem">
+          <button type="button" class="btn btn-primary" id="assessment-retry" data-course="${c.id}">Retake assessment</button>
+          <a class="btn btn-ghost" href="#/course/${c.id}" data-nav>Back to course</a>
+        </div>
+        <h2>Review</h2>
+        <div class="score-review-list">${review}</div>
+      </div>`;
+  }
+
+  function initAssessment(courseId) {
+    const root = $("#assessment-root");
+    const retry = $("#assessment-retry");
+    if (retry) {
+      retry.addEventListener("click", () => {
+        localStorage.removeItem(`ashovix-assessment-${retry.dataset.course}`);
+        location.hash = `#/course/${retry.dataset.course}/assessment`;
+        render();
+      });
+      return;
+    }
+    if (!root) return;
+
+    const c = F.get(courseId);
+    const a = c.assessment;
+    const total = (a.questions || []).length;
+    const minutes = Number(root.dataset.minutes) || 90;
+    let remaining = minutes * 60;
+    const startedAt = Date.now();
+    const timerEl = $("#assessment-timer");
+    const bar = $("#assessment-progress-bar");
+    const label = $("#assessment-progress-label");
+    const form = $("#assessment-form");
+    let submitted = false;
+
+    const submitAssessment = (auto) => {
+      if (submitted) return;
+      submitted = true;
+      clearTimeout(window.__assessmentTimer);
+      const usedSeconds = Math.min(minutes * 60, Math.round((Date.now() - startedAt) / 1000));
+      let correct = 0;
+      const review = a.questions.map((q, i) => {
+        const chosen = form.querySelector(`input[name="q${i}"]:checked`);
+        const yoursIdx = chosen ? Number(chosen.value) : null;
+        const ok = yoursIdx === q.answer;
+        if (ok) correct += 1;
+        return {
+          n: i + 1,
+          q: q.q,
+          yours: yoursIdx == null ? null : q.options[yoursIdx],
+          correctText: q.options[q.answer],
+          correct: ok
+        };
+      });
+      const percent = Math.round((correct / total) * 100);
+      const payload = {
+        submitted: true,
+        auto: !!auto,
+        correct,
+        total,
+        percent,
+        usedSeconds,
+        at: new Date().toLocaleString(),
+        review
+      };
+      localStorage.setItem(`ashovix-assessment-${c.id}`, JSON.stringify(payload));
+      if (percent >= (a.passPercent || 70)) markDone(c.id, "sql39");
+      render();
+    };
+
+    const tick = () => {
+      const m = Math.floor(remaining / 60);
+      const s = remaining % 60;
+      if (timerEl) {
+        timerEl.textContent = `${m}:${String(s).padStart(2, "0")}`;
+        timerEl.classList.toggle("urgent", remaining <= 300);
+      }
+      if (remaining <= 0) {
+        submitAssessment(true);
+        return;
+      }
+      remaining -= 1;
+      window.__assessmentTimer = setTimeout(tick, 1000);
+    };
+
+    const updateProgress = () => {
+      const answered = form.querySelectorAll("input[type=radio]:checked").length;
+      if (bar) bar.style.width = `${Math.round((answered / total) * 100)}%`;
+      if (label) label.textContent = `${answered} / ${total} answered`;
+    };
+
+    form?.addEventListener("change", updateProgress);
+    updateProgress();
+    clearTimeout(window.__assessmentTimer);
+    tick();
+
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const answered = form.querySelectorAll("input[type=radio]:checked").length;
+      if (answered < total && !confirm(`You answered ${answered} of ${total}. Submit anyway?`)) return;
+      submitAssessment(false);
+    });
+  }
+
   function viewNotFound() {
     return `<div class="page"><h1>Not found</h1><p class="lead">That page isn’t in Ashovix Labs.</p><a class="btn btn-primary" href="#/" data-nav>Home</a></div>`;
   }
@@ -1064,6 +1244,7 @@ kubectl apply -f deploy.yaml</pre>
     else if (path === "course" && parts[1] && parts[2] === "lesson" && parts[3]) html = viewLesson(parts[1], parts[3]);
     else if (path === "course" && parts[1] && parts[2] === "labs") html = viewLabs(parts[1]);
     else if (path === "course" && parts[1] && parts[2] === "reference") html = viewReference(parts[1]);
+    else if (path === "course" && parts[1] && parts[2] === "assessment") html = viewAssessment(parts[1]);
     else if (path === "course" && parts[1]) html = viewCourse(parts[1]);
     else html = viewNotFound();
 
@@ -1144,6 +1325,7 @@ kubectl apply -f deploy.yaml</pre>
     });
 
     if (parts[0] === "workspace") initWorkspace();
+    if (parts[0] === "course" && parts[2] === "assessment") initAssessment(parts[1]);
 
     const form = $("#auth-form");
     if (form) {
