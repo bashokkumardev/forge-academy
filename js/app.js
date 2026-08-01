@@ -936,13 +936,6 @@ kubectl apply -f deploy.yaml</pre>
           <h2><a href="#/course/${course.id}" data-nav style="color:inherit">${course.shortTitle || course.title}</a></h2>
           <p>${p.pct}% complete · Certificate ${p.pct}%</p>
           <div class="progress-bar"><span style="width:${p.pct}%"></span></div>
-          <div class="sidebar-actions">
-            <a href="#/course/${course.id}/lesson/${activeId}" data-nav>▶ Watch lesson</a>
-            <a href="#/course/${course.id}/labs" data-nav>🧪 Practice quiz / labs</a>
-            ${course.assessment ? `<a href="#/course/${course.id}/assessment" data-nav>📋 Final Assessment</a>` : ""}
-            <a href="#/course/${course.id}" data-nav>📝 Download notes (overview)</a>
-            <a href="#/projects" data-nav>🛠️ Assignments / projects</a>
-          </div>
         </div>
         ${course.modules.map((m) => {
           const open = m.lessonIds.includes(activeId);
