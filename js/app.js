@@ -240,14 +240,6 @@ kubectl apply -f deploy.yaml</pre>
         </div>
       </section>
 
-      <div class="stats-bar" id="stats-bar" data-animate-stats>
-        ${M.stats.map((s) => `
-          <div class="stat-item">
-            <strong data-count="${s.value}" data-suffix="${s.suffix}" data-decimals="${s.decimals || 0}">0</strong>
-            <span>${s.label}</span>
-          </div>`).join("")}
-      </div>
-
       <section class="section reveal">
         <div class="section-head">
           <div>
@@ -308,6 +300,14 @@ kubectl apply -f deploy.yaml</pre>
             </article>`).join("")}
         </div>
       </section>
+
+      <div class="stats-bar" id="stats-bar" data-animate-stats>
+        ${M.stats.map((s) => `
+          <div class="stat-item">
+            <strong data-count="${s.value}" data-suffix="${s.suffix}" data-decimals="${s.decimals || 0}">0</strong>
+            <span>${s.label}</span>
+          </div>`).join("")}
+      </div>
 
       <section class="section reveal">
         <div class="section-head">
