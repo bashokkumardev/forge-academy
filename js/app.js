@@ -223,7 +223,6 @@ kubectl apply -f deploy.yaml</pre>
   function viewHome() {
     const courses = F.list();
     const featured = courses.filter((c) => c.featured).slice(0, 8);
-    const popular = courses.filter((c) => (c.badge || "").includes("Popular") || c.featured).slice(0, 10);
 
     return `
       <section class="hero">
@@ -290,19 +289,6 @@ kubectl apply -f deploy.yaml</pre>
               <h3>${f.title}</h3>
               <p>${f.desc}</p>
             </article>`).join("")}
-        </div>
-      </section>
-
-      <section class="section reveal">
-        <div class="section-head">
-          <div>
-            <div class="section-label">Featured</div>
-            <h2>Popular courses</h2>
-            <p>What students open first — with badges for what’s hot.</p>
-          </div>
-        </div>
-        <div class="carousel" tabindex="0" aria-label="Popular courses carousel">
-          ${popular.map((c) => courseCard(c)).join("")}
         </div>
       </section>
 
