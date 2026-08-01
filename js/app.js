@@ -166,11 +166,12 @@
     const lessons = (c.orderedLessonIds || []).length;
     const modules = (c.modules || []).length;
     const badge = c.badge ? `<span class="course-badge ${badgeClass(c.badge)}">${c.badge}</span>` : "";
+    const logo = (window.CourseLogo && CourseLogo.forCourse(c)) || "";
     return `
       <article class="course-card" style="animation-delay:${opts.delay || 0}ms">
         <div class="course-thumb" style="--c:${c.accent || "var(--accent)"}">
           ${badge}
-          <span aria-hidden="true">${c.thumbnail || "📘"}</span>
+          ${logo}
         </div>
         <div class="course-body">
           <div class="difficulty">${c.difficulty || c.level || "All levels"}</div>
@@ -539,7 +540,7 @@ kubectl apply -f deploy.yaml</pre>
       <div class="page">
         <div class="section-label">${c.category || "Course"}</div>
         <p class="difficulty" style="margin:0 0 .5rem">${c.difficulty || c.level}</p>
-        <h1>${c.thumbnail || ""} ${c.title}</h1>
+        <h1 class="course-title-row">${(window.CourseLogo && CourseLogo.forCourse(c)) || ""} <span>${c.title}</span></h1>
         <p class="lead">${c.description}</p>
         <div class="progress-bar" style="max-width:360px;margin-bottom:1rem"><span style="width:${p.pct}%"></span></div>
         <p style="color:var(--muted);margin-top:0">${p.done}/${p.total} lessons · ${c.modules.length} modules · ${c.duration || ""} · Certificate progress ${p.pct}%</p>

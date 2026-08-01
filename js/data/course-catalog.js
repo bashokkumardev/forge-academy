@@ -124,7 +124,9 @@
       accent: meta.accent || "#4DA3FF",
       description: meta.description,
       audience: meta.audience || "Developers & engineers",
-      thumbnail: meta.thumbnail || "📘",
+      thumbnail: meta.thumbnail || "",
+      logo: meta.logo || meta.id,
+      technology: meta.technology || meta.logo || meta.id,
       badge: meta.badge || "",
       difficulty: meta.difficulty || "Intermediate",
       duration: meta.duration || estimateDuration(ordered.length),
@@ -147,7 +149,7 @@
         id: "postgres", order: 5, prefix: "pg", title: "PostgreSQL Complete", shortTitle: "PostgreSQL",
         tagline: "Production PostgreSQL from install to tuning",
         description: "Install, SQL, indexes, JSONB, roles, backup, replication concepts, and performance basics.",
-        thumbnail: "🐘", badge: "Best Seller", difficulty: "Beginner → Advanced", featured: true,
+        badge: "Best Seller", difficulty: "Beginner → Advanced", featured: true,
         accent: "#4DA3FF", category: "Databases", duration: "18+ hrs"
       },
       modules: [
@@ -172,7 +174,7 @@
         id: "redis", order: 6, prefix: "rd", title: "Redis Essentials", shortTitle: "Redis",
         tagline: "In-memory data structures for speed",
         description: "Install Redis, master strings/lists/hashes/sets, TTLs, persistence basics, and caching patterns.",
-        thumbnail: "⚡", badge: "New", difficulty: "Beginner → Intermediate", featured: true,
+        badge: "New", difficulty: "Beginner → Intermediate", featured: true,
         accent: "#F4B942", category: "Databases"
       },
       modules: [
@@ -192,7 +194,7 @@
         id: "linux", order: 7, prefix: "lx", title: "Linux Mastery", shortTitle: "Linux",
         tagline: "Command line, users, services, and automation",
         description: "Filesystem, permissions, processes, networking basics, systemd, and shell productivity for engineers.",
-        thumbnail: "🐧", badge: "Most Popular", difficulty: "Beginner → Advanced", featured: true,
+        badge: "Most Popular", difficulty: "Beginner → Advanced", featured: true,
         accent: "#2DD4BF", category: "Platform"
       },
       modules: [
@@ -213,7 +215,7 @@
         id: "docker", order: 8, prefix: "dk", title: "Docker Complete", shortTitle: "Docker",
         tagline: "Containers from first image to Compose",
         description: "Images, containers, volumes, networks, Dockerfiles, multi-stage builds, and Compose stacks.",
-        thumbnail: "🐳", badge: "Most Popular", difficulty: "Beginner → Intermediate", featured: true,
+        badge: "Most Popular", difficulty: "Beginner → Intermediate", featured: true,
         accent: "#4DA3FF", category: "DevOps"
       },
       modules: [
@@ -233,7 +235,7 @@
         id: "kubernetes", order: 9, prefix: "k8", title: "Kubernetes", shortTitle: "Kubernetes",
         tagline: "Orchestrate containers at scale",
         description: "Pods, Deployments, Services, ConfigMaps, Ingress concepts, and kubectl daily workflow.",
-        thumbnail: "☸️", badge: "Updated", difficulty: "Intermediate → Advanced", featured: true,
+        badge: "Updated", difficulty: "Intermediate → Advanced", featured: true,
         accent: "#2DD4BF", category: "DevOps"
       },
       modules: [
@@ -249,7 +251,7 @@
         id: "terraform", order: 10, prefix: "tf", title: "Terraform", shortTitle: "Terraform",
         tagline: "Infrastructure as code",
         description: "Providers, resources, state, modules, and safe plan/apply workflows.",
-        thumbnail: "🧱", badge: "New", difficulty: "Intermediate", category: "DevOps", accent: "#F4B942"
+        badge: "New", difficulty: "Intermediate", category: "DevOps", accent: "#F4B942"
       },
       modules: [
         { title: "IaC Foundations", lessons: [
@@ -264,7 +266,7 @@
         id: "aws", order: 11, prefix: "aw", title: "AWS Cloud Practitioner", shortTitle: "AWS",
         tagline: "Core AWS services for builders",
         description: "IAM, EC2, S3, VPC basics, RDS overview, and Well-Architected thinking.",
-        thumbnail: "☁️", badge: "Best Seller", difficulty: "Beginner → Intermediate", featured: true,
+        badge: "Best Seller", difficulty: "Beginner → Intermediate", featured: true,
         category: "Cloud", accent: "#F4B942"
       },
       modules: [
@@ -280,7 +282,7 @@
         id: "azure", order: 12, prefix: "az", title: "Azure Fundamentals", shortTitle: "Azure",
         tagline: "Microsoft Azure core services",
         description: "Subscriptions, Resource Groups, VMs, Storage, Entra ID basics, and Azure SQL overview.",
-        thumbnail: "🔷", badge: "New", difficulty: "Beginner", category: "Cloud", accent: "#4DA3FF"
+        badge: "New", difficulty: "Beginner", category: "Cloud", accent: "#4DA3FF"
       },
       modules: [
         { title: "Azure Basics", lessons: [
@@ -294,7 +296,7 @@
         id: "gcp", order: 13, prefix: "gc", title: "Google Cloud Essentials", shortTitle: "GCP",
         tagline: "GCP foundations for engineers",
         description: "Projects, IAM, Compute Engine, Cloud Storage, and Cloud SQL concepts.",
-        thumbnail: "🌈", badge: "New", difficulty: "Beginner", category: "Cloud", accent: "#2DD4BF"
+        badge: "New", difficulty: "Beginner", category: "Cloud", accent: "#2DD4BF"
       },
       modules: [
         { title: "GCP Basics", lessons: [
@@ -308,7 +310,7 @@
         id: "oracle", order: 14, prefix: "or", title: "Oracle Database", shortTitle: "Oracle",
         tagline: "Oracle fundamentals for DBAs & developers",
         description: "Instances, schemas, SQL*Plus/SQLcl, tablespaces concepts, and backup awareness.",
-        thumbnail: "🔴", difficulty: "Intermediate", category: "Databases", accent: "#F4B942"
+        difficulty: "Intermediate", category: "Databases", accent: "#F4B942"
       },
       modules: [
         { title: "Oracle Foundations", lessons: [
@@ -322,7 +324,7 @@
         id: "mysql", order: 15, prefix: "my", title: "MySQL Complete", shortTitle: "MySQL",
         tagline: "MySQL for apps and operations",
         description: "Install, InnoDB, SQL, users, dumps, and replication concepts.",
-        thumbnail: "🐬", badge: "Updated", difficulty: "Beginner → Intermediate", category: "Databases", accent: "#4DA3FF"
+        badge: "Updated", difficulty: "Beginner → Intermediate", category: "Databases", accent: "#4DA3FF"
       },
       modules: [
         { title: "MySQL Core", lessons: [
@@ -337,7 +339,7 @@
         id: "python-dba", order: 16, prefix: "py", title: "Python for DBAs", shortTitle: "Python",
         tagline: "Automate database work with Python",
         description: "Python basics, DB-API, scripts for health checks, exports, and simple ETL.",
-        thumbnail: "🐍", badge: "New", difficulty: "Beginner → Intermediate", category: "Automation", accent: "#2DD4BF"
+        badge: "New", difficulty: "Beginner → Intermediate", category: "Automation", accent: "#2DD4BF"
       },
       modules: [
         { title: "Python Automation", lessons: [
@@ -352,7 +354,7 @@
         id: "bash", order: 17, prefix: "sh", title: "Bash Scripting", shortTitle: "Bash",
         tagline: "Shell scripts that survive production",
         description: "Variables, loops, exit codes, set -euo pipefail, cron, and safe automation patterns.",
-        thumbnail: "💻", difficulty: "Beginner → Intermediate", category: "Platform", accent: "#F4B942"
+        difficulty: "Beginner → Intermediate", category: "Platform", accent: "#F4B942"
       },
       modules: [
         { title: "Shell Scripting", lessons: [
@@ -367,7 +369,7 @@
         id: "devops", order: 18, prefix: "do", title: "DevOps Fundamentals", shortTitle: "DevOps",
         tagline: "Culture, pipelines, and reliability basics",
         description: "DevOps principles, CI vs CD, environments, observability, and handover checklists.",
-        thumbnail: "🚀", badge: "Most Popular", difficulty: "Beginner → Intermediate", featured: true,
+        badge: "Most Popular", difficulty: "Beginner → Intermediate", featured: true,
         category: "DevOps", accent: "#4DA3FF"
       },
       modules: [
@@ -383,7 +385,7 @@
         id: "cicd", order: 19, prefix: "ci", title: "CI/CD with GitHub Actions", shortTitle: "GitHub Actions",
         tagline: "Automate test and deploy pipelines",
         description: "Workflows, jobs, secrets, matrices, artifacts, and deployment guards.",
-        thumbnail: "⚙️", badge: "Updated", difficulty: "Intermediate", category: "DevOps", accent: "#2DD4BF"
+        badge: "Updated", difficulty: "Intermediate", category: "DevOps", accent: "#2DD4BF"
       },
       modules: [
         { title: "Pipelines", lessons: [
@@ -398,7 +400,7 @@
         id: "prometheus", order: 20, prefix: "pr", title: "Monitoring with Prometheus & Grafana", shortTitle: "Prometheus",
         tagline: "Metrics that wake you before users do",
         description: "Exporters, PromQL basics, alerting rules, and Grafana dashboards.",
-        thumbnail: "📈", badge: "New", difficulty: "Intermediate", category: "DevOps", accent: "#F4B942"
+        badge: "New", difficulty: "Intermediate", category: "DevOps", accent: "#F4B942"
       },
       modules: [
         { title: "Metrics Stack", lessons: [
@@ -413,7 +415,7 @@
         id: "rest", order: 21, prefix: "re", title: "REST APIs", shortTitle: "REST",
         tagline: "Design and consume HTTP APIs",
         description: "Resources, status codes, versioning, auth headers, and OpenAPI basics.",
-        thumbnail: "🌐", difficulty: "Beginner → Intermediate", category: "Backend", accent: "#4DA3FF"
+        difficulty: "Beginner → Intermediate", category: "Backend", accent: "#4DA3FF"
       },
       modules: [
         { title: "API Design", lessons: [
@@ -427,7 +429,7 @@
         id: "graphql", order: 22, prefix: "gq", title: "GraphQL", shortTitle: "GraphQL",
         tagline: "Flexible queries for modern clients",
         description: "Schemas, queries, mutations, resolvers mindset, and N+1 awareness.",
-        thumbnail: "◈", badge: "New", difficulty: "Intermediate", category: "Backend", accent: "#2DD4BF"
+        badge: "New", difficulty: "Intermediate", category: "Backend", accent: "#2DD4BF"
       },
       modules: [
         { title: "GraphQL Basics", lessons: [
@@ -441,7 +443,7 @@
         id: "nodejs", order: 23, prefix: "no", title: "Node.js Backend", shortTitle: "Node.js",
         tagline: "Build APIs with Node and Express",
         description: "Node runtime, Express routes, middleware, env config, and DB connectivity patterns.",
-        thumbnail: "🟢", badge: "Most Popular", difficulty: "Beginner → Intermediate", featured: true,
+        badge: "Most Popular", difficulty: "Beginner → Intermediate", featured: true,
         category: "Backend", accent: "#2DD4BF"
       },
       modules: [
@@ -457,7 +459,7 @@
         id: "system-design", order: 24, prefix: "sd", title: "System Design Basics", shortTitle: "System Design",
         tagline: "Scalable systems without the buzzword fog",
         description: "Load balancing, caching, queues, data partitioning, and trade-off drills.",
-        thumbnail: "🏗️", badge: "Best Seller", difficulty: "Intermediate → Advanced", featured: true,
+        badge: "Best Seller", difficulty: "Intermediate → Advanced", featured: true,
         category: "Architecture", accent: "#F4B942"
       },
       modules: [
@@ -473,7 +475,7 @@
         id: "db-perf", order: 25, prefix: "pf", title: "Database Performance Tuning", shortTitle: "DB Performance",
         tagline: "Find and fix slow databases",
         description: "Indexing strategy, query plans, pooling, vacuum/analyze mindset, and workload isolation.",
-        thumbnail: "🏎️", badge: "Updated", difficulty: "Advanced", category: "Databases", accent: "#4DA3FF"
+        badge: "Updated", difficulty: "Advanced", category: "Databases", accent: "#4DA3FF"
       },
       modules: [
         { title: "Performance", lessons: [
@@ -488,7 +490,7 @@
         id: "warehouse", order: 26, prefix: "dw", title: "Data Warehousing", shortTitle: "Data Warehouse",
         tagline: "Analytics modeling and pipelines",
         description: "Star schemas, ETL vs ELT, slowly changing dimensions, and warehouse query patterns.",
-        thumbnail: "🏬", difficulty: "Intermediate", category: "Data", accent: "#2DD4BF"
+        difficulty: "Intermediate", category: "Data", accent: "#2DD4BF"
       },
       modules: [
         { title: "Warehouse Design", lessons: [
@@ -502,7 +504,7 @@
         id: "kafka", order: 27, prefix: "kf", title: "Apache Kafka", shortTitle: "Kafka",
         tagline: "Event streaming fundamentals",
         description: "Topics, partitions, producers/consumers, offsets, and delivery semantics overview.",
-        thumbnail: "📨", badge: "New", difficulty: "Intermediate → Advanced", category: "Data", accent: "#F4B942"
+        badge: "New", difficulty: "Intermediate → Advanced", category: "Data", accent: "#F4B942"
       },
       modules: [
         { title: "Streaming", lessons: [
@@ -516,7 +518,7 @@
         id: "elasticsearch", order: 28, prefix: "es", title: "ElasticSearch", shortTitle: "Elasticsearch",
         tagline: "Search and analytics engine basics",
         description: "Indexes, mappings, queries, aggregations, and when to use ES beside your DB.",
-        thumbnail: "🔍", difficulty: "Intermediate", category: "Data", accent: "#4DA3FF"
+        difficulty: "Intermediate", category: "Data", accent: "#4DA3FF"
       },
       modules: [
         { title: "Search Basics", lessons: [
@@ -530,7 +532,7 @@
         id: "rabbitmq", order: 29, prefix: "rq", title: "RabbitMQ", shortTitle: "RabbitMQ",
         tagline: "Reliable messaging with queues",
         description: "Exchanges, queues, bindings, ack/nack, and dead-letter patterns.",
-        thumbnail: "🐰", badge: "New", difficulty: "Intermediate", category: "Backend", accent: "#2DD4BF"
+        badge: "New", difficulty: "Intermediate", category: "Backend", accent: "#2DD4BF"
       },
       modules: [
         { title: "Messaging", lessons: [
@@ -552,19 +554,19 @@
   }
 
   enrich("sql", {
-    thumbnail: "🟦", badge: "Best Seller", difficulty: "Beginner → Advanced", featured: true,
+    logo: "sql", technology: "sql", badge: "Best Seller", difficulty: "Beginner → Advanced", featured: true,
     category: "Databases", duration: "20+ hrs", accent: "#4DA3FF"
   });
   enrich("mongo", {
-    thumbnail: "🍃", badge: "Most Popular", difficulty: "Beginner → Advanced", featured: true,
+    logo: "mongodb", technology: "mongodb", badge: "Most Popular", difficulty: "Beginner → Advanced", featured: true,
     category: "Databases", duration: "16+ hrs", accent: "#2DD4BF"
   });
   enrich("git", {
-    thumbnail: "🌿", badge: "Most Popular", difficulty: "Beginner → Advanced", featured: true,
+    logo: "git", technology: "git", badge: "Most Popular", difficulty: "Beginner → Advanced", featured: true,
     category: "Platform", duration: "12+ hrs", accent: "#F4B942"
   });
   enrich("db2", {
-    thumbnail: "💠", badge: "Updated", difficulty: "Beginner → Architect", featured: true,
+    logo: "db2", technology: "db2", badge: "Updated", difficulty: "Beginner → Architect", featured: true,
     category: "Databases", duration: "30+ hrs", accent: "#4DA3FF"
   });
 })();
