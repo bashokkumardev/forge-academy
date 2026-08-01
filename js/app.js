@@ -908,7 +908,7 @@ kubectl apply -f deploy.yaml</pre>
         <p style="color:var(--muted);margin-top:0">${p.done}/${p.total} lessons · ${c.modules.length} modules · ${c.duration || ""} · ${p.pct}% complete</p>
         <div class="cta-row" style="margin:1.25rem 0 2rem">
           <a class="btn btn-primary" href="#/course/${c.id}/lesson/${first}" data-nav>Watch Lesson / Start</a>
-          <a class="btn btn-ghost" href="#/course/${c.id}/reference" data-nav>Notes / Quick Ref</a>
+          <a class="btn btn-ghost" href="#/course/${c.id}/reference" data-nav>Quick Ref</a>
           ${c.assessment ? `<a class="btn btn-ghost" href="#/course/${c.id}/assessment" data-nav>Final Assessment (60 Q · 90 min)</a>` : ""}
         </div>
         <div class="curriculum-list">
@@ -1028,7 +1028,7 @@ kubectl apply -f deploy.yaml</pre>
     if (!r || !(r.commands && r.commands.length)) {
       return `
         <div class="page">
-          <h1>${c.shortTitle || c.title} — Notes / Quick Ref</h1>
+          <h1>${c.shortTitle || c.title} — Quick Ref</h1>
           <p class="lead">Quick reference for this course is being prepared.</p>
           <p><a href="#/course/${c.id}" data-nav>← Back to course</a></p>
         </div>`;
@@ -1047,7 +1047,7 @@ kubectl apply -f deploy.yaml</pre>
 
     return `
       <div class="page ref-page">
-        <div class="section-label">Notes / Quick Ref</div>
+        <div class="section-label">Quick Ref</div>
         <h1>${r.title || `${c.shortTitle || c.title} Quick Reference`}</h1>
         <p class="lead">${r.intro || "Command syntax used throughout this course."}</p>
         <p><a href="#/course/${c.id}" data-nav>← Back to course</a></p>
