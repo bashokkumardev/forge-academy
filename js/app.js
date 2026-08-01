@@ -84,55 +84,30 @@
   }
   function updateAuthUI() {
     const session = getSession();
-    const loginLink = document.querySelector(".btn-login");
-    const startBtn = document.querySelector(".header-actions a.btn-primary[href='#/start']");
-    let userMenu = document.getElementById("user-menu");
     document.body.classList.toggle("is-logged-in", !!session);
 
+    const guest = document.getElementById("auth-guest");
+    const userMenu = document.getElementById("user-menu");
+    const mobileLogout = document.getElementById("mobile-logout");
+
+    if (guest) guest.hidden = !!session;
+
     if (session) {
-      if (loginLink) loginLink.hidden = true;
-      if (startBtn) startBtn.hidden = true;
-      if (!userMenu) {
-        userMenu = document.createElement("div");
-        userMenu.id = "user-menu";
-        userMenu.className = "user-menu";
-        const actions = document.querySelector(".header-actions");
-        const menuToggle = document.getElementById("menu-toggle");
-        actions.insertBefore(userMenu, menuToggle);
+      if (userMenu) {
+        userMenu.hidden = false;
+        userMenu.innerHTML = `
+          <span class="user-chip" title="${session.email}">
+            <span class="user-avatar">${(session.name || "U").charAt(0).toUpperCase()}</span>
+            <span class="user-name">${session.name || session.email}</span>
+          </span>
+          <button type="button" class="btn-logout" id="logout-btn">Log out</button>`;
       }
-      userMenu.hidden = false;
-      userMenu.innerHTML = `
-        <span class="user-chip" title="${session.email}">
-          <span class="user-avatar">${(session.name || "U").charAt(0).toUpperCase()}</span>
-          <span class="user-name">${session.name || session.email}</span>
-        </span>
-        <button type="button" class="btn-logout" id="logout-btn">Log out</button>`;
+      if (mobileLogout) mobileLogout.hidden = false;
     } else {
-      if (loginLink) loginLink.hidden = false;
-      if (startBtn) startBtn.hidden = false;
       if (userMenu) {
         userMenu.hidden = true;
         userMenu.innerHTML = "";
       }
-    }
-
-    const mobileLogin = document.querySelector('.mobile-nav a[href="#/login"]');
-    const mobileStart = document.querySelector('.mobile-nav a[href="#/start"]');
-    let mobileLogout = document.getElementById("mobile-logout");
-    if (session) {
-      if (mobileLogin) mobileLogin.hidden = true;
-      if (mobileStart) mobileStart.hidden = true;
-      if (!mobileLogout) {
-        mobileLogout = document.createElement("button");
-        mobileLogout.id = "mobile-logout";
-        mobileLogout.type = "button";
-        mobileLogout.textContent = "Log out";
-        document.getElementById("mobile-nav").appendChild(mobileLogout);
-      }
-      mobileLogout.hidden = false;
-    } else {
-      if (mobileLogin) mobileLogin.hidden = false;
-      if (mobileStart) mobileStart.hidden = false;
       if (mobileLogout) mobileLogout.hidden = true;
     }
   }

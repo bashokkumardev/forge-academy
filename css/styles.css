@@ -166,6 +166,32 @@ button, input { font: inherit; }
   padding: 0.45rem 0.6rem;
 }
 .btn-login:hover { color: var(--text); }
+.auth-guest {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.user-menu {
+  display: none;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+/* Auth visibility driven by body class — never show both states */
+body.is-logged-in .auth-guest,
+body.is-logged-in .auth-guest-link {
+  display: none !important;
+}
+body.is-logged-in .user-menu {
+  display: inline-flex !important;
+}
+body.is-logged-in #mobile-logout {
+  display: block !important;
+}
+body:not(.is-logged-in) .user-menu,
+body:not(.is-logged-in) #mobile-logout {
+  display: none !important;
+}
 .menu-toggle {
   width: 42px; height: 42px;
   border: 1px solid var(--border);
@@ -192,16 +218,10 @@ button, input { font: inherit; }
   gap: 0.15rem;
   padding: 1rem 1.25rem 2rem;
 }
-.mobile-nav[hidden], .search-overlay[hidden] {
-  display: none !important;
-}
-
 /* Keep HTML hidden working when display: is set on these controls */
-.btn-login[hidden],
-.header-actions > a.btn-primary[hidden],
+.mobile-nav[hidden],
+.search-overlay[hidden],
 .user-menu[hidden],
-.mobile-nav a[hidden],
-.mobile-nav button[hidden],
 #mobile-logout[hidden] {
   display: none !important;
 }
@@ -219,7 +239,7 @@ button, input { font: inherit; }
 
 @media (min-width: 980px) {
   .top-nav { display: flex; }
-  .btn-login { display: inline-flex; }
+  body:not(.is-logged-in) .btn-login { display: inline-flex; }
   .menu-toggle { display: none; }
 }
 
@@ -855,11 +875,6 @@ button, input { font: inherit; }
   opacity: 0.7;
   cursor: wait;
   transform: none;
-}
-.user-menu {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
 }
 .user-chip {
   display: inline-flex;

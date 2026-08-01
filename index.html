@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css?v=20260801a" />
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -32,8 +32,11 @@
         <span class="hide-sm">Search</span>
         <kbd id="search-kbd">⌘K</kbd>
       </button>
-      <a class="btn-login" href="#/login" data-nav>Login</a>
-      <a class="btn btn-primary btn-sm" href="#/start" data-nav>Get Started</a>
+      <div class="auth-guest" id="auth-guest">
+        <a class="btn-login" href="#/login" data-nav>Login</a>
+        <a class="btn btn-primary btn-sm" href="#/start" data-nav>Get Started</a>
+      </div>
+      <div class="user-menu" id="user-menu" hidden></div>
       <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span>
       </button>
@@ -47,8 +50,9 @@
     <a href="#/projects" data-nav>Projects</a>
     <a href="#/blog" data-nav>Blog</a>
     <a href="#/community" data-nav>Community</a>
-    <a href="#/login" data-nav>Login</a>
-    <a href="#/start" data-nav>Get Started</a>
+    <a href="#/login" data-nav class="auth-guest-link">Login</a>
+    <a href="#/start" data-nav class="auth-guest-link">Get Started</a>
+    <button type="button" id="mobile-logout" hidden>Log out</button>
   </aside>
 
   <main id="app"></main>
@@ -94,12 +98,12 @@
     </div>
   </footer>
 
-  <script src="js/data/forge.js"></script>
-  <script src="js/data/curriculum.js"></script>
-  <script src="js/data/course-sql.js"></script>
-  <script src="js/data/course-mongo.js"></script>
-  <script src="js/data/course-git.js"></script>
-  <script src="js/data/course-catalog.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/data/forge.js?v=20260801a"></script>
+  <script src="js/data/curriculum.js?v=20260801a"></script>
+  <script src="js/data/course-sql.js?v=20260801a"></script>
+  <script src="js/data/course-mongo.js?v=20260801a"></script>
+  <script src="js/data/course-git.js?v=20260801a"></script>
+  <script src="js/data/course-catalog.js?v=20260801a"></script>
+  <script src="js/app.js?v=20260801a"></script>
 </body>
 </html>
