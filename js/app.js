@@ -396,7 +396,7 @@ kubectl apply -f deploy.yaml</pre>
       <div class="page">
         <div class="section-label">Learning Paths</div>
         <h1>From zero to professional</h1>
-        <p class="lead">A single recommended sequence. Complete each stage, then ship projects and earn certificate progress.</p>
+        <p class="lead">A single recommended sequence. Complete each stage, then ship projects from what you learned.</p>
         ${roadmapHtml()}
         <div class="curriculum-list" style="margin-top:2rem">
           ${[
@@ -840,7 +840,7 @@ kubectl apply -f deploy.yaml</pre>
           <article class="feature-card"><div class="feature-icon">💬</div><h3>Discord</h3><p>Daily help channels for SQL, DevOps, and career questions.</p><a class="btn btn-ghost btn-sm" style="margin-top:1rem" href="https://discord.com" target="_blank" rel="noopener">Open Discord</a></article>
           <article class="feature-card"><div class="feature-icon">🐙</div><h3>GitHub</h3><p>Sample repos, lab starters, and issue templates.</p><a class="btn btn-ghost btn-sm" style="margin-top:1rem" href="https://github.com" target="_blank" rel="noopener">Open GitHub</a></article>
           <article class="feature-card"><div class="feature-icon">📺</div><h3>YouTube</h3><p>Walkthroughs that mirror Ashovix Labs lesson flows.</p><a class="btn btn-ghost btn-sm" style="margin-top:1rem" href="https://youtube.com" target="_blank" rel="noopener">Watch</a></article>
-          <article class="feature-card"><div class="feature-icon">🔗</div><h3>LinkedIn</h3><p>Share certificate milestones and project launches.</p><a class="btn btn-ghost btn-sm" style="margin-top:1rem" href="https://linkedin.com" target="_blank" rel="noopener">Connect</a></article>
+          <article class="feature-card"><div class="feature-icon">🔗</div><h3>LinkedIn</h3><p>Share project launches and learning milestones with your network.</p><a class="btn btn-ghost btn-sm" style="margin-top:1rem" href="https://linkedin.com" target="_blank" rel="noopener">Connect</a></article>
         </div>
         <div style="margin-top:2.5rem">${testimonialsHtml()}</div>
       </div>`;
@@ -905,7 +905,7 @@ kubectl apply -f deploy.yaml</pre>
         <h1 class="course-title-row">${(window.CourseLogo && CourseLogo.forCourse(c)) || ""} <span>${c.title}</span></h1>
         <p class="lead">${c.description}</p>
         <div class="progress-bar" style="max-width:360px;margin-bottom:1rem"><span style="width:${p.pct}%"></span></div>
-        <p style="color:var(--muted);margin-top:0">${p.done}/${p.total} lessons · ${c.modules.length} modules · ${c.duration || ""} · Certificate progress ${p.pct}%</p>
+        <p style="color:var(--muted);margin-top:0">${p.done}/${p.total} lessons · ${c.modules.length} modules · ${c.duration || ""} · ${p.pct}% complete</p>
         <div class="cta-row" style="margin:1.25rem 0 2rem">
           <a class="btn btn-primary" href="#/course/${c.id}/lesson/${first}" data-nav>Watch Lesson / Start</a>
           <a class="btn btn-ghost" href="#/course/${c.id}/labs" data-nav>Practice Labs</a>
@@ -934,7 +934,7 @@ kubectl apply -f deploy.yaml</pre>
       <aside class="sidebar" aria-label="Course modules">
         <div class="sidebar-head">
           <h2><a href="#/course/${course.id}" data-nav style="color:inherit">${course.shortTitle || course.title}</a></h2>
-          <p>${p.pct}% complete · Certificate ${p.pct}%</p>
+          <p>${p.pct}% complete</p>
           <div class="progress-bar"><span style="width:${p.pct}%"></span></div>
         </div>
         ${course.modules.map((m) => {

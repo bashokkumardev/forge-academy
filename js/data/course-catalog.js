@@ -19,7 +19,6 @@
       { icon: "🛠️", title: "Real Projects", desc: "Build portfolio-ready systems used in interviews and jobs." },
       { icon: "♾️", title: "Lifetime Access", desc: "Learn at your pace. Revisit lessons whenever you need." },
       { icon: "✅", title: "Quizzes", desc: "Check understanding after each module with instant feedback." },
-      { icon: "🎓", title: "Certificates", desc: "Track certificate progress as you complete paths." },
       { icon: "💬", title: "Community Support", desc: "Ask questions, share wins, and learn with peers." },
       { icon: "🎯", title: "Interview Prep", desc: "Scenario drills for DBA, backend, and DevOps roles." },
       { icon: "📓", title: "Downloadable Notes", desc: "Cheat sheets and notes you can keep offline." }
@@ -46,7 +45,7 @@
       { q: "Is Ashovix Labs free to start?", a: "Yes. Browse courses, complete lessons, and track progress in your browser. Account features unlock sync across devices." },
       { q: "Do I need prior experience?", a: "No. Start with Git and Linux, then SQL. Advanced tracks assume earlier foundations but every lesson stays step-by-step." },
       { q: "Are the courses hands-on?", a: "Every major track includes labs, quizzes, and projects. Install guides cover Windows and Linux where relevant." },
-      { q: "Can I get a certificate?", a: "Complete a learning path and required projects to unlock certificate progress. Exportable certificates ship with account plans." },
+      { q: "How do I track progress?", a: "Lesson completion is saved in your browser. Create an account when you want sync and a clearer learning history." },
       { q: "How is this different from random tutorials?", a: "Structured academies, consistent design, progress tracking, and no missing steps — install through production patterns." }
     ],
     blog: [
