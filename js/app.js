@@ -915,17 +915,22 @@ kubectl apply -f deploy.yaml</pre>
           ${c.assessment ? `<a class="btn btn-ghost" href="#/course/${c.id}/assessment" data-nav>Final Assessment (60 Q · 90 min)</a>` : ""}
         </div>
         <div class="curriculum-list">
-          ${c.modules.map((m) => `
+          ${(() => {
+            let serial = 0;
+            return c.modules.map((m) => `
             <div class="module-block">
               <h2>${m.title}</h2>
-              <ol>
+              <ol ${serial ? `start="${serial + 1}"` : ""}>
                 ${m.lessonIds.map((id) => {
                   const L = c.lessons[id];
                   if (!L) return "";
-                  return `<li><a href="#/course/${c.id}/lesson/${id}" data-nav>${L.title}</a> · ${L.duration || ""}${isDone(c.id, id) ? " ✓" : ""}</li>`;
+                  serial += 1;
+                  const title = String(L.title || "").replace(/^\d{1,2}\s+/, "");
+                  return `<li value="${serial}"><a href="#/course/${c.id}/lesson/${id}" data-nav>${title}</a> · ${L.duration || ""}${isDone(c.id, id) ? " ✓" : ""}</li>`;
                 }).join("")}
               </ol>
-            </div>`).join("")}
+            </div>`).join("");
+          })()}
         </div>
       </div>`;
   }
