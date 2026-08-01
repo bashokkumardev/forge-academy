@@ -11,6 +11,57 @@
   const isMac = /Mac|iPhone|iPad/.test(navigator.platform || "");
   $("#search-kbd").textContent = isMac ? "⌘K" : "Ctrl K";
 
+  function showSiteConfirm({
+    title = "Confirm",
+    message = "",
+    confirmLabel = "OK",
+    cancelLabel = "Cancel",
+    danger = false
+  } = {}) {
+    return new Promise((resolve) => {
+      const overlay = $("#confirm-overlay");
+      const titleEl = $("#confirm-title");
+      const msgEl = $("#confirm-message");
+      const okBtn = $("#confirm-ok");
+      const cancelBtn = $("#confirm-cancel");
+      if (!overlay || !okBtn || !cancelBtn) {
+        resolve(window.confirm(message || title));
+        return;
+      }
+
+      titleEl.textContent = title;
+      msgEl.textContent = message;
+      okBtn.textContent = confirmLabel;
+      cancelBtn.textContent = cancelLabel;
+      okBtn.classList.toggle("btn-danger", !!danger);
+
+      const close = (result) => {
+        overlay.hidden = true;
+        document.body.classList.remove("confirm-open");
+        okBtn.removeEventListener("click", onOk);
+        cancelBtn.removeEventListener("click", onCancel);
+        overlay.removeEventListener("click", onBackdrop);
+        document.removeEventListener("keydown", onKey);
+        resolve(result);
+      };
+      const onOk = () => close(true);
+      const onCancel = () => close(false);
+      const onBackdrop = (e) => { if (e.target === overlay) close(false); };
+      const onKey = (e) => {
+        if (e.key === "Escape") close(false);
+        if (e.key === "Enter") close(true);
+      };
+
+      okBtn.addEventListener("click", onOk);
+      cancelBtn.addEventListener("click", onCancel);
+      overlay.addEventListener("click", onBackdrop);
+      document.addEventListener("keydown", onKey);
+      overlay.hidden = false;
+      document.body.classList.add("confirm-open");
+      okBtn.focus();
+    });
+  }
+
   /* ---------- Auth (local) ---------- */
   function getUsers() {
     try { return JSON.parse(localStorage.getItem(USERS_KEY) || "{}"); }
@@ -1256,10 +1307,18 @@ kubectl apply -f deploy.yaml</pre>
     clearTimeout(window.__assessmentTimer);
     tick();
 
-    form?.addEventListener("submit", (e) => {
+    form?.addEventListener("submit", async (e) => {
       e.preventDefault();
       const answered = form.querySelectorAll("input[type=radio]:checked").length;
-      if (answered < total && !confirm(`You answered ${answered} of ${total}. Submit anyway?`)) return;
+      if (answered < total) {
+        const ok = await showSiteConfirm({
+          title: "Submit incomplete assessment?",
+          message: `You answered ${answered} of ${total} questions. Unanswered questions will be marked incorrect.`,
+          confirmLabel: "Submit anyway",
+          cancelLabel: "Keep answering"
+        });
+        if (!ok) return;
+      }
       submitAssessment(false);
     });
   }
@@ -1369,12 +1428,19 @@ kubectl apply -f deploy.yaml</pre>
     if (parts[0] === "workspace") initWorkspace();
     if (parts[0] === "course" && parts[2] === "assessment") initAssessment(parts[1]);
 
-    $("#reset-course-progress")?.addEventListener("click", (e) => {
+    $("#reset-course-progress")?.addEventListener("click", async (e) => {
       const btn = e.currentTarget;
       const courseId = btn.dataset.course;
       const course = F.get(courseId);
       const name = course ? (course.shortTitle || course.title) : "this course";
-      if (!confirm(`Reset all progress for ${name} on this device?`)) return;
+      const ok = await showSiteConfirm({
+        title: "Reset progress?",
+        message: `This will clear all lesson progress for ${name} on this device. This cannot be undone.`,
+        confirmLabel: "Reset Progress",
+        cancelLabel: "Cancel",
+        danger: true
+      });
+      if (!ok) return;
       resetCourseProgress(courseId);
       render();
     });
@@ -1584,12 +1650,18 @@ kubectl apply -f deploy.yaml</pre>
     }
   });
 
-  $("#reset-progress").addEventListener("click", () => {
-    if (confirm("Reset all progress on this device?")) {
-      localStorage.removeItem(STORAGE_KEY);
-      updateProgressChip();
-      render();
-    }
+  $("#reset-progress").addEventListener("click", async () => {
+    const ok = await showSiteConfirm({
+      title: "Reset all progress?",
+      message: "This will clear lesson progress for every course on this device. This cannot be undone.",
+      confirmLabel: "Reset All",
+      cancelLabel: "Cancel",
+      danger: true
+    });
+    if (!ok) return;
+    localStorage.removeItem(STORAGE_KEY);
+    updateProgressChip();
+    render();
   });
 
   /* Persistent logout handlers (survive header re-renders) */
