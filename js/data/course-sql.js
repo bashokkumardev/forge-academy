@@ -2051,16 +2051,16 @@ WHERE salary &lt; (SELECT MAX(salary) FROM employees);</code></pre>
     ],
     lessons,
     labs: [
-      { id: "sql- lab01", title: "Install PostgreSQL & verify", lesson: "sql05", steps: "Install Postgres, connect with psql, run SELECT version();" },
-      { id: "sql- lab02", title: "SQLite first database", lesson: "sql06", steps: "Create ashovix.db, CREATE TABLE, INSERT, SELECT." },
-      { id: "sql- lab03", title: "MySQL practice schema", lesson: "sql07", steps: "Create database ashovix and a customers table." },
-      { id: "sql- lab04", title: "Keys & constraints", lesson: "sql15", steps: "Build customers/orders with PK/FK and prove FK rejection." },
-      { id: "sql- lab05", title: "Joins report", lesson: "sql28", steps: "Write INNER and LEFT join reports across customers and orders." },
-      { id: "sql- lab06", title: "Transaction transfer", lesson: "sql35", steps: "Transfer funds with BEGIN/COMMIT and demonstrate ROLLBACK." },
-      { id: "sql- lab07", title: "EXPLAIN before/after index", lesson: "sql36", steps: "Capture EXPLAIN, add index, compare plan." }
+      { id: "sql-lab01", title: "Install PostgreSQL & verify", lesson: "sql05", steps: "Install Postgres, connect with psql, run SELECT version();" },
+      { id: "sql-lab02", title: "SQLite first database", lesson: "sql06", steps: "Create ashovix.db, CREATE TABLE, INSERT, SELECT." },
+      { id: "sql-lab03", title: "MySQL practice schema", lesson: "sql07", steps: "Create database ashovix and a customers table." },
+      { id: "sql-lab04", title: "Keys & constraints", lesson: "sql15", steps: "Build customers/orders with PK/FK and prove FK rejection." },
+      { id: "sql-lab05", title: "Joins report", lesson: "sql28", steps: "Write INNER and LEFT join reports across customers and orders." },
+      { id: "sql-lab06", title: "Transaction transfer", lesson: "sql35", steps: "Transfer funds with BEGIN/COMMIT and demonstrate ROLLBACK." },
+      { id: "sql-lab07", title: "EXPLAIN before/after index", lesson: "sql36", steps: "Capture EXPLAIN, add index, compare plan." }
     ],
     assessment: {
-      id: "sql- final",
+      id: "sql-final",
       title: "SQL Mastery Final Assessment",
       durationMinutes: 90,
       passPercent: 70,

@@ -908,8 +908,8 @@ kubectl apply -f deploy.yaml</pre>
         <p style="color:var(--muted);margin-top:0">${p.done}/${p.total} lessons · ${c.modules.length} modules · ${c.duration || ""} · ${p.pct}% complete</p>
         <div class="cta-row" style="margin:1.25rem 0 2rem">
           <a class="btn btn-primary" href="#/course/${c.id}/lesson/${first}" data-nav>Watch Lesson / Start</a>
+          <a class="btn btn-ghost" href="#/course/${c.id}/reference" data-nav>Notes / Quick Ref</a>
           ${c.assessment ? `<a class="btn btn-ghost" href="#/course/${c.id}/assessment" data-nav>Final Assessment (60 Q · 90 min)</a>` : ""}
-          ${c.reference ? `<a class="btn btn-ghost" href="#/course/${c.id}/reference" data-nav>Notes / Quick Ref</a>` : ""}
         </div>
         <div class="curriculum-list">
           ${c.modules.map((m) => `
@@ -1022,17 +1022,49 @@ kubectl apply -f deploy.yaml</pre>
 
   function viewReference(courseId) {
     const c = F.get(courseId);
-    if (!c || !c.reference) return viewNotFound();
+    if (!c) return viewNotFound();
+    if (F.attachReferences) F.attachReferences();
     const r = c.reference;
+    if (!r || !(r.commands && r.commands.length)) {
+      return `
+        <div class="page">
+          <h1>${c.shortTitle || c.title} — Notes / Quick Ref</h1>
+          <p class="lead">Quick reference for this course is being prepared.</p>
+          <p><a href="#/course/${c.id}" data-nav>← Back to course</a></p>
+        </div>`;
+    }
+
+    const extras = [];
+    if (r.operators && r.operators.length) {
+      extras.push(`<h2>Operators</h2><p class="ref-chips">${r.operators.map((o) => `<code>${o}</code>`).join(" ")}</p>`);
+    }
+    if (r.monFunctions && r.monFunctions.length) {
+      extras.push(`<h2>Monitor functions</h2><p class="ref-chips">${r.monFunctions.map((o) => `<code>${o}</code>`).join(" ")}</p>`);
+    }
+    if (r.catalogViews && r.catalogViews.length) {
+      extras.push(`<h2>Catalog views</h2><p class="ref-chips">${r.catalogViews.map((o) => `<code>${o}</code>`).join(" ")}</p>`);
+    }
+
     return `
-      <div class="page">
-        <h1>${c.shortTitle || c.title} — Notes / Quick ref</h1>
+      <div class="page ref-page">
+        <div class="section-label">Notes / Quick Ref</div>
+        <h1>${r.title || `${c.shortTitle || c.title} Quick Reference`}</h1>
+        <p class="lead">${r.intro || "Command syntax used throughout this course."}</p>
         <p><a href="#/course/${c.id}" data-nav>← Back to course</a></p>
-        <div class="module-block">
-          ${r.commands ? `<div class="table-wrap"><table><thead><tr><th>Command</th><th>Use</th></tr></thead><tbody>
-            ${r.commands.map((x) => `<tr><td><code>${x.cmd}</code></td><td>${x.use}</td></tr>`).join("")}
-          </tbody></table></div>` : ""}
+        <div class="table-wrap ref-table-wrap">
+          <table class="ref-table">
+            <thead><tr><th>Command</th><th>Syntax</th><th>Use</th></tr></thead>
+            <tbody>
+              ${r.commands.map((x) => `
+                <tr>
+                  <td><strong>${x.cmd}</strong></td>
+                  <td><pre class="ref-syntax">${escapeHtml(x.syntax || x.cmd)}</pre></td>
+                  <td>${x.use || ""}</td>
+                </tr>`).join("")}
+            </tbody>
+          </table>
         </div>
+        ${extras.join("")}
       </div>`;
   }
 
