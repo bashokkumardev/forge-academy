@@ -232,7 +232,7 @@
           <div class="ws-topbar"><span></span><span></span><span></span></div>
           <div class="ws-body">
             <div class="ws-sidebar"><i></i><i></i><i></i><i></i><i></i></div>
-            <pre class="ws-editor"><span class="cm">-- ASHOVIX LABS · live workspace</span>
+            <pre class="ws-editor"><span class="cm">-- Ashovix Labs · live workspace</span>
 <span class="kw">SELECT</span> path, progress
 <span class="kw">FROM</span> academy.courses
 <span class="kw">WHERE</span> level &gt;= <span class="str">'pro'</span>
@@ -259,7 +259,7 @@ kubectl apply -f deploy.yaml</pre>
         <div class="hero-glow" aria-hidden="true"></div>
         <div class="hero-grid">
           <div class="hero-copy">
-            <div class="eyebrow">ASHOVIX LABS · Premium developer academy</div>
+            <div class="eyebrow">Ashovix Labs · Premium developer academy</div>
             <h1>Master Databases &amp; Developer Tools Like a Professional</h1>
             <p class="lead">Learn SQL, MongoDB, PostgreSQL, Git, Docker, Linux, Kubernetes, DevOps, and Cloud technologies through structured step-by-step academies.</p>
             <div class="cta-row">
@@ -468,7 +468,7 @@ kubectl apply -f deploy.yaml</pre>
       <div class="page">
         <div class="section-label">Projects</div>
         <h1>Portfolio-ready builds</h1>
-        <p class="lead">Ship these end-to-end. Each maps to skills from ASHOVIX LABS courses.</p>
+        <p class="lead">Ship these end-to-end. Each maps to skills from Ashovix Labs courses.</p>
         <div class="projects-grid">
           ${M.projects.map((p) => `
             <article class="project-card">
@@ -506,7 +506,7 @@ kubectl apply -f deploy.yaml</pre>
         <div class="features-grid">
           <article class="feature-card"><div class="feature-icon">💬</div><h3>Discord</h3><p>Daily help channels for SQL, DevOps, and career questions.</p><a class="btn btn-ghost btn-sm" style="margin-top:1rem" href="https://discord.com" target="_blank" rel="noopener">Open Discord</a></article>
           <article class="feature-card"><div class="feature-icon">🐙</div><h3>GitHub</h3><p>Sample repos, lab starters, and issue templates.</p><a class="btn btn-ghost btn-sm" style="margin-top:1rem" href="https://github.com" target="_blank" rel="noopener">Open GitHub</a></article>
-          <article class="feature-card"><div class="feature-icon">📺</div><h3>YouTube</h3><p>Walkthroughs that mirror ASHOVIX LABS lesson flows.</p><a class="btn btn-ghost btn-sm" style="margin-top:1rem" href="https://youtube.com" target="_blank" rel="noopener">Watch</a></article>
+          <article class="feature-card"><div class="feature-icon">📺</div><h3>YouTube</h3><p>Walkthroughs that mirror Ashovix Labs lesson flows.</p><a class="btn btn-ghost btn-sm" style="margin-top:1rem" href="https://youtube.com" target="_blank" rel="noopener">Watch</a></article>
           <article class="feature-card"><div class="feature-icon">🔗</div><h3>LinkedIn</h3><p>Share certificate milestones and project launches.</p><a class="btn btn-ghost btn-sm" style="margin-top:1rem" href="https://linkedin.com" target="_blank" rel="noopener">Connect</a></article>
         </div>
         <div style="margin-top:2.5rem">${testimonialsHtml()}</div>
@@ -531,7 +531,7 @@ kubectl apply -f deploy.yaml</pre>
     return `
       <div class="auth-panel">
         <h1>${isLogin ? "Welcome back" : "Get started"}</h1>
-        <p class="lead">${isLogin ? "Log in to continue your ASHOVIX LABS progress." : "Create your ASHOVIX LABS account and start your first path today."}</p>
+        <p class="lead">${isLogin ? "Log in to continue your Ashovix Labs progress." : "Create your Ashovix Labs account and start your first path today."}</p>
         <div id="auth-status" class="auth-status" hidden></div>
         <form id="auth-form" data-mode="${mode}" novalidate>
           ${!isLogin ? `<div class="field"><label for="name">Full name</label><input id="name" name="name" autocomplete="name" required placeholder="Your name" /></div>` : ""}
@@ -555,7 +555,7 @@ kubectl apply -f deploy.yaml</pre>
     return `
       <div class="page">
         <h1>${kind === "privacy" ? "Privacy" : "Terms"}</h1>
-        <p class="lead">ASHOVIX LABS stores lesson progress locally in your browser unless you create an account. We don’t sell personal data. This is a demo legal stub — replace with counsel-approved policies before production launch.</p>
+        <p class="lead">Ashovix Labs stores lesson progress locally in your browser unless you create an account. We don’t sell personal data. This is a demo legal stub — replace with counsel-approved policies before production launch.</p>
         <a class="btn btn-ghost" href="#/" data-nav>Back home</a>
       </div>`;
   }
@@ -710,7 +710,7 @@ kubectl apply -f deploy.yaml</pre>
   }
 
   function viewNotFound() {
-    return `<div class="page"><h1>Not found</h1><p class="lead">That page isn’t in ASHOVIX LABS.</p><a class="btn btn-primary" href="#/" data-nav>Home</a></div>`;
+    return `<div class="page"><h1>Not found</h1><p class="lead">That page isn’t in Ashovix Labs.</p><a class="btn btn-primary" href="#/" data-nav>Home</a></div>`;
   }
 
   /* ---------- Router & effects ---------- */

@@ -1,4 +1,4 @@
-/* ASHOVIX LABS — SQL Mastery (complete portable SQL course) */
+/* Ashovix Labs — SQL Mastery (complete portable SQL course) */
 (function () {
   const lessons = {};
   function L(id, d) { lessons[id] = { id, ...d }; }
@@ -243,8 +243,8 @@ sqlite3 ashovix.db</code></pre>
 .mode column
 .width 20</code></pre></li>
   <li>Run your first query:
-    <pre><code>SELECT datetime('now') AS now_utc, 'ASHOVIX LABS' AS course;</code></pre>
-    <strong>Expected:</strong> two columns with current timestamp and <code>ASHOVIX LABS</code>.</li>
+    <pre><code>SELECT datetime('now') AS now_utc, 'Ashovix Labs' AS course;</code></pre>
+    <strong>Expected:</strong> two columns with current timestamp and <code>Ashovix Labs</code>.</li>
   <li>List meta-commands:
     <pre><code>.help</code></pre></li>
   <li>Exit cleanly:
@@ -896,7 +896,7 @@ FROM shop.orders ORDER BY customer_id, order_date DESC;</code></pre></li>
 <h2>Step 4 — Literal values and functions</h2>
 <ol>
   <li>
-    <pre><code>SELECT 'ASHOVIX LABS' AS source, CURRENT_DATE AS report_date, 42 AS magic_number;</code></pre>
+    <pre><code>SELECT 'Ashovix Labs' AS source, CURRENT_DATE AS report_date, 42 AS magic_number;</code></pre>
     <strong>Expected:</strong> one row, three computed columns.</li>
 </ol>
 

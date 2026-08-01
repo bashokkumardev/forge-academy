@@ -1,7 +1,7 @@
-/* ASHOVIX LABS — Complete IBM Db2 LUW Curriculum (original educational content) */
+/* Ashovix Labs — Complete IBM Db2 LUW Curriculum (original educational content) */
 window.DB2FORGE = {
   meta: {
-    title: "ASHOVIX LABS",
+    title: "Ashovix Labs",
     subtitle: "Complete IBM Db2 LUW Academy",
     version: "11.5 / 12.1 oriented",
     lessons: 42,
@@ -960,7 +960,7 @@ db2 takeover hadr on db LEARNDB by force</code></pre>
   <li><strong>Global continuous:</strong> pureScale + HADR DR site + WLM + RCAC</li>
   <li><strong>Analytics:</strong> columnar cores, dedicated service class, ETL window isolation</li>
 </ol>
-<p>You now have an end-to-end path from Linux install to architecture decisions—without leaving ASHOVIX LABS.</p>
+<p>You now have an end-to-end path from Linux install to architecture decisions—without leaving Ashovix Labs.</p>
 `,
     quiz: {
       q: "RPO most directly influences which design choices?",
@@ -1011,7 +1011,7 @@ db2 takeover hadr on db LEARNDB by force</code></pre>
   };
 
   C.cert = {
-    intro: "Map your ASHOVIX LABS progress to common IBM Db2 LUW certification themes (exam numbers change over time—verify on IBM Training).",
+    intro: "Map your Ashovix Labs progress to common IBM Db2 LUW certification themes (exam numbers change over time—verify on IBM Training).",
     tracks: [
       { name: "Foundations", topics: ["SQL", "objects", "basic admin", "security basics"], lessons: ["f01", "f02", "s01", "s05", "s06", "sec01"] },
       { name: "Administration", topics: ["backup/recovery", "monitoring", "maintenance", "config"], lessons: ["a01", "a02", "a03", "a04", "a05", "f04"] },
@@ -1023,7 +1023,7 @@ db2 takeover hadr on db LEARNDB by force</code></pre>
   C.orderedLessonIds = C.modules.flatMap(m => m.lessonIds);
 })(window.DB2FORGE);
 
-/* Register Db2 as a ASHOVIX LABS course */
+/* Register Db2 as an Ashovix Labs course */
 (function () {
   const D = window.DB2FORGE;
   window.FORGE.register({

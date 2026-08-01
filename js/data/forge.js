@@ -1,6 +1,6 @@
-/* ASHOVIX LABS multi-course registry */
+/* Ashovix Labs multi-course registry */
 window.FORGE = {
-  brand: "ASHOVIX LABS",
+  brand: "Ashovix Labs",
   courses: {},
   register(course) {
     if (!course || !course.id) throw new Error("Course needs an id");

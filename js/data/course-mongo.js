@@ -1,4 +1,4 @@
-/* ASHOVIX LABS — Complete MongoDB Curriculum */
+/* Ashovix Labs — Complete MongoDB Curriculum */
 (function () {
   const lessons = {};
   const L = (id, data) => { lessons[id] = { id, ...data }; };
@@ -51,7 +51,7 @@
   <li>Reporting that depends on normalized star schemas and mature SQL tooling.</li>
   <li>Regulatory requirements mandating specific relational patterns.</li>
 </ul>
-<div class="callout"><strong>ASHOVIX LABS note:</strong> MongoDB 4.0+ supports multi-document transactions on replica sets. Use them when needed, but design for document locality first.</div>
+<div class="callout"><strong>Ashovix Labs note:</strong> MongoDB 4.0+ supports multi-document transactions on replica sets. Use them when needed, but design for document locality first.</div>
 <h2>Hands-on: compare shapes (conceptual)</h2>
 <p>In SQL you might store an order header and line items in two tables. In MongoDB you often embed line items:</p>
 <pre><code>// One document — natural for read-by-order-id
@@ -248,7 +248,7 @@ db.getName()</code></pre>
 <ol start="6">
   <li>Insert one document and read it back:</li>
 </ol>
-<pre><code>db.hello.insertOne({ msg: "ASHOVIX LABS connected", at: new Date() })
+<pre><code>db.hello.insertOne({ msg: "Ashovix Labs connected", at: new Date() })
 db.hello.find()</code></pre>
 <p><strong>Expected:</strong> one document with <code>_id</code> ObjectId and your fields.</p>
 <h2>Connect locally — Compass step by step</h2>
@@ -257,7 +257,7 @@ db.hello.find()</code></pre>
   <li>URI: <code>mongodb://127.0.0.1:27017</code></li>
   <li>Click <strong>Connect</strong> (no auth for default local install).</li>
   <li>Expand <code>forge_lab</code> → <code>hello</code> collection → see your document.</li>
-  <li>Use <strong>Filter</strong> bar: <code>{ msg: "ASHOVIX LABS connected" }</code> → documents match.</li>
+  <li>Use <strong>Filter</strong> bar: <code>{ msg: "Ashovix Labs connected" }</code> → documents match.</li>
 </ol>
 <h2>Connection string reference</h2>
 <pre><code>mongodb://127.0.0.1:27017/forge_lab   # database in path
@@ -310,7 +310,7 @@ mongodb://127.0.0.1:27017/?directConnection=true  # single node</code></pre>
 </ol>
 <pre><code>db.books.insertOne({
   title: "MongoDB Complete",
-  author: "ASHOVIX LABS",
+  author: "Ashovix Labs",
   published: new Date("2024-01-15"),
   pages: 420,
   price: Decimal128("29.99"),
@@ -1360,7 +1360,7 @@ rs.status()</code></pre>
   };
 
   const cert = {
-    intro: "Map MongoDB ASHOVIX LABS progress to MongoDB Associate Developer / Database Administrator exam themes.",
+    intro: "Map MongoDB Ashovix Labs progress to MongoDB Associate Developer / Database Administrator exam themes.",
     tracks: [
       { name: "Developer foundations", topics: ["CRUD", "queries", "aggregation basics"], lessons: ["m01", "m04", "m05", "m06", "m07", "m14"] },
       { name: "Advanced developer", topics: ["arrays", "text", "$lookup", "modeling"], lessons: ["m12", "m13", "m15", "m16", "m17"] },
