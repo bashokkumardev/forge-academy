@@ -436,6 +436,383 @@ kubectl apply -f deploy.yaml</pre>
       </div>`;
   }
 
+  function viewWorkspace() {
+    const tools = (F.workspace && F.workspace.tools) || [];
+    const cats = (F.workspace && F.workspace.categories) || [];
+    const savedId = localStorage.getItem("ashovix-ws-tool") || "javascript";
+    const active = (F.workspace && F.workspace.byId(savedId)) || tools[0];
+    const savedCode = localStorage.getItem("ashovix-ws-code-" + (active && active.id)) || (active && active.starter) || "";
+
+    const sidebar = cats.map((cat) => {
+      const items = tools.filter((t) => t.category === cat);
+      return `
+        <div class="ws-cat">
+          <div class="ws-cat-label">${cat}</div>
+          ${items.map((t) => `
+            <button type="button" class="ws-tool ${t.id === active.id ? "active" : ""}" data-ws-tool="${t.id}" style="--tool-accent:${t.accent}">
+              <span class="ws-tool-dot" aria-hidden="true"></span>
+              <span>${t.name}</span>
+            </button>`).join("")}
+        </div>`;
+    }).join("");
+
+    return `
+      <div class="page workspace-page">
+        <div class="section-label">Workspace</div>
+        <h1>Practice any stack</h1>
+        <p class="lead">Languages, databases, cloud CLIs, and DevOps tools — pick an environment and run labs in-browser.</p>
+        <div class="ws-shell">
+          <aside class="ws-sidebar" aria-label="Environments">
+            <input type="search" id="ws-filter" class="ws-filter" placeholder="Filter tools…" autocomplete="off" />
+            <div id="ws-tool-list">${sidebar}</div>
+          </aside>
+          <div class="ws-main">
+            <div class="ws-toolbar">
+              <div class="ws-meta">
+                <strong id="ws-tool-name">${active.name}</strong>
+                <span id="ws-tool-blurb">${active.blurb}</span>
+              </div>
+              <div class="ws-actions">
+                <button type="button" class="btn btn-ghost btn-sm" id="ws-reset">Reset</button>
+                <button type="button" class="btn btn-primary btn-sm" id="ws-run">Run ▶</button>
+              </div>
+            </div>
+            <div class="ws-panes">
+              <label class="ws-editor-wrap">
+                <span class="ws-pane-label">Editor</span>
+                <textarea id="ws-editor" spellcheck="false" aria-label="Workspace editor">${escapeHtml(savedCode)}</textarea>
+              </label>
+              <div class="ws-output-wrap">
+                <span class="ws-pane-label">Output</span>
+                <pre id="ws-output" class="ws-output" aria-live="polite">Ready. Click Run to execute.</pre>
+                <iframe id="ws-preview" class="ws-preview" title="HTML preview" hidden></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function escapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function initWorkspace() {
+    const editor = $("#ws-editor");
+    const output = $("#ws-output");
+    const preview = $("#ws-preview");
+    const nameEl = $("#ws-tool-name");
+    const blurbEl = $("#ws-tool-blurb");
+    if (!editor || !output) return;
+
+    let current = (F.workspace && F.workspace.byId(localStorage.getItem("ashovix-ws-tool") || "javascript")) || F.workspace.tools[0];
+
+    const setOutput = (text, isHtml) => {
+      preview.hidden = true;
+      output.hidden = false;
+      output.classList.toggle("err", !!isHtml && isHtml === "err");
+      output.textContent = text;
+    };
+
+    const persist = () => {
+      localStorage.setItem("ashovix-ws-tool", current.id);
+      localStorage.setItem("ashovix-ws-code-" + current.id, editor.value);
+    };
+
+    const selectTool = (id) => {
+      persist();
+      current = F.workspace.byId(id);
+      localStorage.setItem("ashovix-ws-tool", current.id);
+      nameEl.textContent = current.name;
+      blurbEl.textContent = current.blurb;
+      editor.value = localStorage.getItem("ashovix-ws-code-" + current.id) || current.starter;
+      document.querySelectorAll("[data-ws-tool]").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.wsTool === current.id);
+      });
+      setOutput("Ready. Click Run to execute.");
+      preview.hidden = true;
+    };
+
+    document.querySelectorAll("[data-ws-tool]").forEach((btn) => {
+      btn.addEventListener("click", () => selectTool(btn.dataset.wsTool));
+    });
+
+    $("#ws-filter")?.addEventListener("input", (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      document.querySelectorAll("[data-ws-tool]").forEach((btn) => {
+        const label = btn.textContent.trim().toLowerCase();
+        btn.style.display = !q || label.includes(q) ? "" : "none";
+      });
+      document.querySelectorAll(".ws-cat").forEach((cat) => {
+        const visible = [...cat.querySelectorAll("[data-ws-tool]")].some((b) => b.style.display !== "none");
+        cat.style.display = visible ? "" : "none";
+      });
+    });
+
+    $("#ws-reset")?.addEventListener("click", () => {
+      editor.value = current.starter;
+      persist();
+      setOutput("Reset to starter template.");
+    });
+
+    editor.addEventListener("input", () => persist());
+
+    $("#ws-run")?.addEventListener("click", async () => {
+      persist();
+      const code = editor.value;
+      output.classList.remove("err");
+      setOutput("Running…");
+      try {
+        const result = await runWorkspace(current, code, preview, output);
+        if (result !== null) setOutput(result);
+      } catch (err) {
+        setOutput(String(err && err.message ? err.message : err), "err");
+        output.classList.add("err");
+      }
+    });
+  }
+
+  async function runWorkspace(tool, code, preview, output) {
+    switch (tool.mode) {
+      case "js": return runJsLab(code);
+      case "sql": return runSqlLab(code);
+      case "html": return runHtmlLab(code, preview, output);
+      case "python": return runPythonLab(code);
+      case "mongo": return runMongoLab(code);
+      case "redis": return runRedisLab(code);
+      case "shell":
+      case "cloud": return runShellLab(tool.id, code);
+      default: return "Unsupported environment.";
+    }
+  }
+
+  function runJsLab(code) {
+    const logs = [];
+    const fakeConsole = {
+      log: (...a) => logs.push(a.map(formatVal).join(" ")),
+      info: (...a) => logs.push(a.map(formatVal).join(" ")),
+      warn: (...a) => logs.push("⚠ " + a.map(formatVal).join(" ")),
+      error: (...a) => logs.push("✖ " + a.map(formatVal).join(" "))
+    };
+    const fn = new Function("console", code);
+    fn(fakeConsole);
+    return logs.length ? logs.join("\n") : "(completed with no output)";
+  }
+
+  function formatVal(v) {
+    if (typeof v === "string") return v;
+    try { return JSON.stringify(v, null, 2); } catch (_) { return String(v); }
+  }
+
+  function runHtmlLab(code, preview, output) {
+    output.hidden = true;
+    preview.hidden = false;
+    preview.srcdoc = code;
+    return null;
+  }
+
+  function loadScriptOnce(src) {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector(`script[data-src="${src}"]`)) {
+        resolve();
+        return;
+      }
+      const s = document.createElement("script");
+      s.src = src;
+      s.async = true;
+      s.dataset.src = src;
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error("Failed to load " + src));
+      document.head.appendChild(s);
+    });
+  }
+
+  async function ensureSqlJs() {
+    if (window.__ashovixSql) return window.__ashovixSql;
+    await loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js");
+    const SQL = await window.initSqlJs({
+      locateFile: (file) => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}`
+    });
+    window.__ashovixSql = new SQL.Database();
+    return window.__ashovixSql;
+  }
+
+  async function runSqlLab(code) {
+    const db = await ensureSqlJs();
+    const parts = code.split(";").map((s) => s.trim()).filter(Boolean);
+    const chunks = [];
+    for (const stmt of parts) {
+      const rows = db.exec(stmt);
+      if (!rows.length) {
+        chunks.push("✓ " + stmt.split("\n")[0].slice(0, 60) + (stmt.length > 60 ? "…" : ""));
+        continue;
+      }
+      rows.forEach((r) => {
+        const header = r.columns.join(" | ");
+        const body = r.values.map((row) => row.map((c) => (c === null ? "NULL" : String(c))).join(" | ")).join("\n");
+        chunks.push(header + "\n" + "-".repeat(Math.min(header.length, 48)) + "\n" + body);
+      });
+    }
+    return chunks.join("\n\n") || "OK";
+  }
+
+  function runPythonLab(code) {
+    const lines = code.split("\n");
+    const out = [];
+    const env = { numbers: null };
+    for (const raw of lines) {
+      const line = raw.trim();
+      if (!line || line.startsWith("#")) continue;
+      if (line.startsWith("print(") && line.endsWith(")")) {
+        const inner = line.slice(6, -1);
+        try {
+          if (inner.includes("sorted(numbers)") && Array.isArray(env.numbers)) out.push("sorted: " + JSON.stringify([...env.numbers].sort((a, b) => a - b)));
+          else if (inner.includes("sum(numbers)") && Array.isArray(env.numbers)) out.push("sum: " + env.numbers.reduce((a, b) => a + b, 0));
+          else if (inner.includes("set(numbers)") && Array.isArray(env.numbers)) out.push("unique: " + JSON.stringify([...new Set(env.numbers)]));
+          else out.push(inner.replace(/^["']|["']$/g, "").replace(/,\s*/g, " "));
+        } catch (_) {
+          out.push(inner);
+        }
+        continue;
+      }
+      const assign = line.match(/^(\w+)\s*=\s*\[(.*)\]$/);
+      if (assign) {
+        try {
+          env[assign[1]] = JSON.parse("[" + assign[2] + "]");
+          out.push(`# ${assign[1]} = ${JSON.stringify(env[assign[1]])}`);
+        } catch (_) { /* ignore */ }
+        continue;
+      }
+      if (line.startsWith("for ") && env.numbers) {
+        env.numbers.forEach((n) => {
+          if (n % 2) out.push(`${n} is odd`);
+        });
+      }
+    }
+    out.push("");
+    out.push("—— Python lab mode ——");
+    out.push("Starter patterns run locally. Use the SQL / JavaScript tools for full live engines.");
+    return out.join("\n");
+  }
+
+  function runMongoLab(code) {
+    const out = ["ashovix> connected"];
+    if (/insertMany/i.test(code)) out.push("Acknowledged inserted documents: 2");
+    if (/find\(/i.test(code)) {
+      out.push(`[
+  { title: "SQL Mastery", level: "beginner", hours: 20 },
+  { title: "Kubernetes", level: "advanced", hours: 18 }
+]`);
+    }
+    if (/aggregate/i.test(code)) {
+      out.push(`[
+  { _id: "beginner", total: 1 },
+  { _id: "advanced", total: 1 }
+]`);
+    }
+    out.push("ok");
+    return out.join("\n");
+  }
+
+  function runRedisLab(code) {
+    const store = Object.create(null);
+    const lists = Object.create(null);
+    const out = [];
+    code.split("\n").map((l) => l.trim()).filter((l) => l && !l.startsWith("#")).forEach((line) => {
+      const parts = line.match(/(?:[^\s"]+|"[^"]*")+/g) || [];
+      const cmd = (parts[0] || "").toUpperCase();
+      const args = parts.slice(1).map((a) => a.replace(/^"|"$/g, ""));
+      if (cmd === "SET") { store[args[0]] = args[1]; out.push("OK"); }
+      else if (cmd === "GET") out.push(store[args[0]] == null ? "(nil)" : store[args[0]]);
+      else if (cmd === "HSET") {
+        store[args[0]] = store[args[0]] || {};
+        for (let i = 1; i < args.length; i += 2) store[args[0]][args[i]] = args[i + 1];
+        out.push(String(Math.floor((args.length - 1) / 2)));
+      } else if (cmd === "HGETALL") {
+        const obj = store[args[0]] || {};
+        Object.entries(obj).forEach(([k, v]) => { out.push(k); out.push(String(v)); });
+      } else if (cmd === "LPUSH") {
+        lists[args[0]] = lists[args[0]] || [];
+        args.slice(1).forEach((v) => lists[args[0]].unshift(v));
+        out.push(String(lists[args[0]].length));
+      } else if (cmd === "LRANGE") out.push(JSON.stringify(lists[args[0]] || []));
+      else if (cmd === "INCR") {
+        store[args[0]] = Number(store[args[0]] || 0) + 1;
+        out.push(String(store[args[0]]));
+      } else out.push("(error) unknown command '" + cmd + "'");
+    });
+    return out.join("\n");
+  }
+
+  function runShellLab(toolId, code) {
+    const replies = {
+      pwd: "/home/ashovix/labs",
+      "ls -la": "total 24\ndrwxr-xr-x  5 ashovix ashovix 4096 Jul 31 12:00 .\ndrwxr-xr-x 18 ashovix ashovix 4096 Jul 31 11:55 ..\n-rw-r--r--  1 ashovix ashovix  220 Jul 31 12:00 README.md",
+      whoami: "ashovix",
+      date: new Date().toString(),
+      "uname -a": "Linux ashovix-lab 6.8.0 #1 SMP x86_64 GNU/Linux",
+      "df -h": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/sda1        50G   12G   36G  25% /",
+      "free -m": "Mem:  7938  2104  4200",
+      "docker version": "Client: Docker Engine 26.1\nServer: Docker Engine 26.1",
+      "docker images": "REPOSITORY     TAG       IMAGE ID\nashovix-api    latest    8f3a21c",
+      "docker ps -a": "CONTAINER ID   IMAGE          STATUS\na1b2c3d4e5f6   ashovix-api    Up 2 hours",
+      "docker compose up -d": "✔ Container ashovix-api  Started",
+      "kubectl get nodes": "NAME           STATUS   ROLES\nlab-node-1     Ready    control-plane",
+      "kubectl get pods -A": "NAMESPACE     NAME                         READY   STATUS\ndefault       ashovix-api-7d9c             1/1     Running",
+      "kubectl get svc": "NAME          TYPE        CLUSTER-IP\nashovix-api   ClusterIP   10.96.10.20",
+      "kubectl apply -f deploy.yaml": "deployment.apps/ashovix-api configured",
+      "kubectl rollout status deployment/ashovix-api": "deployment \"ashovix-api\" successfully rolled out",
+      "terraform init": "Terraform initialized successfully!",
+      "terraform plan": "Plan: 3 to add, 0 to change, 0 to destroy.",
+      "terraform apply -auto-approve": "Apply complete! Resources: 3 added.",
+      "terraform state list": "aws_s3_bucket.labs\naws_iam_role.runner",
+      "git status": "On branch main\nnothing to commit, working tree clean",
+      "git branch -vv": "* main 1cd8766 [origin/main] latest",
+      "git log --oneline -5": "1cd8766 feat: workspace\nf154e4d fix: casing\n77394cf chore: headline",
+      "git checkout -b feature/workspace": "Switched to a new branch 'feature/workspace'",
+      "git add .": "",
+      "aws sts get-caller-identity": '{\n  "UserId": "AIDAEXAMPLE",\n  "Account": "123456789012",\n  "Arn": "arn:aws:iam::123456789012:user/ashovix"\n}',
+      "aws s3 ls": "2026-07-01  ashovix-labs-artifacts\n2026-07-01  ashovix-labs-logs",
+      "az account show": '{\n  "name": "Ashovix Subscription",\n  "id": "00000000-0000-0000-0000-000000000000",\n  "state": "Enabled"\n}',
+      "az group list -o table": "Name            Location\n------------    ---------\nashovix-rg      eastus",
+      "gcloud config list": "[core]\naccount = ashok@ashovix.dev\nproject = ashovix-labs",
+      "gcloud projects list": "PROJECT_ID        NAME\nashovix-labs       Ashovix Labs",
+      "systemctl status nginx": "● nginx.service - active (running)"
+    };
+
+    const out = [];
+    code.split("\n").forEach((raw) => {
+      const line = raw.trim();
+      if (!line || line.startsWith("#")) return;
+      out.push(`$ ${line}`);
+      let matched = false;
+      for (const [cmd, reply] of Object.entries(replies)) {
+        if (line === cmd || line.startsWith(cmd + " ")) {
+          if (reply) out.push(reply);
+          matched = true;
+          break;
+        }
+      }
+      if (!matched) {
+        if (/^echo\s+/.test(line)) out.push(line.replace(/^echo\s+/, "").replace(/^["']|["']$/g, ""));
+        else if (/^mkdir\b/.test(line)) out.push("");
+        else if (/^cd\b/.test(line)) out.push("");
+        else if (/^git commit\b/.test(line)) out.push("[feature/workspace 9ab12cd] practice commit\n 1 file changed");
+        else if (/docker logs/.test(line)) out.push("listening on :8080\nready for traffic");
+        else if (/aws ec2|aws lambda|az vm|az storage|gcloud compute|gcloud storage|ps aux/.test(line)) {
+          out.push("(lab) sample output — command recognized in Ashovix workspace");
+        } else out.push(`(lab) simulated: ${line}`);
+      }
+      out.push("");
+    });
+    out.push(`—— ${toolId} lab · browser simulation ——`);
+    return out.join("\n").trim();
+  }
+
   function viewBlog() {
     return `
       <div class="page">
@@ -677,6 +1054,7 @@ kubectl apply -f deploy.yaml</pre>
     else if (path === "courses") html = viewCourses();
     else if (path === "paths") html = viewPaths();
     else if (path === "projects") html = viewProjects();
+    else if (path === "workspace") html = viewWorkspace();
     else if (path === "blog") html = viewBlog();
     else if (path === "community") html = viewCommunity();
     else if (path === "login") html = viewAuth("login");
@@ -764,6 +1142,8 @@ kubectl apply -f deploy.yaml</pre>
       e.preventDefault();
       logout();
     });
+
+    if (parts[0] === "workspace") initWorkspace();
 
     const form = $("#auth-form");
     if (form) {
