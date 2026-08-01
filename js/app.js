@@ -196,51 +196,12 @@
     return "";
   }
 
-  function workspaceArt() {
-    return `
-      <div class="hero-visual-wrap">
-        <div class="workspace-3d" aria-hidden="true">
-          <div class="ws-topbar"><span></span><span></span><span></span></div>
-          <div class="ws-body">
-            <div class="ws-sidebar"><i></i><i></i><i></i><i></i><i></i></div>
-            <pre class="ws-editor"><span class="cm">-- Ashovix Labs · live workspace</span>
-<span class="kw">SELECT</span> path, progress
-<span class="kw">FROM</span> academy.courses
-<span class="kw">WHERE</span> level &gt;= <span class="str">'pro'</span>
-<span class="kw">ORDER BY</span> impact <span class="kw">DESC</span>;
-
-<span class="cm"># ship with confidence</span>
-git checkout -b feature/scale
-docker compose up -d
-kubectl apply -f deploy.yaml</pre>
-          </div>
-          <div class="ws-glow"></div>
-        </div>
-      </div>`;
-  }
-
   /* ---------- Views ---------- */
   function viewHome() {
     const courses = F.list();
     const featured = courses.filter((c) => c.featured).slice(0, 8);
 
     return `
-      <section class="hero">
-        <div class="hero-glow" aria-hidden="true"></div>
-        <div class="hero-grid">
-          <div class="hero-copy">
-            <div class="eyebrow">Ashovix Labs · Premium Developer Academy</div>
-            <h1>Master Tools Like a Professional</h1>
-            <p class="lead">Learn SQL, MongoDB, PostgreSQL, Git, Docker, Linux, Kubernetes, DevOps, and Cloud technologies through structured step-by-step academies.</p>
-            <div class="cta-row">
-              <a class="btn btn-primary" href="#/courses" data-nav>Start Learning</a>
-              <a class="btn btn-ghost" href="#/courses" data-nav>Explore Courses</a>
-            </div>
-          </div>
-          ${workspaceArt()}
-        </div>
-      </section>
-
       <div class="stats-bar" id="stats-bar" data-animate-stats>
         ${M.stats.map((s) => `
           <div class="stat-item">
@@ -249,14 +210,14 @@ kubectl apply -f deploy.yaml</pre>
           </div>`).join("")}
       </div>
 
-      <section class="section reveal">
+      <section class="section reveal" id="courses-grid">
         <div class="section-head">
           <div>
             <div class="section-label">Curriculum</div>
             <h2>Courses built like premium products</h2>
             <p>${courses.length} academies — databases, cloud, DevOps, and backend engineering.</p>
           </div>
-          <a class="btn btn-ghost btn-sm" href="#/courses" data-nav>View all</a>
+          <a class="btn btn-ghost btn-sm" href="#/courses" data-nav>Explore Courses</a>
         </div>
         <div class="courses-grid">
           ${featured.map((c, i) => courseCard(c, { delay: i * 40 })).join("")}
