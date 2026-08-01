@@ -8,7 +8,7 @@
       { value: 12, suffix: "", label: "Learning Paths" },
       { value: 300, suffix: "+", label: "Lessons" },
       { value: 50, suffix: "+", label: "Hands-on Projects" },
-      { value: 4.9, suffix: "★", label: "Student Rating", decimals: 1 }
+      { value: 4.5, suffix: "★", label: "Student Rating", decimals: 1 }
     ],
     roadmap: [
       "Beginner", "Git", "Linux", "SQL", "PostgreSQL", "MongoDB",
