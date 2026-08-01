@@ -908,7 +908,6 @@ kubectl apply -f deploy.yaml</pre>
         <p style="color:var(--muted);margin-top:0">${p.done}/${p.total} lessons · ${c.modules.length} modules · ${c.duration || ""} · ${p.pct}% complete</p>
         <div class="cta-row" style="margin:1.25rem 0 2rem">
           <a class="btn btn-primary" href="#/course/${c.id}/lesson/${first}" data-nav>Watch Lesson / Start</a>
-          <a class="btn btn-ghost" href="#/course/${c.id}/labs" data-nav>Practice Labs</a>
           ${c.assessment ? `<a class="btn btn-ghost" href="#/course/${c.id}/assessment" data-nav>Final Assessment (60 Q · 90 min)</a>` : ""}
           ${c.reference ? `<a class="btn btn-ghost" href="#/course/${c.id}/reference" data-nav>Notes / Quick Ref</a>` : ""}
         </div>
@@ -998,7 +997,7 @@ kubectl apply -f deploy.yaml</pre>
           </div>
           <div class="lesson-nav">
             ${prev ? `<a class="btn btn-ghost" href="#/course/${c.id}/lesson/${prev}" data-nav>← Previous</a>` : "<span></span>"}
-            ${next ? `<a class="btn btn-primary" href="#/course/${c.id}/lesson/${next}" data-nav>Next →</a>` : `<a class="btn btn-primary" href="#/course/${c.id}/labs" data-nav>Labs →</a>`}
+            ${next ? `<a class="btn btn-primary" href="#/course/${c.id}/lesson/${next}" data-nav>Next →</a>` : `<a class="btn btn-primary" href="#/course/${c.id}" data-nav>Back to course</a>`}
           </div>
         </article>
       </div>`;
