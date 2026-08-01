@@ -2853,6 +2853,7 @@ WHERE price &lt; (SELECT MAX(price) FROM products);</code></pre>
     duration: "20+ hrs",
     description: "Complete SQL Mastery: databases, SQL basics, installs (PostgreSQL, SQLite, MySQL), tables/rows/columns/types/constraints/keys, normalization, DDL/DML/DQL/TCL/DCL, querying, joins, views, indexes, routines, transactions, tuning, design, interviews, and a timed final assessment.",
     audience: "Beginners to job-ready SQL practitioners",
+    featureFlag: "Yes",
     modules: [
       { id: "sql-m01", title: "Foundations", lessonIds: ["sql01","sql02","sql03","sql04"] },
       { id: "sql-m02", title: "Install & Tools", lessonIds: ["sql05","sql06","sql07","sql08"] },

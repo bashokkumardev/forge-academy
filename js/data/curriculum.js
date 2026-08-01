@@ -1036,6 +1036,7 @@ db2 takeover hadr on db LEARNDB by force</code></pre>
     accent: "#3fd0b6",
     description: "Complete IBM Db2 for Linux (LUW): install, SQL, storage, security, backup, performance, HADR, pureScale.",
     audience: "DBAs, developers, architects",
+    featureFlag: "Yes",
     paths: D.paths,
     modules: D.modules,
     lessons: D.lessons,

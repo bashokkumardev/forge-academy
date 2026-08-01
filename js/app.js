@@ -379,7 +379,7 @@ kubectl apply -f deploy.yaml</pre>
       <div class="page">
         <div class="section-label">Catalog</div>
         <h1>All courses</h1>
-        <p class="lead">${courses.length} academies — every course in Ashovix Labs is listed here.</p>
+        <p class="lead">${courses.length} academies available right now.</p>
         <div class="courses-grid" id="courses-grid">
           ${courses.map((c, i) => courseCard(c, { delay: (i % 8) * 30 })).join("")}
         </div>
@@ -891,6 +891,14 @@ kubectl apply -f deploy.yaml</pre>
   function viewCourse(courseId) {
     const c = F.get(courseId);
     if (!c) return viewNotFound();
+    if (!F.isEnabled(c)) {
+      return `
+        <div class="page">
+          <h1>${c.title}</h1>
+          <p class="lead">This course is currently turned off (feature flag: No).</p>
+          <a class="btn btn-primary" href="#/courses" data-nav>Browse courses</a>
+        </div>`;
+    }
     const p = courseProgress(c);
     const first = c.orderedLessonIds[0];
     return `
@@ -953,7 +961,7 @@ kubectl apply -f deploy.yaml</pre>
 
   function viewLesson(courseId, lessonId) {
     const c = F.get(courseId);
-    if (!c) return viewNotFound();
+    if (!c || !F.isEnabled(c)) return viewNotFound();
     const L = c.lessons[lessonId];
     if (!L) return viewNotFound();
     const ids = c.orderedLessonIds;
