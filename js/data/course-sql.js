@@ -357,14 +357,14 @@ sudo -u postgres psql</code></pre>
 <pre><code>-- Inside psql: confirm the server
 SELECT version();</code></pre>
 <pre><code>-- Show connection info (psql meta-command)
--- \conninfo
+-- \\conninfo
 
 -- List databases (psql)
--- \l
+-- \\l
 
 -- Create a practice database
 CREATE DATABASE ashovix_lab;</code></pre>
-<pre><code>-- Connect to it (psql): \c ashovix_lab
+<pre><code>-- Connect to it (psql): \\c ashovix_lab
 SELECT current_database() AS db, current_user AS who;</code></pre>
 
 <h2>Try it</h2>
@@ -596,9 +596,9 @@ FROM customers
 WHERE city = 'Pune'
 ORDER BY name;</code></pre>
 <pre><code>-- psql: useful meta-commands
--- \dt          list tables
--- \d customers describe table
--- \x           expanded display
+-- \\dt          list tables
+-- \\d customers describe table
+-- \\x           expanded display
 -- \timing      show execution time</code></pre>
 <pre><code>-- Safety habit: preview before mass update
 SELECT COUNT(*) AS will_touch
@@ -658,7 +658,7 @@ UPDATE orders SET status = 'CANCELLED' WHERE status = 'DRAFT';
 <pre><code>-- PostgreSQL / MySQL style
 CREATE DATABASE ashovix_shop;
 
--- PostgreSQL connect: \c ashovix_shop
+-- PostgreSQL connect: \\c ashovix_shop
 -- MySQL:
 -- USE ashovix_shop;
 

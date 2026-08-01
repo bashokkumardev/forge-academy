@@ -1,0 +1,14 @@
+<!DOCTYPE html><html><body>
+<script>
+window.onerror = function(msg, src, line, col, err) {
+  document.title = 'ERR:' + line + ':' + msg;
+  document.body.textContent = line + ':' + col + ' ' + msg;
+};
+</script>
+<script src="file:///C:/Users/ashok/Desktop/Project/js/data/forge.js"></script>
+<script src="file:///C:/Users/ashok/Desktop/Project/js/data/course-sql.js"></script>
+<script>
+document.title = 'OK:' + (window.FORGE && FORGE.get('sql') && Object.keys(FORGE.get('sql').lessons).length);
+document.body.textContent = document.title + ' hasSql01=' + !!(FORGE.get('sql')&&FORGE.get('sql').lessons.sql01);
+</script>
+</body></html>
