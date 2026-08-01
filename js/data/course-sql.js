@@ -65,14 +65,6 @@ SELECT city, COUNT(*) AS customer_count
 FROM customers
 GROUP BY city;</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>Write (on paper or in notes) three apps you use that must store shared data.</li>
-<li>For each, list one risk if two users edited a plain CSV at the same time.</li>
-<li>Sketch a tiny database with one table <code>students</code> and two example rows.</li>
-<li>Explain in one sentence why a bank cannot rely on spreadsheets alone.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Thinking a database is "just Excel on a server" - engines add concurrency, integrity, and recovery.</li>
@@ -136,14 +128,6 @@ ORDER BY name;</code></pre>
 
 <h2>Portability tip</h2>
 <p>Learn <strong>ANSI SQL</strong> first. Dialects differ at the edges (string concat, dates, <code>LIMIT</code> vs <code>TOP</code>, identity columns). Core <code>SELECT</code>/<code>JOIN</code>/<code>GROUP BY</code> ideas transfer.</p>
-
-<h2>Try it</h2>
-<ol>
-<li>Rewrite this English request as SQL: "List product names priced under 500."</li>
-<li>Label each of these as DDL/DML/DQL/TCL/DCL: <code>CREATE TABLE</code>, <code>INSERT</code>, <code>SELECT</code>, <code>COMMIT</code>, <code>GRANT</code>.</li>
-<li>Explain in one line why SQL is called declarative.</li>
-<li>Run (or write) a constant <code>SELECT</code> that returns your name and today's year.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -209,14 +193,6 @@ WHERE status = 'Paid';</code></pre>
 SELECT o.id, c.name, o.total
 FROM orders o
 JOIN customers c ON c.id = o.customer_id;</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>List two tasks you would keep in a spreadsheet this week.</li>
-<li>List two tasks that should be a database (multi-user, money, inventory).</li>
-<li>Convert this sheet filter to SQL: Status = Open AND Priority = High.</li>
-<li>Explain why two people editing the same shared CSV is risky.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -294,14 +270,6 @@ JOIN orders o ON o.customer_id = c.id;</code></pre>
 -- concurrency, constraints, recovery, users
 SELECT current_user;  -- who am I? (syntax varies by engine)</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>Name three RDBMS products from memory.</li>
-<li>Draw customers and orders boxes and the line for <code>customer_id</code>.</li>
-<li>Write a SELECT that lists customer names with order totals (use the JOIN above).</li>
-<li>Explain one job the "management system" does besides storing bytes.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Confusing RDBMS (the product) with SQL (the language).</li>
@@ -366,14 +334,6 @@ SELECT version();</code></pre>
 CREATE DATABASE ashovix_lab;</code></pre>
 <pre><code>-- Connect to it (psql): \\c ashovix_lab
 SELECT current_database() AS db, current_user AS who;</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Install PostgreSQL and note the port (default 5432).</li>
-<li>Connect as <code>postgres</code> (or your admin user) and run <code>SELECT version();</code>.</li>
-<li>Create database <code>ashovix_lab</code> and reconnect to it.</li>
-<li>Write down your password storage plan (password manager - never commit it to git).</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -448,14 +408,6 @@ SELECT id, name, city FROM customers;</code></pre>
 <tr><td>Zero admin for starters</td><td>Users, roles, replication options</td></tr>
 </tbody></table></div>
 
-<h2>Try it</h2>
-<ol>
-<li>Create <code>ashovix.db</code> and a <code>customers</code> table.</li>
-<li>Insert three rows and <code>SELECT</code> them.</li>
-<li>Run <code>.schema customers</code> in the CLI and read the output.</li>
-<li>Note one app scenario where SQLite fits and one where Postgres fits better.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Putting the <code>.db</code> file on a network share with many writers - corruption risk.</li>
@@ -524,14 +476,6 @@ SELECT DATABASE();</code></pre>
 CREATE USER 'ashovix'@'localhost' IDENTIFIED BY 'change_me_now';
 GRANT SELECT, INSERT, UPDATE, DELETE ON ashovix.* TO 'ashovix'@'localhost';
 FLUSH PRIVILEGES;</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Install MySQL and confirm port 3306.</li>
-<li>Create database <code>ashovix</code> and table <code>customers</code>.</li>
-<li>Insert two rows and select them.</li>
-<li>Run <code>SELECT VERSION();</code> and record the version string.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -610,14 +554,6 @@ BEGIN;
 UPDATE orders SET status = 'CANCELLED' WHERE status = 'DRAFT';
 -- SELECT and verify, then COMMIT or ROLLBACK;</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>Open your engine's CLI and list tables.</li>
-<li>Open a GUI (pgAdmin, Workbench, or DBeaver) and run the same SELECT.</li>
-<li>Time a query in CLI if available (<code>\timing</code> in psql).</li>
-<li>Write a personal rule: never store DB passwords in project source files.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Running UPDATE/DELETE without a WHERE preview.</li>
@@ -689,14 +625,6 @@ WHERE table_schema NOT IN ('pg_catalog', 'information_schema')
 -- DROP TABLE products;
 -- DROP DATABASE ashovix_shop;  -- syntax/privileges vary</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>Create database <code>ashovix_shop</code> (or a SQLite file).</li>
-<li>Create <code>products</code> with id, name, price.</li>
-<li>Insert at least three products and select them ordered by price.</li>
-<li>List tables and confirm <code>products</code> appears.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Creating tables while connected to the wrong database.</li>
@@ -759,14 +687,6 @@ ALTER TABLE customers
 -- Prefer order_date over od, customer_id over cid in public schemas
 SELECT id, full_name, email
 FROM customers;</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Design a <code>books</code> table with id, title, author, price, in_stock.</li>
-<li>Create it and insert two rows.</li>
-<li>Alter the table to add <code>isbn</code>.</li>
-<li>Write why you made <code>title</code> NOT NULL.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -833,14 +753,6 @@ WHERE id = 12;
 
 -- Dangerous pattern (lab only): DELETE FROM customers;  -- all rows</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>Insert three customer rows with different cities.</li>
-<li>Update one customer's email and re-select that id.</li>
-<li>Delete one row by primary key.</li>
-<li>Run the same SELECT twice without ORDER BY and note that order may vary by engine/plan.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li><code>UPDATE</code>/<code>DELETE</code> without WHERE on a large table.</li>
@@ -902,14 +814,6 @@ FROM customers;</code></pre>
 <li>Avoid spaces and reserved words as names.</li>
 <li>Prefer <code>is_active</code> over vague <code>flag</code>.</li>
 </ul>
-
-<h2>Try it</h2>
-<ol>
-<li>Select only <code>id</code> and <code>full_name</code> from customers.</li>
-<li>Alias <code>full_name</code> as <code>customer_name</code>.</li>
-<li>Add a nullable <code>notes</code> column.</li>
-<li>Explain one reason <code>SELECT *</code> is risky in APIs.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -984,14 +888,6 @@ SELECT
   CAST(price AS VARCHAR(20)) AS price_text
 FROM products;</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>Design an <code>employees</code> table with hire_date, salary, and is_active types.</li>
-<li>Insert one row and select it.</li>
-<li>Attempt to insert a non-numeric salary and observe the error.</li>
-<li>Rewrite a FLOAT money column plan to DECIMAL.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Using FLOAT/DOUBLE for currency.</li>
@@ -1053,14 +949,6 @@ FROM products;</code></pre>
 <pre><code>ALTER TABLE products
   ADD CONSTRAINT chk_status
   CHECK (status IN ('ACTIVE', 'DISCONTINUED'));</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Create a table with NOT NULL, UNIQUE, CHECK, and DEFAULT.</li>
-<li>Prove CHECK by attempting an invalid INSERT.</li>
-<li>Prove UNIQUE with a duplicate key insert.</li>
-<li>Add a CHECK via ALTER and test it.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -1124,14 +1012,6 @@ CREATE TABLE enrollments (
 -- PostgreSQL: id SERIAL PRIMARY KEY
 -- MySQL: id INT PRIMARY KEY AUTO_INCREMENT
 -- SQL Server: id INT IDENTITY(1,1) PRIMARY KEY</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Create <code>customers</code> with an integer PK and unique email.</li>
-<li>Attempt a duplicate PK insert and read the error.</li>
-<li>Design a composite PK for a junction table of your choice.</li>
-<li>Argue for or against using email as the primary key.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -1198,14 +1078,6 @@ CREATE TABLE order_items (
   sku      VARCHAR(40) NOT NULL,
   FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Build customers and orders with an FK.</li>
-<li>Insert a valid order and an invalid order; confirm rejection.</li>
-<li>Attempt to delete a customer that still has orders (note the behavior).</li>
-<li>Write one sentence on when CASCADE is helpful vs dangerous.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -1283,14 +1155,6 @@ SELECT o.id, c.name, c.phone
 FROM orders o
 JOIN customers c ON c.id = o.customer_id;</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>Take a spreadsheet with customer name repeated on every order and split it into two tables.</li>
-<li>Identify a 1NF violation in a design that stores comma-separated tags in one cell.</li>
-<li>Explain a transitive dependency: ZIP determines city stored beside customer id.</li>
-<li>Name one reporting case where a denormalized summary table might be OK.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Over-normalizing into tiny tables that make every screen need 12 joins.</li>
@@ -1354,14 +1218,6 @@ ALTER TABLE employees
 -- TRUNCATE TABLE employees;
 -- DROP TABLE employees;</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>CREATE a table, ALTER add a column, CREATE an index.</li>
-<li>Write the difference between DELETE all rows and TRUNCATE in your own words (check your engine docs).</li>
-<li>Draft a two-step migration: add nullable column, then backfill, then set NOT NULL.</li>
-<li>Label five statements as DDL or DML from a mixed list you invent.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Running DROP/TRUNCATE on production without backups and a change ticket.</li>
@@ -1418,14 +1274,6 @@ UPDATE accounts SET balance = balance + 100 WHERE id = 2;
 -- verify both sides, then:
 COMMIT;
 -- or ROLLBACK;</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Insert two products, update one price, delete one row.</li>
-<li>Before a bulk UPDATE, run a SELECT with the same WHERE.</li>
-<li>Wrap a two-step transfer in BEGIN/COMMIT.</li>
-<li>Write an UPDATE that would be wrong without WHERE - then do not run it.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -1485,14 +1333,6 @@ ORDER BY customer_count DESC;</code></pre>
 FROM products
 WHERE name LIKE '%Note%';</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>Select all columns from a table, then rewrite with an explicit column list.</li>
-<li>Filter with WHERE and sort with ORDER BY.</li>
-<li>Write a COUNT(*) grouped by city.</li>
-<li>Find rows where a column IS NULL.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Using <code>= NULL</code> instead of <code>IS NULL</code>.</li>
@@ -1549,14 +1389,6 @@ INSERT INTO orders (id, product_id, qty) VALUES (500, 10, 1);
 ROLLBACK TO SAVEPOINT after_stock;
 ROLLBACK;  -- or COMMIT remaining intentional work carefully</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>Run a two-update transfer and COMMIT.</li>
-<li>Repeat with ROLLBACK and confirm balances unchanged.</li>
-<li>Use a SAVEPOINT and roll back to it.</li>
-<li>Explain atomicity in one sentence using the transfer example.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Leaving transactions open (long locks, connection pool pain).</li>
@@ -1610,14 +1442,6 @@ FLUSH PRIVILEGES;</code></pre>
 <li>Migrations: separate privileged account, not the runtime user.</li>
 </ul>
 
-<h2>Try it</h2>
-<ol>
-<li>Create a read-only user/role in your engine.</li>
-<li>GRANT SELECT and prove INSERT fails.</li>
-<li>REVOKE a privilege and retest.</li>
-<li>List privileges your imaginary checkout API actually needs.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Sharing the superuser password with every developer laptop.</li>
@@ -1670,14 +1494,6 @@ WHERE launched BETWEEN '2026-01-01' AND '2026-12-31'
 <li><code>NOT IN (...)</code> with NULLs in the list can surprise you - prefer careful patterns.</li>
 <li>Unknown logic: comparisons with NULL yield UNKNOWN, filtered out by WHERE.</li>
 </ul>
-
-<h2>Try it</h2>
-<ol>
-<li>Filter products with price BETWEEN 5 and 25.</li>
-<li>Find names starting with 'A' using LIKE.</li>
-<li>Find rows where phone IS NULL.</li>
-<li>Write a WHERE with AND/OR and add parentheses to make intent obvious.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -1734,14 +1550,6 @@ WHERE status = 'PAID'
 GROUP BY customer_id
 HAVING COUNT(*) >= 3;</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>Write three WHERE filters on your sample data (equality, range, NULL).</li>
-<li>UPDATE one row using WHERE on the primary key.</li>
-<li>Explain why WHERE status = 'PAID' differs from HAVING COUNT(*) &gt; 1.</li>
-<li>Convert an English rule into a WHERE clause for your domain.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Putting aggregate conditions in WHERE instead of HAVING.</li>
@@ -1796,14 +1604,6 @@ LIMIT 5;
 
 <h2>NULL sorting</h2>
 <p>Engines differ on whether NULLs sort first or last. Check docs or use <code>NULLS FIRST/LAST</code> where supported (PostgreSQL).</p>
-
-<h2>Try it</h2>
-<ol>
-<li>Sort customers by name ascending.</li>
-<li>Sort products by price descending, then name.</li>
-<li>Return the 5 most expensive products (LIMIT/TOP).</li>
-<li>Run a SELECT twice without ORDER BY and discuss stability.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -1864,14 +1664,6 @@ FROM orders
 GROUP BY DATE_TRUNC('month', order_date)
 ORDER BY month;</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>COUNT customers per city.</li>
-<li>SUM order totals per customer_id.</li>
-<li>AVG price per product category (add a category column if needed).</li>
-<li>Explain an error you get if you SELECT name while grouping only by city.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Selecting unaggregated non-grouped columns.</li>
@@ -1923,14 +1715,6 @@ ORDER BY customers DESC;</code></pre>
 FROM order_items
 GROUP BY product_id
 HAVING SUM(qty) >= 100;</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Find cities with more than one customer.</li>
-<li>Find customers with at least two PAID orders (WHERE + HAVING).</li>
-<li>Rewrite a wrong query that put COUNT in WHERE and fix it.</li>
-<li>Explain why HAVING can reference aggregate expressions.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -1992,14 +1776,6 @@ JOIN orders o ON o.customer_id = c.id
 JOIN order_items oi ON oi.order_id = o.id
 JOIN products p ON p.id = oi.product_id;</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>Write an INNER JOIN report of customers and orders.</li>
-<li>Write a LEFT JOIN that still shows customers with no orders.</li>
-<li>Intentionally omit ON (or use CROSS JOIN) in a lab and observe row explosion - then fix it.</li>
-<li>Add a third table into a join chain.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Missing join condition producing a Cartesian product.</li>
@@ -2059,14 +1835,6 @@ FROM (
 ) per_customer
 GROUP BY city;</code></pre>
 
-<h2>Try it</h2>
-<ol>
-<li>Select products priced above the average price.</li>
-<li>Select customers who appear in orders via IN.</li>
-<li>Rewrite an IN subquery as a JOIN and compare results.</li>
-<li>Write a FROM subquery (derived table) that aggregates once, then filters.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Subquery returns more than one row where a scalar is required.</li>
@@ -2120,14 +1888,6 @@ GROUP BY customer_id;</code></pre>
 <pre><code>-- Replace definition when logic changes (syntax varies)
 -- CREATE OR REPLACE VIEW v_customer_orders AS ...
 DROP VIEW v_customer_orders;  -- when retiring</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Create a view joining customers and orders.</li>
-<li>Query the view with a WHERE on status.</li>
-<li>Create an aggregate view of revenue by customer.</li>
-<li>Grant SELECT on a view to a read-only role (if your engine setup allows).</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -2202,14 +1962,6 @@ CREATE UNIQUE INDEX uq_customers_email
 <li>Unused indexes still cost maintenance.</li>
 </ul>
 
-<h2>Try it</h2>
-<ol>
-<li>Create an index on a foreign key column.</li>
-<li>Run a selective WHERE before and after (use EXPLAIN if available).</li>
-<li>Create a composite index and query using the leading column.</li>
-<li>List indexes you would NOT add on a tiny lookup table.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Indexing every column "just in case."</li>
@@ -2275,14 +2027,6 @@ SELECT 'Use engine docs for CREATE PROCEDURE details' AS note;</code></pre>
 <li><strong>Cons:</strong> harder CI/testing for some teams, vendor lock-in, logic hidden from app repos if mismanaged.</li>
 </ul>
 
-<h2>Try it</h2>
-<ol>
-<li>Read your engine's CREATE PROCEDURE (or equivalent) docs for 10 minutes.</li>
-<li>Write a procedure that inserts a product (or a PostgreSQL function doing the same).</li>
-<li>Call it twice with different parameters.</li>
-<li>Argue where checkout logic should live for your team: app vs DB.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Copy-pasting MySQL procedure syntax into PostgreSQL unchanged.</li>
@@ -2344,14 +2088,6 @@ FROM customers;</code></pre>
 </ul>
 <p>Exact rules differ by engine (PostgreSQL especially blurs lines with powerful functions).</p>
 
-<h2>Try it</h2>
-<ol>
-<li>Select UPPER/LOWER of customer names.</li>
-<li>Use COALESCE to replace NULL phones.</li>
-<li>Filter a date range without YEAR(column) wrapping.</li>
-<li>Look up one string function unique to your engine.</li>
-</ol>
-
 <h2>Common mistakes</h2>
 <ul>
 <li>Applying functions to indexed columns in WHERE unnecessarily.</li>
@@ -2409,14 +2145,6 @@ DELIMITER ;</code></pre>
 <pre><code>-- PostgreSQL uses CREATE FUNCTION + CREATE TRIGGER
 -- Keep logic tiny: prefer app transactions for complex workflows
 SELECT 'Document every trigger in your schema README' AS advice;</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Create an audit table for a base table you care about.</li>
-<li>Add an AFTER INSERT trigger (per your engine docs).</li>
-<li>Insert a row and confirm the audit row appears.</li>
-<li>List one rule you would NOT enforce with a trigger (and why).</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -2477,14 +2205,6 @@ SAVEPOINT sp1;
 UPDATE accounts SET balance = balance - 20 WHERE id = 1;
 ROLLBACK TO SAVEPOINT sp1;
 COMMIT;</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Implement a funds transfer with COMMIT.</li>
-<li>Force a failure path and ROLLBACK; verify balances.</li>
-<li>Use SAVEPOINT in a three-step script.</li>
-<li>Time how long your transaction stays open - keep it short.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -2558,14 +2278,6 @@ WHERE order_date >= '2026-01-01'
 
 -- Often worse for indexes:
 -- WHERE YEAR(order_date) = 2026</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Run EXPLAIN (or EXPLAIN ANALYZE where available) on a slow-ish query.</li>
-<li>Add an index and compare plans.</li>
-<li>Rewrite a SELECT * hot query to an explicit list.</li>
-<li>Rewrite a YEAR(col) filter as a range predicate.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
@@ -2647,14 +2359,6 @@ CREATE TABLE order_items (
 <pre><code>-- Access-path indexes from expected queries
 CREATE INDEX idx_orders_customer_id ON orders (customer_id);
 CREATE INDEX idx_orders_ordered_at ON orders (ordered_at);</code></pre>
-
-<h2>Try it</h2>
-<ol>
-<li>Design tables for a library (members, books, loans).</li>
-<li>Mark PKs and FKs on your diagram.</li>
-<li>Write CREATE TABLE statements for two entities.</li>
-<li>List three queries the design must support and indexes they need.</li>
-</ol>
 
 <h2>Common mistakes</h2>
 <ul>
