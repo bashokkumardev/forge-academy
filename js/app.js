@@ -1650,20 +1650,6 @@ kubectl apply -f deploy.yaml</pre>
     }
   });
 
-  $("#reset-progress").addEventListener("click", async () => {
-    const ok = await showSiteConfirm({
-      title: "Reset all progress?",
-      message: "This will clear lesson progress for every course on this device. This cannot be undone.",
-      confirmLabel: "Reset All",
-      cancelLabel: "Cancel",
-      danger: true
-    });
-    if (!ok) return;
-    localStorage.removeItem(STORAGE_KEY);
-    updateProgressChip();
-    render();
-  });
-
   /* Persistent logout handlers (survive header re-renders) */
   document.querySelector(".header-actions")?.addEventListener("click", (e) => {
     const btn = e.target.closest("#logout-btn, .btn-logout");
