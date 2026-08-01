@@ -87,6 +87,7 @@
     const loginLink = document.querySelector(".btn-login");
     const startBtn = document.querySelector(".header-actions a.btn-primary[href='#/start']");
     let userMenu = document.getElementById("user-menu");
+    document.body.classList.toggle("is-logged-in", !!session);
 
     if (session) {
       if (loginLink) loginLink.hidden = true;
@@ -107,14 +108,8 @@
         </span>
         <button type="button" class="btn-logout" id="logout-btn">Log out</button>`;
     } else {
-      if (loginLink) {
-        loginLink.hidden = false;
-        loginLink.style.display = "";
-      }
-      if (startBtn) {
-        startBtn.hidden = false;
-        startBtn.style.display = "";
-      }
+      if (loginLink) loginLink.hidden = false;
+      if (startBtn) startBtn.hidden = false;
       if (userMenu) {
         userMenu.hidden = true;
         userMenu.innerHTML = "";

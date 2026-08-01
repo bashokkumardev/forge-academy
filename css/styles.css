@@ -192,7 +192,19 @@ button, input { font: inherit; }
   gap: 0.15rem;
   padding: 1rem 1.25rem 2rem;
 }
-.mobile-nav[hidden], .search-overlay[hidden] { display: none !important; }
+.mobile-nav[hidden], .search-overlay[hidden] {
+  display: none !important;
+}
+
+/* Keep HTML hidden working when display: is set on these controls */
+.btn-login[hidden],
+.header-actions > a.btn-primary[hidden],
+.user-menu[hidden],
+.mobile-nav a[hidden],
+.mobile-nav button[hidden],
+#mobile-logout[hidden] {
+  display: none !important;
+}
 .mobile-nav a, .mobile-nav button {
   color: var(--text);
   font-size: 1.1rem;
