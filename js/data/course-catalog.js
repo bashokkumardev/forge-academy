@@ -130,7 +130,6 @@
       difficulty: meta.difficulty || "Intermediate",
       duration: meta.duration || estimateDuration(ordered.length),
       featured: !!meta.featured,
-      featureFlag: meta.featureFlag == null ? "Yes" : meta.featureFlag,
       category: meta.category || "Engineering",
       modules,
       lessons,
@@ -555,23 +554,18 @@
 
   enrich("sql", {
     logo: "sql", technology: "sql", badge: "Best Seller", difficulty: "Beginner → Advanced", featured: true,
-    featureFlag: "Yes", category: "Databases", duration: "20+ hrs", accent: "#4DA3FF"
+    category: "Databases", duration: "20+ hrs", accent: "#4DA3FF"
   });
   enrich("mongo", {
     logo: "mongodb", technology: "mongodb", badge: "Most Popular", difficulty: "Beginner → Advanced", featured: true,
-    featureFlag: "Yes", category: "Databases", duration: "16+ hrs", accent: "#2DD4BF"
+    category: "Databases", duration: "16+ hrs", accent: "#2DD4BF"
   });
   enrich("git", {
     logo: "git", technology: "git", badge: "Most Popular", difficulty: "Beginner → Advanced", featured: true,
-    featureFlag: "Yes", category: "Platform", duration: "12+ hrs", accent: "#F4B942"
+    category: "Platform", duration: "12+ hrs", accent: "#F4B942"
   });
   enrich("db2", {
     logo: "db2", technology: "db2", badge: "Updated", difficulty: "Beginner → Architect", featured: true,
-    featureFlag: "Yes", category: "Databases", duration: "30+ hrs", accent: "#4DA3FF"
-  });
-
-  // Re-normalize flags after enrich / generated register
-  F.listAll().forEach((c) => {
-    c.featureFlag = F.normalizeFeatureFlag(c.featureFlag);
+    category: "Databases", duration: "30+ hrs", accent: "#4DA3FF"
   });
 })();

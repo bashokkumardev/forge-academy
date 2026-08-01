@@ -1378,7 +1378,6 @@ rs.status()</code></pre>
     accent: "#5dde8a",
     description: "Complete MongoDB: install on Windows/Linux, mongosh & Compass, CRUD, queries, aggregation, modeling, indexes, auth, backup.",
     audience: "Developers, full-stack engineers, aspiring DBAs",
-    featureFlag: "Yes",
     paths,
     modules,
     lessons,

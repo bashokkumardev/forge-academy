@@ -1115,7 +1115,6 @@ git cherry-pick &lt;commit-hash&gt;</code></pre>
     accent: "#f0b429",
     description: "Complete Git and GitHub course: install, first commit, branching, remotes, pull requests, undo, rebase, tags, and Git Flow.",
     audience: "Developers, students, and anyone shipping code",
-    featureFlag: "Yes",
     paths: C.paths,
     modules: C.modules,
     lessons: C.lessons,
